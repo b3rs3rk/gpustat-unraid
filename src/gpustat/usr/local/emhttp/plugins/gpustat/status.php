@@ -57,18 +57,36 @@ function parseNvidia (string $stdout = '') {
         $gpuData = $data->gpu;
 
         if (isset($gpuData->utilization)) {
-            $retval['gpu_util'] =  isset($gpuData->utilization->gpu_util) ? (string) $gpuData->utilization->gpu_util : '-1%';
-            $retval['memory_util'] = isset($gpuData->utilization->memory_util) ? (string) $gpuData->utilization->memory_util : '-1%';
+            $retval['gpu_util'] =
+                isset($gpuData->utilization->gpu_util)
+                    ? (string) str_replace(' ', '', $gpuData->utilization->gpu_util)
+                    : '-1%';
+            $retval['memory_util'] =
+                isset($gpuData->utilization->memory_util)
+                    ? (string) str_replace(' ', '', $gpuData->utilization->memory_util)
+                    : '-1%';
         }
         if (isset($gpuData->temperature)) {
-            $retval['gpu_temp'] = isset($gpuData->temperature->gpu_temp) ? (string) $gpuData->temperature->gpu_temp : '-1C';
+            $retval['gpu_temp'] =
+                isset($gpuData->temperature->gpu_temp)
+                    ? (string) str_replace(' ', '', $gpuData->temperature->gpu_temp)
+                    : '-1C';
         }
-        $retval['fan_speed'] = isset($gpuData->fan_speed) ? (string) $gpuData->fan_speed : '-1%';
+        $retval['fan_speed'] =
+            isset($gpuData->fan_speed)
+                ? (string) str_replace(' ', '', $gpuData->fan_speed)
+                : '-1%';
         if (isset($gpuData->power_readings)) {
-            $retval['power_draw'] = isset($gpuData->power_readings->power_draw) ? (string) $gpuData->power_readings->power_draw : '-1.0W';
+            $retval['power_draw'] =
+                isset($gpuData->power_readings->power_draw)
+                    ? (string) str_replace(' ', '', $gpuData->power_readings->power_draw)
+                    : '-1.0W';
         }
         if (isset($gpuData->encoder_stats)) {
-            $retval['active_sessions'] = isset($gpuData->encoder_stats->session_count) ? (int) $gpuData->encoder_stats->session_count : -1;
+            $retval['active_sessions'] =
+                isset($gpuData->encoder_stats->session_count)
+                    ? (int) $gpuData->encoder_stats->session_count
+                    : -1;
         }
     }
 
