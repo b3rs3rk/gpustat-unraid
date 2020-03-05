@@ -14,11 +14,11 @@ switch ($settings['VENDOR']) {
         if (!is_null(shell_exec($which . 'nvidia-smi'))) {
             $stdout = shell_exec('nvidia-smi -q -x 2>&1');
         } else {
-            die("GPU Type set to Nvidia, but nvidia-smi was not found.");
+            die("GPU vendor set to nVidia, but nvidia-smi was not found.");
         }
         break;
     default:
-        die("Could not determine GPU type.");
+        die("Could not determine GPU vendor.");
 }
 
 $data = parseStdout($settings['VENDOR'], $stdout);
@@ -30,15 +30,15 @@ if (is_array($data)) {
     die("Data not in array format.");
 }
 
-function parseStdout (string $type = '', string $stdout = '') {
+function parseStdout (string $vendor = '', string $stdout = '') {
 
     if (!empty($stdout) && strlen($stdout) > 0) {
-        switch ($type) {
+        switch ($vendor) {
             case 'nvidia':
                 $data = parseNvidia($stdout);
                 break;
             default:
-                die("Could not determine GPU type.");
+                die("Could not determine GPU vendor.");
         }
     } else {
         die("No data returned from statistics command.");
