@@ -11,7 +11,7 @@ if (file_exists($settingsFile)) {
 
 switch ($settings['VENDOR']) {
     case 'nvidia':
-        if (shell_exec($which . 'nvidia-smi 2>&1') !== '') {
+        if (!is_null(shell_exec($which . 'nvidia-smi'))) {
             $stdout = shell_exec('nvidia-smi -q -x 2>&1');
         } else {
             die("GPU Type set to Nvidia, but nvidia-smi was not found.");
