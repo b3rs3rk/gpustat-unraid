@@ -44,13 +44,23 @@ function parseNvidia (string $stdout = '') {
     $retval = array();
 
     if (!empty($data->gpu)) {
+
+        $gpuData = $data->gpu;
         //var_dump(count($data));
         //print_r($data->gpu);
-        $retval['gpu_util'] = (string) $data->gpu->utilization->gpu_util;
-        $retval['memory_util'] = (string) $data->gpu->utilization->memory_util;
-        $retval['gpu_temp'] = (string) $data->gpu->temperature->gpu_temp;
-        $retval['fan_speed'] = (string) $data->gpu->fan_speed;
-        $retval['power_draw'] = (string) $data->gpu->power_readings->power_draw;
+        if (isset($gpuData->utilization)) {
+            $retval['gpu_util'] =  isset($gpuData->utilization->gpu_util) ? (string) $gpuData->utilization->gpu_util : '-1%';
+            $retval['memory_util'] = isset($gpuData->utilization->memory_util) ? (string) $gpuData->utilization->memory_util : '-1%';
+        }
+        if (isset($gpuData->temperature)) {
+            $retval['gpu_temp'] = isset($gpuData->temperature->gpu_temp) ? (string) $gpuData->temperature->gpu_temp : '-1C';
+        }
+        $retval['fan_speed'] = isset($gpuData->fan_speed) ? (string) $gpuData->fan_speed : '-1%';
+        if (isset($gpuData->power_readings)) {
+            $retval['power_draw'] = isset($gpuData->power_readings->power_draw) ? (string) $gpuData->power_readings->power_draw : '-1.0W';
+        }
+        if (isset($gpuData->encoder_stats)) {
+            $retval['active_sessions'] = isset($gpuData->encoder_stats->session_count) ? (int) $gpuData->encoder_stats->session_count : -1;
+        }
     }
-    var_dump($retval);
 }
