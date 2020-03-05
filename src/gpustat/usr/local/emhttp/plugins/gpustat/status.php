@@ -6,10 +6,10 @@ $which = 'which ';
 if (file_exists($settingsFile)) {
     $settings = parse_ini_file($settingsFile);
 } else {
-    $settings["TYPE"] = "nvidia";
+    $settings["VENDOR"] = "nvidia";
 }
 
-switch ($settings['TYPE']) {
+switch ($settings['VENDOR']) {
     case 'nvidia':
         if (shell_exec($which . 'nvidia-smi 2>&1') !== '') {
             $stdout = shell_exec('nvidia-smi -q -x 2>&1');
@@ -21,14 +21,21 @@ switch ($settings['TYPE']) {
         die("Could not determine GPU type.");
 }
 
-parseStdout($settings['TYPE'], $stdout);
+$data = parseStdout($settings['VENDOR'], $stdout);
+
+if (is_array($data)) {
+    header('Content-Type: application/json');
+    echo json_encode($data);
+} else {
+    die("Data not in array format.");
+}
 
 function parseStdout (string $type = '', string $stdout = '') {
 
     if (!empty($stdout) && strlen($stdout) > 0) {
         switch ($type) {
             case 'nvidia':
-                parseNvidia($stdout);
+                $data = parseNvidia($stdout);
                 break;
             default:
                 die("Could not determine GPU type.");
@@ -36,6 +43,8 @@ function parseStdout (string $type = '', string $stdout = '') {
     } else {
         die("No data returned from statistics command.");
     }
+
+    return $data;
 }
 
 function parseNvidia (string $stdout = '') {
@@ -62,4 +71,6 @@ function parseNvidia (string $stdout = '') {
             $retval['active_sessions'] = isset($gpuData->encoder_stats->session_count) ? (int) $gpuData->encoder_stats->session_count : -1;
         }
     }
+
+    return $retval;
 }
