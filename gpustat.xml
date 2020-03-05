@@ -6,7 +6,7 @@
     <Category>Other:</Category>
     <Name>GPU Statistics</Name>
     <Description>
-        This plugin is for application developers ONLY.  It will create the category entries for application templates so that Community Applications can display the apps correctly.  (Either docker apps or plugins)
+        This plugin parses GPU statistic data from vendor specific utilities and displays a subset of them on the UnRAID UI.
     </Description>
     <Support/>
     <Icon/>
