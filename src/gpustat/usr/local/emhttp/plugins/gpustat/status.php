@@ -46,8 +46,7 @@ function parseNvidia (string $stdout = '') {
     if (!empty($data->gpu)) {
 
         $gpuData = $data->gpu;
-        //var_dump(count($data));
-        //print_r($data->gpu);
+
         if (isset($gpuData->utilization)) {
             $retval['gpu_util'] =  isset($gpuData->utilization->gpu_util) ? (string) $gpuData->utilization->gpu_util : '-1%';
             $retval['memory_util'] = isset($gpuData->utilization->memory_util) ? (string) $gpuData->utilization->memory_util : '-1%';
