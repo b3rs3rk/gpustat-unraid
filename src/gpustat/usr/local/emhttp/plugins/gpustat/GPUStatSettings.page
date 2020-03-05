@@ -1,0 +1,26 @@
+Menu="Utilities"
+Icon="gpustat.png"
+Title="GPU Statistics"
+---
+<?php
+$gpustat_cfg 	= parse_plugin_cfg("gpustat", true);
+$gpustat_vendor 	= isset($gpustat_cfg['VENDOR']) ? $gpustat_cfg['VENDOR'] : "nvidia";
+?>
+<b><font style='color:cyan;'>GPU Statistics</font></b>
+<form markdown="1" method="POST" action="/update.php" target="progressFrame">
+<input type="hidden" name="#file" value="gpustat/gpustat.cfg" />
+
+GPU Vendor:
+: <select id="VENDOR" name="VENDOR" size="1">
+  <?=mk_option($gpustat_vendor, "nvidia", "nVidia");?>
+  </select>
+
+ <input id="DEFAULT" class="stopped" type="submit" value="Default" onClick="resetDATA(this.form)">
+: <input id="btnApply" type="submit" value="Apply"><input type="button" value="Done" onClick="done()">
+</form>
+
+<script type="text/javascript">
+function resetDATA(form) {
+	form.VENDOR.value = "nvidia";
+}
+</script>
