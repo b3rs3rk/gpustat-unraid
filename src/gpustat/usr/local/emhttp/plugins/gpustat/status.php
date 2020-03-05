@@ -56,38 +56,43 @@ function parseNvidia (string $stdout = '') {
 
         $gpuData = $data->gpu;
 
+        $retval['name'] =
+            isset($gpuData->product_name)
+                ? (string) $gpuData->product_name
+                : 'Graphics Card';
         if (isset($gpuData->utilization)) {
-            $retval['gpu_util'] =
+            $retval['util'] =
                 isset($gpuData->utilization->gpu_util)
                     ? (string) str_replace(' ', '', $gpuData->utilization->gpu_util)
                     : '-1%';
-            $retval['memory_util'] =
+            $retval['memutil'] =
                 isset($gpuData->utilization->memory_util)
                     ? (string) str_replace(' ', '', $gpuData->utilization->memory_util)
                     : '-1%';
         }
         if (isset($gpuData->temperature)) {
-            $retval['gpu_temp'] =
+            $retval['temp'] =
                 isset($gpuData->temperature->gpu_temp)
                     ? (string) str_replace(' ', '', $gpuData->temperature->gpu_temp)
                     : '-1C';
         }
-        $retval['fan_speed'] =
+        $retval['fan'] =
             isset($gpuData->fan_speed)
                 ? (string) str_replace(' ', '', $gpuData->fan_speed)
                 : '-1%';
         if (isset($gpuData->power_readings)) {
-            $retval['power_draw'] =
+            $retval['power'] =
                 isset($gpuData->power_readings->power_draw)
                     ? (string) str_replace(' ', '', $gpuData->power_readings->power_draw)
                     : '-1.0W';
         }
         if (isset($gpuData->encoder_stats)) {
-            $retval['active_sessions'] =
+            $retval['encoders'] =
                 isset($gpuData->encoder_stats->session_count)
                     ? (int) $gpuData->encoder_stats->session_count
                     : -1;
         }
+        $retval['vendor'] = 'nVidia';
     }
 
     return $retval;
