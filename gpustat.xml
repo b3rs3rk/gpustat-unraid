@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Containers>
-    <PluginURL>https://raw.githubusercontent.com/Squidly271/docker.categorize/master/plugins/docker.categorize.plg</PluginURL>
+    <PluginURL>https://raw.githubusercontent.com/b3rs3rk/gpustat-unraid/master/gpustat.plg</PluginURL>
     <PluginAuthor>b3rs3rk</PluginAuthor>
     <Beta>False</Beta>
     <Category>Other:</Category>
-    <Name>Application Categorizer</Name>
+    <Name>GPU Statistics</Name>
     <Description>
         This plugin is for application developers ONLY.  It will create the category entries for application templates so that Community Applications can display the apps correctly.  (Either docker apps or plugins)
     </Description>
-    <Support>http://lime-technology.com/forum/index.php?topic=40111.0</Support>
-    <Icon>http://www.graphicsfuel.com/wp-content/uploads/2012/03/folder-icon-512x512.png</Icon>
-    <IconFA>refresh</IconFA>
+    <Support/>
+    <Icon/>
+    <IconFA>hardware</IconFA>
+    <License>MIT Copyright 2020 b3rs3rk</License>
 </Containers>
