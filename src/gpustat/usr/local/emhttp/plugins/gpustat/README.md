@@ -1,3 +1,3 @@
 **GPU Statistics**
 
-An UnRAID plugin for displaying GPU status
+An plugin for displaying GPU statistics on the dashboard
