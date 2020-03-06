@@ -7,10 +7,9 @@
     <Date>2020-03-05</Date>
     <Name>GPU Statistics</Name>
     <Description>
-        This plugin parses GPU statistic data from vendor specific utilities and displays a subset of them on the UnRAID UI.
+        This plugin parses GPU statistic data from vendor specific utilities and displays a subset of them on the dashboard
     </Description>
     <Support/>
     <Icon>https://raw.githubusercontent.com/b3rs3rk/gpustat-unraid/master/src/gpustat/usr/local/emhttp/plugins/gpustat/images/gpustat.png</Icon>
-    <IconFA/>
     <License>MIT Copyright 2020 b3rs3rk</License>
 </Containers>

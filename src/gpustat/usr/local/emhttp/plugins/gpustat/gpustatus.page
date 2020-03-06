@@ -1,5 +1,5 @@
 Menu="Dashboard"
-Icon="hardware"
+Icon="gpustat.png"
 ---
 <style type="text/css">
 <?php
