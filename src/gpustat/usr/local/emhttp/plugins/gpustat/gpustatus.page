@@ -42,7 +42,6 @@ Icon="hardware"
         </tr>
         <tr class="gpu-sessions">
             <td></td>
-            <td>Sessions</td>
             <td>Encoders: <span class="gpu-encoders"></span></td>
             <td></td>
         </tr>
