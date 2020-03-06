@@ -25,3 +25,8 @@
   </INLINE>
  </FILE>
 </PLUGIN>
+
+<CHANGES>
+###2020-03-06
+- [BETA] First Release: Implements basic nVidia Support for single-GPU systems
+</CHANGES>

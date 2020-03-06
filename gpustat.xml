@@ -13,8 +13,4 @@
     <Icon>https://raw.githubusercontent.com/b3rs3rk/gpustat-unraid/master/src/gpustat/usr/local/emhttp/plugins/gpustat/images/gpustat.png</Icon>
     <IconFA/>
     <License>MIT Copyright 2020 b3rs3rk</License>
-    <Changes>
-        ###2020-03-06
-        - *BETA* First release: Implemented nVidia support to dashboard plugin for single GPU systems
-    </Changes>
 </Containers>
