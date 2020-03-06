@@ -3,7 +3,8 @@
     <PluginURL>https://raw.githubusercontent.com/b3rs3rk/gpustat-unraid/master/gpustat.plg</PluginURL>
     <PluginAuthor>b3rs3rk</PluginAuthor>
     <Beta>True</Beta>
-    <Category>Other:</Category>
+    <Category>Tools:System</Category>
+    <Date>2020-03-05</Date>
     <Name>GPU Statistics</Name>
     <Description>
         This plugin parses GPU statistic data from vendor specific utilities and displays a subset of them on the UnRAID UI.
@@ -12,4 +13,5 @@
     <Icon/>
     <IconFA>hardware</IconFA>
     <License>MIT Copyright 2020 b3rs3rk</License>
+    <Changes/>
 </Containers>
