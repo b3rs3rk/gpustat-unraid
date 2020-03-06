@@ -90,7 +90,7 @@ function parseNvidia (string $stdout = '') {
             $retval['encoders'] =
                 isset($gpuData->processes->process_info)
                     ? (int) count($gpuData->processes->process_info)
-                    : -1;
+                    : 0;
         }
         $retval['vendor'] = 'nVidia';
     }
