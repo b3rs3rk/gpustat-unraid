@@ -1,7 +1,7 @@
 <?php
 
 $settingsFile = '/boot/config/plugins/gpustat/gpustat.cfg';
-$which = 'which ';
+$which = 'where ';
 
 if (file_exists($settingsFile)) {
     $settings = parse_ini_file($settingsFile);
@@ -86,10 +86,10 @@ function parseNvidia (string $stdout = '') {
                     ? (string) str_replace(' ', '', $gpuData->power_readings->power_draw)
                     : '-1.0W';
         }
-        if (isset($gpuData->encoder_stats)) {
+        if (isset($gpuData->processes)) {
             $retval['encoders'] =
-                isset($gpuData->encoder_stats->session_count)
-                    ? (int) $gpuData->encoder_stats->session_count
+                isset($gpuData->processes->process_info)
+                    ? (int) count($gpuData->processes->process_info)
                     : -1;
         }
         $retval['vendor'] = 'nVidia';
