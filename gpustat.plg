@@ -24,6 +24,14 @@
    echo "&name; has been removed"
   </INLINE>
  </FILE>
+ <!-- Install default plugin cfg  -->
+ <FILE Name="/boot/config/plugins/gpustat/gpustat.cfg">
+ <INLINE>
+ <![CDATA[
+ VENDOR=nvidia
+ ]]>
+ </INLINE>
+ </FILE>
 </PLUGIN>
 
 <CHANGES>
