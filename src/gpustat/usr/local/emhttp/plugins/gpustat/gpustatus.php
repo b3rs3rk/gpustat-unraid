@@ -1,7 +1,7 @@
 <?php
 
 $settingsFile = '/boot/config/plugins/gpustat/gpustat.cfg';
-$which = 'where ';
+$which = 'which ';
 
 if (file_exists($settingsFile)) {
     $settings = parse_ini_file($settingsFile);
