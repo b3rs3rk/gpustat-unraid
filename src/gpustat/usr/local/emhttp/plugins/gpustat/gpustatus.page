@@ -50,7 +50,7 @@ Icon="hardware"
 </table>
 <script>
 const gpustat_status = () => {
- $.getJSON("/plugins/gpustat/status.php", (data) => {
+ $.getJSON("/plugins/gpustat/gpustatus.php", (data) => {
   if(data) {
     $.each(data, function (key, data) {
         $(".gpu-"+key).html(data);
