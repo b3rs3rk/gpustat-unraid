@@ -12,9 +12,11 @@
 <!ENTITY emhttp    "/usr/local/emhttp/plugins/&name;">
 ]>
 <PLUGIN name="&name;" author="&author;" version="&version;" icon="icon-hardware" launch="&launch;" pluginURL="&pluginURL;">
+
  <FILE Name="&plgPATH;/&plgNAME;.txz" Min="6.4" Run="upgradepkg --install-new">
   <URL>&pkgURL;/&plgNAME;.txz</URL>
  </FILE>
+
  <FILE Run="/bin/bash" Method="remove">
   <INLINE>
    echo "Removing &name;..."
@@ -24,18 +26,18 @@
    echo "&name; has been removed"
   </INLINE>
  </FILE>
-</PLUGIN>
 
-<!-- Install default plugin cfg  -->
-<FILE Name="/boot/config/plugins/gpustat/gpustat.cfg">
-<INLINE>
-<![CDATA[
-VENDOR=nvidia
-]]>
-</INLINE>
-</FILE>
+ <!-- Install default plugin cfg  -->
+ <FILE Name="/boot/config/plugins/gpustat/gpustat.cfg">
+  <INLINE>
+   <![CDATA[
+    VENDOR=nvidia
+   ]]>
+  </INLINE>
+ </FILE>
 
 <CHANGES>
-###2020-03-06
-- [BETA] Implements basic nVidia Support for single-GPU systems
+ ###2020-03-06
+ - [BETA] Implements basic nVidia Support for single-GPU systems
 </CHANGES>
+</PLUGIN>
