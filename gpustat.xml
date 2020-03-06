@@ -2,7 +2,7 @@
 <Containers>
     <PluginURL>https://raw.githubusercontent.com/b3rs3rk/gpustat-unraid/master/gpustat.plg</PluginURL>
     <PluginAuthor>b3rs3rk</PluginAuthor>
-    <Beta>False</Beta>
+    <Beta>True</Beta>
     <Category>Other:</Category>
     <Name>GPU Statistics</Name>
     <Description>
