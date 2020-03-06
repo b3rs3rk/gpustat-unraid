@@ -11,7 +11,7 @@
 <!ENTITY plgNAME   "&name;-&version;-x86_64">
 <!ENTITY emhttp    "/usr/local/emhttp/plugins/&name;">
 ]>
-<PLUGIN name="&name;" author="&author;" version="&version;" icon="icon-hardware" launch="&launch;" pluginURL="&pluginURL;">
+<PLUGIN name="&name;" author="&author;" version="&version;" support="https://forums.unraid.net/topic/89453-plugin-gpu-statistics/" icon="icon-hardware" launch="&launch;" pluginURL="&pluginURL;">
 
  <FILE Name="&plgPATH;/&plgNAME;.txz" Min="6.4" Run="upgradepkg --install-new">
   <URL>&pkgURL;/&plgNAME;.txz</URL>
