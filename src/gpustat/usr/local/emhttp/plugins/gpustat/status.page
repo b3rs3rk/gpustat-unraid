@@ -14,7 +14,7 @@ Icon="hardware"
     .dash_gpustat_table_header {text-decoration:underline;}
 </style>
 <table id="db-box1" class="dash_gpustat dashboard box1" style="display:none">
-    <thead sort="965" class="sortable">
+    <thead sort="953" class="sortable">
         <tr>
             <td></td>
             <td class="next dash_gpustat_header" colspan="3">
@@ -32,7 +32,7 @@ Icon="hardware"
             <td></td>
         </tr>
     </thead>
-    <tbody class="dash_gpustat_toggle sortable" sort="965">
+    <tbody class="dash_gpustat_toggle sortable" sort="953">
         <tr class="gpu-enviro">
             <td></td>
             <td>Temp: <span class="gpu-temp"></span></td>
