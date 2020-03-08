@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Containers>
+    <Plugin>True</Plugin>
     <PluginURL>https://raw.githubusercontent.com/b3rs3rk/gpustat-unraid/master/gpustat.plg</PluginURL>
     <PluginAuthor>b3rs3rk</PluginAuthor>
     <Beta>True</Beta>
