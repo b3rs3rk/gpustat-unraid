@@ -11,7 +11,9 @@ if (file_exists($settingsFile)) {
 
 switch ($settings['VENDOR']) {
     case 'nvidia':
+        //Needed to be able to run the code on Windows for code testing and Windows uses where instead of which
         if (!is_null(shell_exec($which . 'nvidia-smi'))) {
+            //Command invokes nvidia-smi in query all mode with XML return
             $stdout = shell_exec('nvidia-smi -q -x 2>&1');
         } else {
             die("GPU vendor set to nVidia, but nvidia-smi was not found.");
@@ -21,16 +23,27 @@ switch ($settings['VENDOR']) {
         die("Could not determine GPU vendor.");
 }
 
-$data = parseStdout($settings['VENDOR'], $stdout);
+$data = detectParser($settings['VENDOR'], $stdout);
 
+// Page file JavaScript expects a JSON encoded string
 if (is_array($data)) {
     header('Content-Type: application/json');
-    echo json_encode($data);
+    $json = json_encode($data);
+    $jsonlen = strlen($json);
+    header('Content-Length: ' . $jsonlen);
+    echo $json;
 } else {
     die("Data not in array format.");
 }
 
-function parseStdout (string $vendor = '', string $stdout = '') {
+/**
+ * Detects correct parser and directs stdout to correct function
+ *
+ * @param string $vendor
+ * @param string $stdout
+ * @return array
+ */
+function detectParser (string $vendor = '', string $stdout = '') {
 
     if (!empty($stdout) && strlen($stdout) > 0) {
         switch ($vendor) {
@@ -47,6 +60,12 @@ function parseStdout (string $vendor = '', string $stdout = '') {
     return $data;
 }
 
+/**
+ * Loads stdout into SimpleXMLObject then retrieves and returns specific definitions in an array
+ *
+ * @param string $stdout
+ * @return array
+ */
 function parseNvidia (string $stdout = '') {
 
     $data = @simplexml_load_string($stdout);
@@ -86,6 +105,7 @@ function parseNvidia (string $stdout = '') {
                     ? (string) str_replace(' ', '', $gpuData->power_readings->power_draw)
                     : '-1.0W';
         }
+        // For some reason, encoder_sessions->session_count is not reliable on my install, better to count processes
         if (isset($gpuData->processes)) {
             $retval['encoders'] =
                 isset($gpuData->processes->process_info)
