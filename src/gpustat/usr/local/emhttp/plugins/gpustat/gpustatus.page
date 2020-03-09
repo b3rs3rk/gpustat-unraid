@@ -16,7 +16,7 @@ Icon="gpustat.png"
                 <i class='icon-hardware'></i>
                 <div class='section'>GPU<br>
                     <span class='gpu-vendor'></span> <span class='gpu-name'></span>
-                    <span id='util'>Utilization:  GPU <span class='gpu-util'></span> | MEM <span class='gpu-memutil'></span></span><br><br>
+                    <span id='util'>Utilization:  GPU <span class='gpu-putil'></span> | MEM <span class='gpu-mutil'></span></span><br><br>
                 </div>
                 <i class='fa fa-fw chevron mt0' id='dash_gpustat_toggle' onclick='toggleChevron("dash_gpustat_toggle",0)'></i>
                 <a href='/Settings/GPUStatSettings' id='dash_gpustat_settings' title='Go to GPU Statistics settings'><i class='fa fa-fw fa-cog chevron mt0'></i></a>
@@ -29,7 +29,7 @@ Icon="gpustat.png"
                 <span class='ups'>Temperature:</span><span class='gpu-temp'></span><br>
                 <span class='ups'>Fan Usage:</span><span class='gpu-fan'></span><br>
                 <span class='ups'>Power Draw:</span><span class='gpu-power'></span><br>
-                <span class='ups'>Encoder Sessions:</span><span class='gpu-encoders'></span><br>
+                <span class='ups'>Sessions:</span><span class='gpu-sessions'></span><br>
             </td>
             <td></td>
         </tr>

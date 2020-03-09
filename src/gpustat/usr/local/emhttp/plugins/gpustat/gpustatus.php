@@ -4,36 +4,36 @@ $settingsFile = '/boot/config/plugins/gpustat/gpustat.cfg';
 $which = 'which ';
 
 if (file_exists($settingsFile)) {
-    $settings = parse_ini_file($settingsFile);
+	$settings = parse_ini_file($settingsFile);
 } else {
-    $settings["VENDOR"] = "nvidia";
+	$settings["VENDOR"] = "nvidia";
 }
 
 switch ($settings['VENDOR']) {
-    case 'nvidia':
-        //Needed to be able to run the code on Windows for code testing and Windows uses where instead of which
-        if (!is_null(shell_exec($which . 'nvidia-smi'))) {
-            //Command invokes nvidia-smi in query all mode with XML return
-            $stdout = shell_exec('nvidia-smi -q -x 2>&1');
-        } else {
-            die("GPU vendor set to nVidia, but nvidia-smi was not found.");
-        }
-        break;
-    default:
-        die("Could not determine GPU vendor.");
+	case 'nvidia':
+		//Needed to be able to run the code on Windows for code testing and Windows uses where instead of which
+		if (!is_null(shell_exec($which . 'nvidia-smi'))) {
+			//Command invokes nvidia-smi in query all mode with XML return
+			$stdout = shell_exec('nvidia-smi -q -x 2>&1');
+		} else {
+			die("GPU vendor set to NVIDIA, but nvidia-smi was not found.");
+		}
+		break;
+	default:
+		die("Could not determine GPU vendor.");
 }
 
 $data = detectParser($settings['VENDOR'], $stdout);
 
 // Page file JavaScript expects a JSON encoded string
 if (is_array($data)) {
-    header('Content-Type: application/json');
-    $json = json_encode($data);
-    $jsonlen = strlen($json);
-    header('Content-Length: ' . $jsonlen);
-    echo $json;
+	header('Content-Type: application/json');
+	$json = json_encode($data);
+	$jsonlen = strlen($json);
+	header('Content-Length: ' . $jsonlen);
+	echo $json;
 } else {
-    die("Data not in array format.");
+	die("Data not in array format.");
 }
 
 /**
@@ -45,19 +45,19 @@ if (is_array($data)) {
  */
 function detectParser (string $vendor = '', string $stdout = '') {
 
-    if (!empty($stdout) && strlen($stdout) > 0) {
-        switch ($vendor) {
-            case 'nvidia':
-                $data = parseNvidia($stdout);
-                break;
-            default:
-                die("Could not determine GPU vendor.");
-        }
-    } else {
-        die("No data returned from statistics command.");
-    }
+	if (!empty($stdout) && strlen($stdout) > 0) {
+		switch ($vendor) {
+			case 'nvidia':
+				$data = parseNvidia($stdout);
+				break;
+			default:
+				die("Could not determine GPU vendor.");
+		}
+	} else {
+		die("No data returned from statistics command.");
+	}
 
-    return $data;
+	return $data;
 }
 
 /**
@@ -68,52 +68,94 @@ function detectParser (string $vendor = '', string $stdout = '') {
  */
 function parseNvidia (string $stdout = '') {
 
-    $data = @simplexml_load_string($stdout);
-    $retval = array();
+	$data = @simplexml_load_string($stdout);
+	$retval = array();
 
-    if (!empty($data->gpu)) {
+	if (!empty($data->gpu)) {
 
-        $gpuData = $data->gpu;
+		$gpu = $data->gpu;
+		$retval = [
+			'vendor'    => 'NVIDIA',
+			'name'      => 'Graphics Card',
+			'puutil'    => 'N/A',
+			'mutil'     => 'N/A',
+			'eutil'     => 'N/A',
+			'dutil'     => 'N/A',
+			'temp'      => 'N/A',
+			'tempmax'   => 'N/A',
+			'fan'       => 'N/A',
+			'perfstate' => 'N/A',
+			'throttled' => 'N/A',
+			'power'     => 'N/A',
+			'powermax'  => 'N/A',
+			'sessions'  =>  0,
+		];
 
-        $retval['name'] =
-            isset($gpuData->product_name)
-                ? (string) $gpuData->product_name
-                : 'Graphics Card';
-        if (isset($gpuData->utilization)) {
-            $retval['util'] =
-                isset($gpuData->utilization->gpu_util)
-                    ? (string) str_replace(' ', '', $gpuData->utilization->gpu_util)
-                    : '-1%';
-            $retval['memutil'] =
-                isset($gpuData->utilization->memory_util)
-                    ? (string) str_replace(' ', '', $gpuData->utilization->memory_util)
-                    : '-1%';
-        }
-        if (isset($gpuData->temperature)) {
-            $retval['temp'] =
-                isset($gpuData->temperature->gpu_temp)
-                    ? (string) str_replace(' ', '', $gpuData->temperature->gpu_temp)
-                    : '-1C';
-        }
-        $retval['fan'] =
-            isset($gpuData->fan_speed)
-                ? (string) str_replace(' ', '', $gpuData->fan_speed)
-                : '-1%';
-        if (isset($gpuData->power_readings)) {
-            $retval['power'] =
-                isset($gpuData->power_readings->power_draw)
-                    ? (string) str_replace(' ', '', $gpuData->power_readings->power_draw)
-                    : '-1.0W';
-        }
-        // For some reason, encoder_sessions->session_count is not reliable on my install, better to count processes
-        if (isset($gpuData->processes)) {
-            $retval['encoders'] =
-                isset($gpuData->processes->process_info)
-                    ? (int) count($gpuData->processes->process_info)
-                    : 0;
-        }
-        $retval['vendor'] = 'nVidia';
-    }
+		$retval['vendor'] = 'NVIDIA';
+		 if (isset($gpu->product_name)) {
+			 $retval['name'] = (string) $gpu->product_name;
+		 }
+		if (isset($gpu->utilization)) {
+			if (isset($gpu->utilization->gpu_util)) {
+				$retval['putil'] = (string) strip_spaces($gpu->utilization->gpu_util);
+			}
+			if (isset($gpu->utilization->memory_util)) {
+				$retval['mutil'] = (string) strip_spaces($gpu->utilization->memory_util);
+			}
+			if (isset($gpu->utilization->encoder_util)) {
+				$retval['eutil'] = (string) strip_spaces($gpu->utilization->encoder_util);
+			}
+			if (isset($gpu->utilization->decoder_util)) {
+				$retval['dutil'] = (string) strip_spaces($gpu->utilization->encoder_util);
+			}
+		}
+		if (isset($gpu->temperature)) {
+			if (isset($gpu->temperature->gpu_temp)) {
+				$retval['temp'] = (string) strip_spaces($gpu->temperature->gpu_temp);
+			}
+			if (isset($gpu->temperature->gpu_temp->gpu_temp_max_threshold)) {
+				$retval['tempmax'] = (string) strip_spaces($gpu->temperature->gpu_temp_max_threshold);
+			}
+		}
+		if (isset($gpu->fan_speed)) {
+			$retval['fan'] = (string) strip_spaces($gpu->fan_speed);
+		}
+		if (isset($gpu->performance_state)) {
+			$retval['perfstate'] = (string) strip_spaces($gpu->performance_state);
+		}
+		if (isset($gpu->clocks_throttle_reasons)) {
+			$retval['throttled'] = 'No';
+			foreach ($gpu->clocks_throttle_reasons AS $reason) {
+				if ($reason == 'Active') {
+					$retval['throttled'] = 'Yes';
+					break;
+				}
+			}
+		}
+		if (isset($gpu->power_readings)) {
+			if (isset($gpu->power_readings->power_draw)) {
+				$retval['power'] = (string) strip_spaces($gpu->power_readings->power_draw);
+			}
+			if (isset($gpu->power_readings->power_limit)) {
+				$retval['powermax'] = (string) strip_spaces($gpu->power_readings->power_limit);
+			}
+		}
+		// For some reason, encoder_sessions->session_count is not reliable on my install, better to count processes
+		if (isset($gpu->processes) && isset($gpu->processes->process_info)) {
+			$retval['sessions'] = (int) count($gpu->processes->process_info);
+		}
+	}
 
-    return $retval;
+	return $retval;
+}
+
+/**
+ * Strips all spaces from a provided string
+ *
+ * @param string $text
+ * @return string|string[]
+ */
+function strip_spaces(string $text = '') {
+
+	return str_replace(' ', '', $text);
 }
