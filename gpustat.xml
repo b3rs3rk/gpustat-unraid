@@ -5,7 +5,7 @@
     <PluginAuthor>b3rs3rk</PluginAuthor>
     <Beta>True</Beta>
     <Category>Tools:System</Category>
-    <Date>2020-03-05</Date>
+    <Date>2020-03-08</Date>
     <Name>GPU Statistics</Name>
     <Description>
         This plugin parses GPU statistic data from vendor specific utilities and displays a subset of them on the dashboard
