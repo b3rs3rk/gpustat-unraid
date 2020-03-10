@@ -3,8 +3,8 @@ Icon="gpustat.png"
 Title="GPU Statistics"
 ---
 <?php
-    $gpustat_cfg 	= parse_plugin_cfg("gpustat", true);
-    $gpustat_vendor 	= isset($gpustat_cfg['VENDOR']) ? $gpustat_cfg['VENDOR'] : "nvidia";
+$gpustat_cfg 	= parse_plugin_cfg("gpustat", true);
+$gpustat_vendor 	= isset($gpustat_cfg['VENDOR']) ? $gpustat_cfg['VENDOR'] : "nvidia";
 ?>
 <b>GPU Statistics</b>
 <form markdown="1" method="POST" action="/update.php" target="progressFrame">
