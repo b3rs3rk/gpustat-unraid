@@ -76,6 +76,8 @@ function parseNvidia (string $stdout = '') {
         $retval = [
             'vendor'    => 'NVIDIA',
             'name'      => 'Graphics Card',
+            'clock'     => 'N/A',
+            'memclock' => 'N/A',
             'util'      => 'N/A',
             'memutil'   => 'N/A',
             'encutil'   => 'N/A',
@@ -85,13 +87,14 @@ function parseNvidia (string $stdout = '') {
             'fan'       => 'N/A',
             'perfstate' => 'N/A',
             'throttled' => 'N/A',
+            'thrtlrsn'  => '',
             'power'     => 'N/A',
             'powermax'  => 'N/A',
             'sessions'  =>  0,
         ];
 
         if (isset($gpu->product_name)) {
-             $retval['name'] = (string) $gpu->product_name;
+            $retval['name'] = (string) $gpu->product_name;
         }
         if (isset($gpu->utilization)) {
             if (isset($gpu->utilization->gpu_util)) {
@@ -104,7 +107,7 @@ function parseNvidia (string $stdout = '') {
                 $retval['encutil'] = (string) strip_spaces($gpu->utilization->encoder_util);
             }
             if (isset($gpu->utilization->decoder_util)) {
-                $retval['decutil'] = (string) strip_spaces($gpu->utilization->encoder_util);
+                $retval['decutil'] = (string) strip_spaces($gpu->utilization->decoder_util);
             }
         }
         if (isset($gpu->temperature)) {
@@ -123,9 +126,10 @@ function parseNvidia (string $stdout = '') {
         }
         if (isset($gpu->clocks_throttle_reasons)) {
             $retval['throttled'] = 'No';
-            foreach ($gpu->clocks_throttle_reasons AS $reason) {
-                if ($reason == 'Active') {
+            foreach ($gpu->clocks_throttle_reasons->children() AS $reason => $throttle) {
+                if ($throttle == 'Active') {
                     $retval['throttled'] = 'Yes';
+                    $retval['thrtlrsn'] = ' (' . str_replace('clocks_throttle_reason_', '', $reason) . ')';
                     break;
                 }
             }
@@ -135,7 +139,15 @@ function parseNvidia (string $stdout = '') {
                 $retval['power'] = (string) strip_spaces($gpu->power_readings->power_draw);
             }
             if (isset($gpu->power_readings->power_limit)) {
-                $retval['powermax'] = (string) strip_spaces($gpu->power_readings->power_limit);
+                $retval['powermax'] = (string) str_replace('.00 ', '', $gpu->power_readings->power_limit);
+            }
+        }
+        if (isset($gpu->clocks)) {
+            if (isset($gpu->clocks->graphics_clock)) {
+                $retval['clock'] = (string) str_replace(' MHz', '', $gpu->clocks->graphics_clock);
+            }
+            if (isset($gpu->clocks->mem_clock)) {
+                $retval['memclock'] = (string) $gpu->clocks->mem_clock;
             }
         }
         // For some reason, encoder_sessions->session_count is not reliable on my install, better to count processes
