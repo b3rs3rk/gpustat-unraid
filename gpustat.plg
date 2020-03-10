@@ -37,6 +37,16 @@
  </FILE>
 
 <CHANGES>
+ ###2020-03-10
+ - [BETA] Implement more NVIDIA data readings
+  * Clock Speeds (GPU/MEM)
+  * Encoder/Decoder Utilization
+  * Power State (P0-8)
+  * Throttle Check/Reason
+
+ ###2020-03-08
+ - [BETA] Fix formatting to be more UnRAID-like
+
  ###2020-03-06
  - [BETA] Implements basic NVIDIA Support for single-GPU systems
 </CHANGES>
