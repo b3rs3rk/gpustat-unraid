@@ -5,7 +5,7 @@ Icon="gpustat.png"
 <?php
     $gpustat_cfg = parse_plugin_cfg('gpustat', true);
 ?>
-    #dash_gpustat_settings i, #dash_gpustat_toggle {margin-top:0; background-color: var(--base00) !important;}
+    #dash_gpustat_settings i, #dash_gpustat_toggle {margin-top:0;}
 </style>
 <table id='db-box1' class='dash_gpustat dashboard box1' style='display:none'>
     <thead sort='953'><tr class='hidden'><td></td><td colspan='3'></td><td></td></tr></thead>
