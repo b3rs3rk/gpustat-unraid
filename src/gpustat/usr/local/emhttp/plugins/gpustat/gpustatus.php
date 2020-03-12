@@ -1,29 +1,31 @@
 <?php
 
-$settingsFile = '/boot/config/plugins/gpustat/gpustat.cfg';
-$which = 'which ';
+const SETTINGS_FILE_PATH = '/boot/config/plugins/gpustat/gpustat.cfg';
+const COMMAND_EXISTS_CHECKER = 'which ';
+const NVIDIA_STATISTICS_COMMAND = 'nvidia-smi -q -x 2>&1';
 
-if (file_exists($settingsFile)) {
-    $settings = parse_ini_file($settingsFile);
+if (file_exists(SETTINGS_FILE_PATH)) {
+    $settings = parse_ini_file(SETTINGS_FILE_PATH);
 } else {
-    $settings["VENDOR"] = "nvidia";
+    $settings['VENDOR'] = 'nvidia';
+    $settings['TEMPFORMAT'] = 'F';
 }
 
 switch ($settings['VENDOR']) {
     case 'nvidia':
         //Needed to be able to run the code on Windows for code testing and Windows uses where instead of which
-        if (!is_null(shell_exec($which . 'nvidia-smi'))) {
+        if (!is_null(shell_exec(COMMAND_EXISTS_CHECKER . 'nvidia-smi'))) {
             //Command invokes nvidia-smi in query all mode with XML return
-            $stdout = shell_exec('nvidia-smi -q -x 2>&1');
+            $stdout = shell_exec(NVIDIA_STATISTICS_COMMAND);
         } else {
-            die("GPU vendor set to NVIDIA, but nvidia-smi was not found.");
+            die('GPU vendor set to NVIDIA, but nvidia-smi was not found.');
         }
         break;
     default:
-        die("Could not determine GPU vendor.");
+        die('Could not determine GPU vendor.');
 }
 
-$data = detectParser($settings['VENDOR'], $stdout);
+$data = detectParser($settings, $stdout);
 
 // Page file JavaScript expects a JSON encoded string
 if (is_array($data)) {
@@ -32,28 +34,28 @@ if (is_array($data)) {
     header('Content-Length: ' . strlen($json));
     echo $json;
 } else {
-    die("Data not in array format.");
+    die('Data not in array format.');
 }
 
 /**
  * Detects correct parser and directs stdout to correct function
  *
- * @param string $vendor
+ * @param array $settings
  * @param string $stdout
  * @return array
  */
-function detectParser (string $vendor = '', string $stdout = '') {
+function detectParser (array $settings = [], string $stdout = '') {
 
     if (!empty($stdout) && strlen($stdout) > 0) {
-        switch ($vendor) {
+        switch ($settings['VENDOR']) {
             case 'nvidia':
-                $data = parseNvidia($stdout);
+                $data = parseNvidia($settings, $stdout);
                 break;
             default:
-                die("Could not determine GPU vendor.");
+                die('Could not determine GPU vendor.');
         }
     } else {
-        die("No data returned from statistics command.");
+        die('No data returned from statistics command.');
     }
 
     return $data;
@@ -62,10 +64,11 @@ function detectParser (string $vendor = '', string $stdout = '') {
 /**
  * Loads stdout into SimpleXMLObject then retrieves and returns specific definitions in an array
  *
+ * @param array $settings
  * @param string $stdout
  * @return array
  */
-function parseNvidia (string $stdout = '') {
+function parseNvidia (array $settings = [], string $stdout = '') {
 
     $data = @simplexml_load_string($stdout);
     $retval = array();
@@ -116,6 +119,11 @@ function parseNvidia (string $stdout = '') {
             }
             if (isset($gpu->temperature->gpu_temp_max_threshold)) {
                 $retval['tempmax'] = (string) strip_spaces($gpu->temperature->gpu_temp_max_threshold);
+            }
+            if ($settings['TEMPFORMAT'] == 'F') {
+                foreach (['temp', 'tempmax'] AS $key) {
+                    $retval[$key] = celsius_to_fahrenheit((int) str_replace('C', '', $retval[$key])) . 'F';
+                }
             }
         }
         if (isset($gpu->fan_speed)) {
@@ -168,4 +176,17 @@ function parseNvidia (string $stdout = '') {
 function strip_spaces(string $text = '') {
 
     return str_replace(' ', '', $text);
+}
+
+/**
+ * Converts Celsius to Fahrenheit
+ *
+ * @param int $temp
+ * @return false|float
+ */
+function celsius_to_fahrenheit(int $temp = 0)
+{
+    $fahrenheit = $temp*(9/5)+32;
+
+    return round($fahrenheit, -1, PHP_ROUND_HALF_UP);
 }

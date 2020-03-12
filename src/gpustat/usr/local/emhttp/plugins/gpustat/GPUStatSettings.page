@@ -3,24 +3,33 @@ Icon="gpustat.png"
 Title="GPU Statistics"
 ---
 <?php
-$gpustat_cfg 	= parse_plugin_cfg("gpustat", true);
-$gpustat_vendor 	= isset($gpustat_cfg['VENDOR']) ? $gpustat_cfg['VENDOR'] : "nvidia";
+    $gpustat_cfg        = parse_plugin_cfg("gpustat", true);
+    $gpustat_vendor     = isset($gpustat_cfg['VENDOR']) ? $gpustat_cfg['VENDOR'] : "nvidia";
+    $gpustat_tempformat = isset($gpustat_cfg['TEMPFORMAT']) ? $gpustat_cfg['TEMPFORMAT'] : "C";
 ?>
+
 <b>GPU Statistics</b>
 <form markdown="1" method="POST" action="/update.php" target="progressFrame">
-<input type="hidden" name="#file" value="gpustat/gpustat.cfg" />
+  <input type="hidden" name="#file" value="gpustat/gpustat.cfg" />
 
 GPU Vendor:
 : <select id="VENDOR" name="VENDOR" size="1">
-  <?=mk_option($gpustat_vendor, "nvidia", "NVIDIA");?>
+    <?=mk_option($gpustat_vendor, "nvidia", "NVIDIA");?>
   </select>
 
- <input id="DEFAULT" class="stopped" type="submit" value="Default" onClick="resetDATA(this.form)">
+Temperature Format:
+: <select id="TEMPFORMAT" name="TEMPFORMAT" size="1">
+    <?=mk_option($gpustat_tempformat, "C", "Celsius");?>
+    <?=mk_option($gpustat_tempformat, "F", "Fahrenheit");?>
+  </select>
+
+  <input id="DEFAULT" class="stopped" type="submit" value="Default" onClick="resetDATA(this.form)">
 : <input id="btnApply" type="submit" value="Apply"><input type="button" value="Done" onClick="done()">
 </form>
 
 <script type="text/javascript">
 function resetDATA(form) {
-	form.VENDOR.value = "nvidia";
+    form.VENDOR.value = "nvidia";
+    form.TEMPFORMAT.value = "C";
 }
 </script>
