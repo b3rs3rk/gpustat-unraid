@@ -32,6 +32,8 @@
   <INLINE>
    <![CDATA[
     VENDOR=nvidia
+    GPUID=0
+    TEMPFORMAT=Celsius
    ]]>
   </INLINE>
  </FILE>
