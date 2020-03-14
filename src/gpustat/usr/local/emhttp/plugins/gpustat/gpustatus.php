@@ -2,21 +2,30 @@
 
 const SETTINGS_FILE_PATH = '/boot/config/plugins/gpustat/gpustat.cfg';
 const COMMAND_EXISTS_CHECKER = 'which ';
-const NVIDIA_STATISTICS_COMMAND = 'nvidia-smi -q -x 2>&1';
+const NVIDIA_STATISTICS_COMMAND = 'nvidia-smi -q -x -i %s 2>&1';
+const NVIDIA_INVENTORY_COMMAND = 'nvidia-smi -L';
+const NVIDIA_INVENTORY_REGEX = '/GPU\s(?P<id>\d):\s(?P<model>.*)\s\(UUID:\s(?P<guid>GPU-[0-9a-f-]+)\)/i';
 
 if (file_exists(SETTINGS_FILE_PATH)) {
-    $settings = parse_ini_file(SETTINGS_FILE_PATH);
+    $gpu_settings = parse_ini_file(SETTINGS_FILE_PATH);
 } else {
-    $settings['VENDOR'] = 'nvidia';
-    $settings['TEMPFORMAT'] = 'F';
+    $gpu_settings['VENDOR'] = 'nvidia';
+    $gpu_settings['TEMPFORMAT'] = 'F';
+    $gpu_settings['GPUID'] = '0';
 }
 
-switch ($settings['VENDOR']) {
+switch ($gpu_settings['VENDOR']) {
     case 'nvidia':
         //Needed to be able to run the code on Windows for code testing and Windows uses where instead of which
         if (!is_null(shell_exec(COMMAND_EXISTS_CHECKER . 'nvidia-smi'))) {
-            //Command invokes nvidia-smi in query all mode with XML return
-            $stdout = shell_exec(NVIDIA_STATISTICS_COMMAND);
+            // If Settings page includes, this should be true
+            if (isset($gpu_inventory) && $gpu_inventory) {
+                $gpu_stdout = shell_exec(NVIDIA_INVENTORY_COMMAND);
+                $gpu_data = parseNvidiaInventory($gpu_stdout);
+            } else {
+                //Command invokes nvidia-smi in query all mode with XML return
+                $gpu_stdout = shell_exec(sprintf(NVIDIA_STATISTICS_COMMAND, $gpu_settings['GPUID']));
+            }
         } else {
             die('GPU vendor set to NVIDIA, but nvidia-smi was not found.');
         }
@@ -25,16 +34,17 @@ switch ($settings['VENDOR']) {
         die('Could not determine GPU vendor.');
 }
 
-$data = detectParser($settings, $stdout);
-
-// Page file JavaScript expects a JSON encoded string
-if (is_array($data)) {
-    $json = json_encode($data);
-    header('Content-Type: application/json');
-    header('Content-Length: ' . strlen($json));
-    echo $json;
-} else {
-    die('Data not in array format.');
+if (!isset($gpu_data)) {
+    $gpu_data = detectParser($gpu_settings, $gpu_stdout);
+    // Page file JavaScript expects a JSON encoded string
+    if (is_array($gpu_data)) {
+        $gpu_json = json_encode($gpu_data);
+        header('Content-Type: application/json');
+        header('Content-Length: ' . strlen($gpu_json));
+        echo $gpu_json;
+    } else {
+        die('Data not in array format.');
+    }
 }
 
 /**
@@ -59,6 +69,18 @@ function detectParser (array $settings = [], string $stdout = '') {
     }
 
     return $data;
+}
+
+/**
+ * Parses output of nvidia-sml -L and returns an array of matches with named groups
+ *
+ * @param string $stdout
+ * @return mixed
+ */
+function parseNvidiaInventory(string $stdout = '') {
+    preg_match_all(NVIDIA_INVENTORY_REGEX, $stdout, $matches, PREG_SET_ORDER);
+
+    return $matches;
 }
 
 /**
