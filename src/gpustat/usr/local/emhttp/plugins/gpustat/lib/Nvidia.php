@@ -19,8 +19,8 @@ class Nvidia extends Main
      */
     public function __construct(array $settings = [])
     {
+        $settings += ['cmd' => self::CMD_UTILITY];
         parent::__construct($settings);
-        $this->checkCommand(self::CMD_UTILITY);
     }
 
     /**
@@ -90,36 +90,36 @@ class Nvidia extends Main
             }
             if (isset($gpu->utilization)) {
                 if (isset($gpu->utilization->gpu_util)) {
-                    $retval['util'] = (string) $this->strip_spaces($gpu->utilization->gpu_util);
+                    $retval['util'] = (string) $this->stripSpaces($gpu->utilization->gpu_util);
                 }
                 if (isset($gpu->utilization->memory_util)) {
-                    $retval['memutil'] = (string) $this->strip_spaces($gpu->utilization->memory_util);
+                    $retval['memutil'] = (string) $this->stripSpaces($gpu->utilization->memory_util);
                 }
                 if (isset($gpu->utilization->encoder_util)) {
-                    $retval['encutil'] = (string) $this->strip_spaces($gpu->utilization->encoder_util);
+                    $retval['encutil'] = (string) $this->stripSpaces($gpu->utilization->encoder_util);
                 }
                 if (isset($gpu->utilization->decoder_util)) {
-                    $retval['decutil'] = (string) $this->strip_spaces($gpu->utilization->decoder_util);
+                    $retval['decutil'] = (string) $this->stripSpaces($gpu->utilization->decoder_util);
                 }
             }
             if (isset($gpu->temperature)) {
                 if (isset($gpu->temperature->gpu_temp)) {
-                    $retval['temp'] = (string) $this->strip_spaces($gpu->temperature->gpu_temp);
+                    $retval['temp'] = (string) $this->stripSpaces($gpu->temperature->gpu_temp);
                 }
                 if (isset($gpu->temperature->gpu_temp_max_threshold)) {
-                    $retval['tempmax'] = (string) $this->strip_spaces($gpu->temperature->gpu_temp_max_threshold);
+                    $retval['tempmax'] = (string) $this->stripSpaces($gpu->temperature->gpu_temp_max_threshold);
                 }
                 if ($this->settings['TEMPFORMAT'] == 'F') {
                     foreach (['temp', 'tempmax'] AS $key) {
-                        $retval[$key] = $this->celsius_to_fahrenheit((int) str_replace('C', '', $retval[$key])) . 'F';
+                        $retval[$key] = $this->convertCelsius((int) str_replace('C', '', $retval[$key])) . 'F';
                     }
                 }
             }
             if (isset($gpu->fan_speed)) {
-                $retval['fan'] = (string) $this->strip_spaces($gpu->fan_speed);
+                $retval['fan'] = (string) $this->stripSpaces($gpu->fan_speed);
             }
             if (isset($gpu->performance_state)) {
-                $retval['perfstate'] = (string) $this->strip_spaces($gpu->performance_state);
+                $retval['perfstate'] = (string) $this->stripSpaces($gpu->performance_state);
             }
             if (isset($gpu->clocks_throttle_reasons)) {
                 $retval['throttled'] = 'No';
@@ -133,7 +133,7 @@ class Nvidia extends Main
             }
             if (isset($gpu->power_readings)) {
                 if (isset($gpu->power_readings->power_draw)) {
-                    $retval['power'] = (string) $this->strip_spaces($gpu->power_readings->power_draw);
+                    $retval['power'] = (string) $this->stripSpaces($gpu->power_readings->power_draw);
                 }
                 if (isset($gpu->power_readings->power_limit)) {
                     $retval['powermax'] = (string) str_replace('.00 ', '', $gpu->power_readings->power_limit);

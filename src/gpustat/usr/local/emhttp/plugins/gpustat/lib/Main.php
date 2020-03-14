@@ -26,14 +26,16 @@ class Main
      * @var array
      */
     protected $inventory;
-
+    
     /**
      * GPUStat constructor.
+     *
      * @param array $settings
      */
     public function __construct(array $settings = [])
     {
         $this->settings = $settings;
+        $this->checkCommand($settings['cmd']);
     }
 
     /**
@@ -89,7 +91,7 @@ class Main
      * @param string $text
      * @return string|string[]
      */
-    protected static function strip_spaces(string $text = '') {
+    protected static function stripSpaces(string $text = '') {
         
         return str_replace(' ', '', $text);
     }
@@ -100,7 +102,7 @@ class Main
      * @param int $temp
      * @return false|float
      */
-    protected static function celsius_to_fahrenheit(int $temp = 0)
+    protected static function convertCelsius(int $temp = 0)
     {
         $fahrenheit = $temp*(9/5)+32;
         
