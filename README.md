@@ -14,6 +14,15 @@ If any issues occur, visit the support thread [here](https://forums.unraid.net/t
 
 ## Current Support
 
-    NVIDIA: GPU\Memory Utilization, Temperature, Fan Speed, Power Draw, Active Processes
+    NVIDIA:
+        * GPU/Memory Utilization
+        * GPU/Memory Clocks
+        * Encoder/Decoder Utilization
+        * Temperature
+        * Fan Utilization
+        * Power Draw
+        * Power State
+        * Throttled (Y/N) and Reason for Throttle
+        * Active Processes
     
 The bulk of this code was adapted from/inspired by @realies and @CyanLabs corsairpsu-unraid project!
