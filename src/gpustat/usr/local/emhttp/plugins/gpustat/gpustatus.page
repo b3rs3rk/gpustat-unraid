@@ -28,8 +28,7 @@ Icon="gpustat.png"
             <td></td>
             <td colspan='2'>
                 <span class='gpu'>Clocks GPU/MEM:</span><span class='gpu-clock'></span>/<span class='gpu-memclock'></span><br>
-                <span class='gpu'>Encoder Utilization:</span><span class='gpu-encutil'></span><br>
-                <span class='gpu'>Decoder Utilization:</span><span class='gpu-decutil'></span><br>
+                <span class='gpu'>Enc/Dec Util:</span><span class='gpu-encutil'></span>/<span class='gpu-decutil'></span><br>
                 <span class='gpu'>Temperature:</span><span class='gpu-temp'></span>/<span class='gpu-tempmax'></span><br>
                 <span class='gpu'>Fan Usage:</span><span class='gpu-fan'></span><br>
                 <span class='gpu'>Power Draw:</span><span class='gpu-power'></span>/<span class='gpu-powermax'></span><br>
