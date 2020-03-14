@@ -7,7 +7,7 @@ Title="GPU Statistics"
     $gpustat_vendor     = isset($gpustat_cfg['VENDOR']) ? $gpustat_cfg['VENDOR'] : "nvidia";
     $gpustat_tempformat = isset($gpustat_cfg['TEMPFORMAT']) ? $gpustat_cfg['TEMPFORMAT'] : "C";
     $gpustat_gpuid      = isset($gpustat_cfg['GPUID']) ? $gpustat_cfg['GPUID'] : "0";
-    $gpu_inventory      = true;
+    $gpustat_inventory      = true;
 
     include_once './plugins/gpustat/gpustatus.php';
 ?>
