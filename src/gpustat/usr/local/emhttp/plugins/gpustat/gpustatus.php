@@ -9,9 +9,11 @@ const NVIDIA_INVENTORY_REGEX = '/GPU\s(?P<id>\d):\s(?P<model>.*)\s\(UUID:\s(?P<g
 if (file_exists(SETTINGS_FILE_PATH)) {
     $gpu_settings = parse_ini_file(SETTINGS_FILE_PATH);
 } else {
-    $gpu_settings['VENDOR'] = 'nvidia';
-    $gpu_settings['TEMPFORMAT'] = 'F';
-    $gpu_settings['GPUID'] = '0';
+    $gpu_settings = [
+        'VENDOR'        => 'nvidia',
+        'TEMPFORMAT'    => 'F',
+        'GPUID'         => '0',
+    ];
 }
 
 switch ($gpu_settings['VENDOR']) {
@@ -78,6 +80,7 @@ function detectParser (array $settings = [], string $stdout = '') {
  * @return mixed
  */
 function parseNvidiaInventory(string $stdout = '') {
+
     preg_match_all(NVIDIA_INVENTORY_REGEX, $stdout, $matches, PREG_SET_ORDER);
 
     return $matches;
