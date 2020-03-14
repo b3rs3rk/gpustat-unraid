@@ -22,6 +22,5 @@ switch ($gpustat_cfg['VENDOR']) {
         }
         break;
     default:
-        var_dump('test');
         new Error(Error::CONFIG_SETTINGS_NOT_VALID);
 }
