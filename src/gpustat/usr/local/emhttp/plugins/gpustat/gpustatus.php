@@ -16,7 +16,8 @@ switch ($gpustat_cfg['VENDOR']) {
     case 'nvidia':
         // $gpu_inventory should be set if called from settings page code
         if (isset($gpu_inventory) && $gpu_inventory) {
-            $gpu_data = (new Nvidia($gpustat_cfg))->getInventory();
+            // Settings page looks for $gpu_data specifically
+            $gpustat_data = (new Nvidia($gpustat_cfg))->getInventory();
         } else {
             (new Nvidia($gpustat_cfg))->getStatistics();
         }

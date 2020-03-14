@@ -24,8 +24,8 @@ GPU Vendor:
 GPU for Dashboard:
 : <select id="GPUID" name="GPUID" size="1">
     <?php
-        if (isset($gpu_data)) {
-            foreach ($gpu_data AS $gpu) {
+        if (isset($gpustat_data)) {
+            foreach ($gpustat_data AS $gpu) {
                 $gpudesc = $gpu['id'] . ': ' . $gpu['model'] . ' - ' . $gpu['guid'];
                 printf(mk_option($gpustat_gpuid, $gpu['id'], $gpudesc));
             }
