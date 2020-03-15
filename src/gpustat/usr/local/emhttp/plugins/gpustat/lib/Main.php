@@ -12,7 +12,6 @@ class Main
 {
     const PLUGIN_NAME = 'gpustat';
     const COMMAND_EXISTS_CHECKER = 'which';
-    const ES = ' ';
 
     /**
      * @var array
@@ -60,7 +59,7 @@ class Main
         if (is_array($data)) {
             $json = json_encode($data);
             header('Content-Type: application/json');
-            header('Content-Length:' . self::ES . strlen($json));
+            header('Content-Length:' . ES . strlen($json));
             echo $json;
         } else {
             new Error(Error::BAD_ARRAY_DATA);
@@ -74,7 +73,7 @@ class Main
      */
     protected function checkCommand(string $utility = '') {
         // Check if vendor utility is available
-        if (is_null(shell_exec(self::COMMAND_EXISTS_CHECKER . self::ES . $utility))) {
+        if (is_null(shell_exec(self::COMMAND_EXISTS_CHECKER . ES . $utility))) {
             new Error(Error::VENDOR_UTILITY_NOT_FOUND);
         }
     }

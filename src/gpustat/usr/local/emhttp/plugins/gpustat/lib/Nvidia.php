@@ -30,7 +30,7 @@ class Nvidia extends Main
      */
     public function getInventory ()
     {
-        $this->stdout = shell_exec(self::CMD_UTILITY . self::ES . self::INVENTORY_PARAM);
+        $this->stdout = shell_exec(self::CMD_UTILITY . ES . self::INVENTORY_PARAM);
         if (!empty($this->stdout) && strlen($this->stdout) > 0) {
             preg_match_all(self::INVENTORY_REGEX, $this->stdout, $this->inventory, PREG_SET_ORDER);
         } else {
@@ -46,7 +46,7 @@ class Nvidia extends Main
     public function getStatistics()
     {
         //Command invokes nvidia-smi in query all mode with XML return
-        $this->stdout = shell_exec(self::CMD_UTILITY . self::ES . sprintf(self::STATISTICS_PARAM, $this->settings['GPUID']));
+        $this->stdout = shell_exec(self::CMD_UTILITY . ES . sprintf(self::STATISTICS_PARAM, $this->settings['GPUID']));
         if (!empty($this->stdout) && strlen($this->stdout) > 0) {
             $this->parseStatistics();
         } else {

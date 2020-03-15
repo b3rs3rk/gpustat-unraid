@@ -1,5 +1,7 @@
 <?php
 
+define('ES', ' ');
+
 include 'lib/Main.php';
 include 'lib/Nvidia.php';
 include 'lib/Error.php';

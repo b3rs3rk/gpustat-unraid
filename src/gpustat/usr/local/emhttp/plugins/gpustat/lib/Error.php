@@ -26,6 +26,6 @@ class Error
      */
     public function __construct(array $error = self::UNKNOWN, string $extra_info = '')
     {
-        die('Error' . Main::ES . $error['code'] . ':' . Main::ES . $error['message'] . $extra_info);
+        die('Error' . ES . $error['code'] . ':' . ES . $error['message'] . $extra_info);
     }
 }
