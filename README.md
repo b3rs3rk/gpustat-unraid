@@ -24,5 +24,11 @@ If any issues occur, visit the support thread [here](https://forums.unraid.net/t
         * Power State
         * Throttled (Y/N) and Reason for Throttle
         * Active Processes
-    
+
+    Intel:
+        * Render Engine Utilization
+        * Encode/Decode Engine Utilization
+        * Power Draw
+        * GPU Clock
+
 The bulk of this code was adapted from/inspired by @realies and @CyanLabs corsairpsu-unraid project!
