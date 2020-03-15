@@ -2,13 +2,15 @@
 
 namespace gpustat\lib;
 
+require_once('/usr/local/emhttp/plugins/dynamix/include/Wrappers.php');
+
 /**
  * Class GPUStat
  * @package gpustat\lib
  */
 class Main
 {
-    const SETTINGS_FILE_PATH = '/boot/config/plugins/gpustat/gpustat.cfg';
+    const PLUGIN_NAME = 'gpustat';
     const COMMAND_EXISTS_CHECKER = 'which';
     const ES = ' ';
 
@@ -49,9 +51,7 @@ class Main
             'TEMPFORMAT'    => 'C',
         ];
 
-        if (file_exists(self::SETTINGS_FILE_PATH)) {
-            $settings += parse_ini_file(self::SETTINGS_FILE_PATH);
-        }
+        $settings += parse_plugin_cfg(self::PLUGIN_NAME);
 
         return $settings;
     }
