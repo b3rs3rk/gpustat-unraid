@@ -15,8 +15,10 @@ class Error
     // Vendor Utility Errors
     const VENDOR_UTILITY_NOT_FOUND  = ['code' => 300, 'message' => 'Vendor utility not found.'];
     const VENDOR_DATA_NOT_RETURNED  = ['code' => 300, 'message' => 'Vendor command returned no data.'];
+    // Process Errors
+    const PROCESS_NOT_OPENED        = ['code' => 400, 'message' => 'Process was not spawned.'];
     // JSON Response Errors
-    const BAD_ARRAY_DATA            = ['code' => 400, 'message' => 'Bad array data received.'];
+    const BAD_ARRAY_DATA            = ['code' => 500, 'message' => 'Bad array data received.'];
 
     /**
      * Error constructor.

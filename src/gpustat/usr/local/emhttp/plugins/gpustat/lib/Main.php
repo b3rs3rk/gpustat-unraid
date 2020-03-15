@@ -27,6 +27,11 @@ class Main
      * @var array
      */
     protected $inventory;
+
+    /**
+     * @var array
+     */
+    protected $pageData;
     
     /**
      * GPUStat constructor.
@@ -37,8 +42,54 @@ class Main
     {
         $this->settings = $settings;
         $this->checkCommand($settings['cmd']);
+
+        $this->pageData = [
+            'clock'     => 'N/A',
+            'memclock'  => 'N/A',
+            'util'      => 'N/A',
+            'memutil'   => 'N/A',
+            'encutil'   => 'N/A',
+            'decutil'   => 'N/A',
+            'temp'      => 'N/A',
+            'tempmax'   => 'N/A',
+            'fan'       => 'N/A',
+            'perfstate' => 'N/A',
+            'throttled' => 'N/A',
+            'thrtlrsn'  => '',
+            'power'     => 'N/A',
+            'powermax'  => 'N/A',
+            'sessions'  =>  0,
+        ];
     }
     
+    /**
+     * Runs a command, waits for output and closes it immediately once received
+     *
+     * @param string $command
+     * @param string $argument
+     */
+    protected function runLongCommand (string $command = '', string $argument = '')
+    {
+        $cmdDescriptor = [['pipe', 'w']];
+
+        if (!empty($command)) {
+            $process = proc_open($command . $argument, $cmdDescriptor, $pipes);
+            if (is_resource($process)) {
+                $iter = 0;
+                while (empty($this->stdout) && $iter <= 10) {
+                    usleep(100000);
+                    $this->stdout = stream_get_contents($pipes[0]);
+                    usleep(100000);
+                    $iter++;
+                }
+                fclose($pipes[0]);
+                proc_close($process);
+            } else {
+                new Error(Error::PROCESS_NOT_OPENED);
+            }
+        }
+    }
+
     /**
      * Retrieves plugin settings and returns them or defaults if no file
      *
@@ -100,5 +151,16 @@ class Main
         $fahrenheit = $temp*(9/5)+32;
         
         return round($fahrenheit, -1, PHP_ROUND_HALF_UP);
+    }
+
+    /**
+     * Rounds a float to a whole number
+     *
+     * @param float $number
+     * @return false|float
+     */
+    protected static function roundFloat(float $number)
+    {
+        return round($number, 0, PHP_ROUND_HALF_UP);
     }
 }

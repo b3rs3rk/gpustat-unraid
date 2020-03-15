@@ -65,24 +65,11 @@ class Nvidia extends Main
         if (!empty($data->gpu)) {
 
             $gpu = $data->gpu;
-            $retval = [
+            $retval = $this->pageData;
+    
+            $retval += [
                 'vendor'    => 'NVIDIA',
                 'name'      => 'Graphics Card',
-                'clock'     => 'N/A',
-                'memclock'  => 'N/A',
-                'util'      => 'N/A',
-                'memutil'   => 'N/A',
-                'encutil'   => 'N/A',
-                'decutil'   => 'N/A',
-                'temp'      => 'N/A',
-                'tempmax'   => 'N/A',
-                'fan'       => 'N/A',
-                'perfstate' => 'N/A',
-                'throttled' => 'N/A',
-                'thrtlrsn'  => '',
-                'power'     => 'N/A',
-                'powermax'  => 'N/A',
-                'sessions'  =>  0,
             ];
 
             if (isset($gpu->product_name)) {
@@ -152,7 +139,6 @@ class Nvidia extends Main
                 $retval['sessions'] = (int) count($gpu->processes->process_info);
             }
         }
-
         $this->echoJson($retval);
     }
 }

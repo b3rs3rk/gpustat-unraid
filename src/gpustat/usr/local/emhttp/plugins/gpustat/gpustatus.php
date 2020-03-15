@@ -4,10 +4,12 @@ define('ES', ' ');
 
 include 'lib/Main.php';
 include 'lib/Nvidia.php';
+include 'lib/Intel.php';
 include 'lib/Error.php';
 
 use \gpustat\lib\Main;
 use \gpustat\lib\Nvidia;
+use \gpustat\lib\Intel;
 use \gpustat\lib\Error;
 
 if (!isset($gpustat_cfg)) {
@@ -23,6 +25,9 @@ switch ($gpustat_cfg['VENDOR']) {
         } else {
             (new Nvidia($gpustat_cfg))->getStatistics();
         }
+        break;
+    case 'intel':
+        (new Intel($gpustat_cfg))->getStatistics();
         break;
     default:
         new Error(Error::CONFIG_SETTINGS_NOT_VALID);
