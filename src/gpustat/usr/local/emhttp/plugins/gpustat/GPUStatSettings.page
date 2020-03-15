@@ -4,9 +4,6 @@ Title="GPU Statistics"
 ---
 <?php
     $gpustat_cfg        = parse_plugin_cfg("gpustat", true);
-    $gpustat_vendor     = isset($gpustat_cfg['VENDOR']) ? $gpustat_cfg['VENDOR'] : "nvidia";
-    $gpustat_tempformat = isset($gpustat_cfg['TEMPFORMAT']) ? $gpustat_cfg['TEMPFORMAT'] : "C";
-    $gpustat_gpuid      = isset($gpustat_cfg['GPUID']) ? $gpustat_cfg['GPUID'] : "0";
     $gpustat_inventory  = true;
 
     include_once './plugins/gpustat/gpustatus.php';
@@ -18,7 +15,7 @@ Title="GPU Statistics"
 
 Vendor:
 : <select id="VENDOR" name="VENDOR" size="1">
-    <?=mk_option($gpustat_vendor, "nvidia", "NVIDIA");?>
+    <?=mk_option($gpustat_cfg['VENDOR'], "nvidia", "NVIDIA");?>
   </select>
 
 Unit ID for Dashboard:
@@ -27,7 +24,7 @@ Unit ID for Dashboard:
         if (isset($gpustat_data)) {
             foreach ($gpustat_data AS $gpu) {
                 $gpudesc = $gpu['id'] . ': ' . $gpu['model'] . ' - ' . $gpu['guid'];
-                printf(mk_option($gpustat_gpuid, $gpu['id'], $gpudesc));
+                printf(mk_option($gpustat_cfg['GPUID'], $gpu['id'], $gpudesc));
             }
         }
     ?>
@@ -35,8 +32,8 @@ Unit ID for Dashboard:
 
 Temperature Format:
 : <select id="TEMPFORMAT" name="TEMPFORMAT" size="1">
-    <?=mk_option($gpustat_tempformat, "C", "Celsius");?>
-    <?=mk_option($gpustat_tempformat, "F", "Fahrenheit");?>
+    <?=mk_option($gpustat_cfg['TEMPFORMAT'], "C", "Celsius");?>
+    <?=mk_option($gpustat_cfg['TEMPFORMAT'], "F", "Fahrenheit");?>
   </select>
 
   <input id="DEFAULT" class="stopped" type="submit" value="Default" onClick="resetDATA(this.form)">

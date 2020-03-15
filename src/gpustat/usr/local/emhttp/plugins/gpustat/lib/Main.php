@@ -39,21 +39,15 @@ class Main
         $this->settings = $settings;
         $this->checkCommand($settings['cmd']);
     }
-
+    
     /**
      * Retrieves plugin settings and returns them or defaults if no file
+     *
+     * @return mixed
      */
     public static function getSettings()
     {
-        $settings = [
-            'VENDOR'        => 'nvidia',
-            'GPUID'         => '0',
-            'TEMPFORMAT'    => 'C',
-        ];
-
-        $settings += parse_plugin_cfg(self::PLUGIN_NAME);
-
-        return $settings;
+        return parse_plugin_cfg(self::PLUGIN_NAME);
     }
 
     /**
