@@ -16,12 +16,12 @@ Title="GPU Statistics"
 <form markdown="1" method="POST" action="/update.php" target="progressFrame">
   <input type="hidden" name="#file" value="gpustat/gpustat.cfg" />
 
-GPU Vendor:
+Vendor:
 : <select id="VENDOR" name="VENDOR" size="1">
     <?=mk_option($gpustat_vendor, "nvidia", "NVIDIA");?>
   </select>
 
-GPU for Dashboard:
+Unit ID for Dashboard:
 : <select id="GPUID" name="GPUID" size="1">
     <?php
         if (isset($gpustat_data)) {
