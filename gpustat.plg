@@ -33,7 +33,7 @@
    <![CDATA[
     VENDOR=nvidia
     GPUID=0
-    TEMPFORMAT=Celsius
+    TEMPFORMAT=C
    ]]>
   </INLINE>
  </FILE>
