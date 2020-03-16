@@ -9,6 +9,9 @@ namespace gpustat\lib;
 class Intel extends Main
 {
     const CMD_UTILITY = 'intel_gpu_top';
+    const INVENTORY_UTILITY = 'lspci';
+    const INVENTORY_PARAM = '| grep VGA';
+    const INVENTORY_REGEX = '(?P<id>\d+\:\d+\.\d+)\s+VGA.+\:\s+(?P<vendor>Intel\s+Corporation)\s+(?P<product>.*)\s+\(rev/i';
     const STATISTICS_PARAM = '-J -s 5000';
 
     /**
@@ -19,7 +22,24 @@ class Intel extends Main
     {
         parent::__construct($settings);
     }
-    
+
+    /**
+     * Retrieves Intel inventory using lshw and parses into \SimplexXMLElement
+     *
+     * @return array
+     */
+    public function getInventory()
+    {
+        $this->runCommand(self::INVENTORY_UTILITY, self::INVENTORY_PARAM);
+        if (!empty($this->stdout) && strlen($this->stdout) > 0) {
+            $this->parseInventory(self::INVENTORY_REGEX);
+        } else {
+            new Error(Error::VENDOR_DATA_NOT_RETURNED);
+        }
+
+        return $this->inventory;
+    }
+
     /**
      * Retrieves NVIDIA card statistics
      */
@@ -37,8 +57,8 @@ class Intel extends Main
     /**
      * Loads stdout into SimpleXMLObject then retrieves and returns specific definitions in an array
      */
-    private function parseStatistics () {
-
+    private function parseStatistics()
+    {
         $gpu = json_encode($this->stdout);
         $retval = array();
 
@@ -62,6 +82,8 @@ class Intel extends Main
             if (isset($gpu['frequency']['requested'])) {
                 $retval['clock'] = (string) str_replace(' MHz', '', $gpu->clocks->graphics_clock);
             }
+        } else {
+            new Error(Error::VENDOR_DATA_BAD_PARSE);
         }
         $this->echoJson($retval);
     }

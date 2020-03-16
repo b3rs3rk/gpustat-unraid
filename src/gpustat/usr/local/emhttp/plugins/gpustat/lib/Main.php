@@ -43,6 +43,8 @@ class Main
         $this->settings = $settings;
         $this->checkCommand($settings['cmd']);
 
+        $this->stdout = $this->inventory = '';
+
         $this->pageData = [
             'clock'     => 'N/A',
             'memclock'  => 'N/A',
@@ -63,22 +65,37 @@ class Main
     }
     
     /**
+     * Runs a command in shell and stores STDOUT in class variable
+     *
+     * @param string $command
+     * @param string $argument
+     */
+    protected function runCommand(string $command = '', string $argument = '')
+    {
+        $this->stdout = shell_exec(escapeshellarg($command . ES . $argument));
+    }
+
+    /**
      * Runs a command, waits for output and closes it immediately once received
      *
      * @param string $command
      * @param string $argument
      */
-    protected function runLongCommand (string $command = '', string $argument = '')
+    protected function runLongCommand(string $command = '', string $argument = '')
     {
         $cmdDescriptor = [['pipe', 'w']];
 
         if (!empty($command)) {
-            $process = proc_open($command . $argument, $cmdDescriptor, $pipes);
+            $process = proc_open(escapeshellarg($command . ES . $argument), $cmdDescriptor, $pipes);
             if (is_resource($process)) {
                 $iter = 0;
+                // Programs that don't self terminate need to be closed
                 while (empty($this->stdout) && $iter <= 10) {
-                    usleep(100000);
+                    usleep(10000);
                     $this->stdout = stream_get_contents($pipes[0]);
+                    if (!empty($this->stdout)) {
+                        break;
+                    }
                     usleep(100000);
                     $iter++;
                 }
@@ -99,13 +116,24 @@ class Main
     {
         return parse_plugin_cfg(self::PLUGIN_NAME);
     }
+    
+    /**
+     * Triggers regex match all against class variable stdout and places matches in class variable inventory
+     *
+     * @param string $regex
+     */
+    protected function parseInventory(string $regex = '')
+    {
+        preg_match_all($regex, $this->stdout, $this->inventory, PREG_SET_ORDER);
+    }
 
     /**
      * Echoes JSON to web renderer -- used to populate page data
      *
      * @param array $data
      */
-    protected function echoJson (array $data = []) {
+    protected function echoJson(array $data = [])
+    {
         // Page file JavaScript expects a JSON encoded string
         if (is_array($data)) {
             $json = json_encode($data);
@@ -122,9 +150,11 @@ class Main
      *
      * @param string $utility
      */
-    protected function checkCommand(string $utility = '') {
+    protected function checkCommand(string $utility = '')
+    {
         // Check if vendor utility is available
-        if (is_null(shell_exec(self::COMMAND_EXISTS_CHECKER . ES . $utility))) {
+        $this->runCommand(self::COMMAND_EXISTS_CHECKER, $utility);
+        if (is_null($this->stdout)) {
             new Error(Error::VENDOR_UTILITY_NOT_FOUND);
         }
     }
@@ -135,7 +165,8 @@ class Main
      * @param string $text
      * @return string|string[]
      */
-    protected static function stripSpaces(string $text = '') {
+    protected static function stripSpaces(string $text = '')
+    {
         
         return str_replace(' ', '', $text);
     }

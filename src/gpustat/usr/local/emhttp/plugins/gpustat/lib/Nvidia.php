@@ -2,6 +2,8 @@
 
 namespace gpustat\lib;
 
+use SimpleXMLElement;
+
 /**
  * Class Nvidia
  * @package gpustat\lib
@@ -28,11 +30,11 @@ class Nvidia extends Main
      *
      * @return array
      */
-    public function getInventory ()
+    public function getInventory()
     {
         $this->stdout = shell_exec(self::CMD_UTILITY . ES . self::INVENTORY_PARAM);
         if (!empty($this->stdout) && strlen($this->stdout) > 0) {
-            preg_match_all(self::INVENTORY_REGEX, $this->stdout, $this->inventory, PREG_SET_ORDER);
+            $this->parseInventory(self::INVENTORY_REGEX);
         } else {
             new Error(Error::VENDOR_DATA_NOT_RETURNED);
         }
@@ -57,12 +59,13 @@ class Nvidia extends Main
     /**
      * Loads stdout into SimpleXMLObject then retrieves and returns specific definitions in an array
      */
-    private function parseStatistics () {
+    private function parseStatistics()
+    {
 
         $data = @simplexml_load_string($this->stdout);
         $retval = array();
 
-        if (!empty($data->gpu)) {
+        if ($data instanceof SimpleXMLElement && !empty($data->gpu)) {
 
             $gpu = $data->gpu;
             $retval = $this->pageData;
@@ -138,6 +141,8 @@ class Nvidia extends Main
             if (isset($gpu->processes) && isset($gpu->processes->process_info)) {
                 $retval['sessions'] = (int) count($gpu->processes->process_info);
             }
+        } else {
+            new Error(Error::VENDOR_DATA_BAD_PARSE);
         }
         $this->echoJson($retval);
     }
