@@ -60,7 +60,7 @@ class Intel extends Main
      */
     private function parseStatistics()
     {
-        $gpu = json_decode($this->stdout);
+        $gpu = json_decode($this->stdout, true);
         $retval = array();
 
         if (!empty($gpu[0])) {
