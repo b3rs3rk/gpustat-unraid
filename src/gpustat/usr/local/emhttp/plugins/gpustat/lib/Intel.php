@@ -11,7 +11,7 @@ class Intel extends Main
     const CMD_UTILITY = 'intel_gpu_top';
     const INVENTORY_UTILITY = 'lspci';
     const INVENTORY_PARAM = '| grep VGA';
-    const INVENTORY_REGEX = '(?P<id>\d+\:\d+\.\d+)\s+VGA.+\:\s+(?P<vendor>Intel\s+Corporation)\s+(?P<product>.*)\s+\(rev/i';
+    const INVENTORY_REGEX = '(?P<guid>\d+\:\d+\.\d+)\s+VGA.+\:\s+Intel\s+Corporation\s+(?P<model>.*)\s+\(rev/i';
     const STATISTICS_PARAM = '-J -s 5000';
 
     /**
@@ -36,7 +36,8 @@ class Intel extends Main
         } else {
             new Error(Error::VENDOR_DATA_NOT_RETURNED);
         }
-
+        // Only one iGPU per system, so mark it ID 0
+        $this->inventory += ["id" => '0'];
         return $this->inventory;
     }
 

@@ -19,7 +19,8 @@ if (!isset($gpustat_cfg)) {
 // $gpu_inventory should be set if called from settings page code
 if (isset($gpustat_inventory) && $gpustat_inventory) {
     // Settings page looks for $gpu_data specifically
-    $gpustat_data = (new Nvidia($gpustat_cfg))->getInventory() + (new Intel($gpustat_cfg))->getInventory();
+    $gpustat_data = (new Nvidia($gpustat_cfg))->getInventory();
+    $gpustat_data += (new Intel($gpustat_cfg))->getInventory();
 
 } else {
 
