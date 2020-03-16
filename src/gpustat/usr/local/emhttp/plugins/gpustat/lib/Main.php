@@ -32,6 +32,11 @@ class Main
      * @var array
      */
     protected $pageData;
+
+    /**
+     * @var bool
+     */
+    protected $cmdexists;
     
     /**
      * GPUStat constructor.
@@ -41,7 +46,7 @@ class Main
     public function __construct(array $settings = [])
     {
         $this->settings = $settings;
-        $this->checkCommand($settings['cmd']);
+        $this->cmdexists = $this->checkCommand($settings['cmd']);
 
         $this->stdout = $this->inventory = '';
 
@@ -144,19 +149,27 @@ class Main
             new Error(Error::BAD_ARRAY_DATA);
         }
     }
-
+    
     /**
      * Checks if vendor utility exists in the system and dies if it does not
      *
      * @param string $utility
+     * @return bool
      */
     protected function checkCommand(string $utility = '')
     {
+        $exists = false;
+
         // Check if vendor utility is available
         $this->runCommand(self::COMMAND_EXISTS_CHECKER, $utility);
-        if (is_null($this->stdout)) {
-            new Error(Error::VENDOR_UTILITY_NOT_FOUND);
+        if (!is_null($this->stdout) && !empty($this->stdout)) {
+            $exists = true;
+        } else {
+            // Send the error but don't die because we need to continue for inventory
+            new Error(Error::VENDOR_UTILITY_NOT_FOUND, '', false);
         }
+
+        return $exists;
     }
 
     /**

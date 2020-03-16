@@ -39,7 +39,13 @@ class Nvidia extends Main
             new Error(Error::VENDOR_DATA_NOT_RETURNED);
         }
 
-        return $this->inventory;
+        if ($this->cmdexists) {
+            $result = $this->inventory;
+        } else {
+            $result = [];
+        }
+
+        return $result;
     }
 
     /**

@@ -20,15 +20,22 @@ class Error
     const PROCESS_NOT_OPENED        = ['code' => 400, 'message' => 'Process was not spawned.'];
     // JSON Response Errors
     const BAD_ARRAY_DATA            = ['code' => 500, 'message' => 'Bad array data received.'];
-
+    
     /**
      * Error constructor.
      *
      * @param array $error
      * @param string $extra_info
+     * @param bool $die
      */
-    public function __construct(array $error = self::UNKNOWN, string $extra_info = '')
+    public function __construct(array $error = self::UNKNOWN, string $extra_info = '', bool $die = true)
     {
-        die('Error' . ES . $error['code'] . ':' . ES . $error['message'] . $extra_info);
+        $error = 'Error' . ES . $error['code'] . ':' . ES . $error['message'] . $extra_info;
+
+        if ($die) {
+            die($error);
+        } else {
+            echo $error;
+        }
     }
 }

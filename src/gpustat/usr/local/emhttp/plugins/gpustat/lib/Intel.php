@@ -36,9 +36,16 @@ class Intel extends Main
         } else {
             new Error(Error::VENDOR_DATA_NOT_RETURNED);
         }
-        // Only one iGPU per system, so mark it ID 0
-        $this->inventory += ["id" => '0'];
-        return $this->inventory;
+    
+        if ($this->cmdexists) {
+            // Only one iGPU per system, so mark it ID 0
+            $this->inventory += ["id" => '0'];
+            $result = $this->inventory;
+        } else {
+            $result = [];
+        }
+
+        return $result;
     }
 
     /**
