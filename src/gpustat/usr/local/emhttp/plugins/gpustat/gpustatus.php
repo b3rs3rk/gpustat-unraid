@@ -32,6 +32,6 @@ if (isset($gpustat_inventory) && $gpustat_inventory) {
             (new Intel($gpustat_cfg))->getStatistics();
             break;
         default:
-            new Error(Error::CONFIG_SETTINGS_NOT_VALID);
+            new Error(Error::CONFIG_SETTINGS_NOT_VALID, '', false);
     }
 }

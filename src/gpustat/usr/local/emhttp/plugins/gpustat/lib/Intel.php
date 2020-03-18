@@ -20,45 +20,50 @@ class Intel extends Main
      */
     public function __construct(array $settings = [])
     {
+        $settings += ['cmd' => self::CMD_UTILITY];
         parent::__construct($settings);
     }
 
     /**
-     * Retrieves Intel inventory using lshw and parses into \SimplexXMLElement
+     * Retrieves Intel inventory using lspci and returns an array
      *
      * @return array
      */
     public function getInventory()
     {
-        $this->runCommand(self::INVENTORY_UTILITY, self::INVENTORY_PARAM);
-        if (!empty($this->stdout) && strlen($this->stdout) > 0) {
-            $this->parseInventory(self::INVENTORY_REGEX);
-        } else {
-            new Error(Error::VENDOR_DATA_NOT_RETURNED);
-        }
-    
+        $result = [];
+
         if ($this->cmdexists) {
-            // Only one iGPU per system, so mark it ID 0
-            $this->inventory += ["id" => '0'];
-            $result = $this->inventory;
-        } else {
-            $result = [];
+            $this->checkCommand(self::INVENTORY_UTILITY);
+            if ($this->cmdexists) {
+                $this->runCommand(self::INVENTORY_UTILITY, self::INVENTORY_PARAM);
+                if (!empty($this->stdout) && strlen($this->stdout) > 0) {
+                    $this->parseInventory(self::INVENTORY_REGEX);
+                }
+                if (isset($this->inventory[0])) {
+                    // Only one iGPU per system, so mark it ID 99
+                    $this->inventory[0]['id'] = '99';
+                    $result = $this->inventory;
+                }
+            }
         }
 
         return $result;
     }
 
     /**
-     * Retrieves NVIDIA card statistics
+     * Retrieves Intel iGPU statistics
      */
     public function getStatistics()
     {
-        //Command invokes intel_gpu_top in JSON output mode with an update rate of 5 seconds
-        $this->runLongCommand(self::CMD_UTILITY, self::STATISTICS_PARAM);
-        if (!empty($this->stdout) && strlen($this->stdout) > 0) {
-            $this->parseStatistics();
-        } else {
-            new Error(Error::VENDOR_DATA_NOT_RETURNED);
+        if ($this->cmdexists) {
+            //Command invokes intel_gpu_top in JSON output mode with an update rate of 5 seconds
+            $this->runLongCommand(self::CMD_UTILITY, self::STATISTICS_PARAM);
+            if (!empty($this->stdout) && strlen($this->stdout) > 0) {
+                $this->parseStatistics();
+            } else {
+                new Error(Error::VENDOR_DATA_NOT_RETURNED);
+            }
         }
     }
 

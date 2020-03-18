@@ -46,9 +46,10 @@ class Main
     public function __construct(array $settings = [])
     {
         $this->settings = $settings;
-        $this->cmdexists = $this->checkCommand($settings['cmd']);
+        $this->checkCommand($this->settings['cmd']);
 
-        $this->stdout = $this->inventory = '';
+        $this->stdout = '';
+        $this->inventory = [];
 
         $this->pageData = [
             'clock'     => 'N/A',
@@ -70,12 +71,31 @@ class Main
     }
     
     /**
+     * Checks if vendor utility exists in the system and dies if it does not
+     *
+     * @param string $utility
+     */
+    protected function checkCommand(string $utility)
+    {
+        $this->cmdexists = false;
+        // Check if vendor utility is available
+        $this->runCommand(self::COMMAND_EXISTS_CHECKER, $utility);
+        // When checking for existence of the command, we want the return to be NULL
+        if (is_null($this->stdout)) {
+            $this->cmdexists = true;
+        } else {
+            // Send the error but don't die because we need to continue for inventory
+            new Error(Error::VENDOR_UTILITY_NOT_FOUND, '', false);
+        }
+    }
+
+    /**
      * Runs a command in shell and stores STDOUT in class variable
      *
      * @param string $command
      * @param string $argument
      */
-    protected function runCommand(string $command = '', string $argument = '')
+    protected function runCommand(string $command, string $argument = '')
     {
         $this->stdout = shell_exec(escapeshellarg($command . ES . $argument));
     }
@@ -148,28 +168,6 @@ class Main
         } else {
             new Error(Error::BAD_ARRAY_DATA);
         }
-    }
-    
-    /**
-     * Checks if vendor utility exists in the system and dies if it does not
-     *
-     * @param string $utility
-     * @return bool
-     */
-    protected function checkCommand(string $utility = '')
-    {
-        $exists = false;
-
-        // Check if vendor utility is available
-        $this->runCommand(self::COMMAND_EXISTS_CHECKER, $utility);
-        if (!is_null($this->stdout) && !empty($this->stdout)) {
-            $exists = true;
-        } else {
-            // Send the error but don't die because we need to continue for inventory
-            new Error(Error::VENDOR_UTILITY_NOT_FOUND, '', false);
-        }
-
-        return $exists;
     }
 
     /**

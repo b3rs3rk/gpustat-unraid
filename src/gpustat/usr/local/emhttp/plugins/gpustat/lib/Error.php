@@ -30,12 +30,12 @@ class Error
      */
     public function __construct(array $error = self::UNKNOWN, string $extra_info = '', bool $die = true)
     {
-        $error = 'Error' . ES . $error['code'] . ':' . ES . $error['message'] . $extra_info;
+        $error = 'Error' . ES . $error['code'] . ':' . ES . $error['message'] . $extra_info . "\n\n";
 
         if ($die) {
             die($error);
         } else {
-            echo $error;
+            echo $error . "\n\n";
         }
     }
 }
