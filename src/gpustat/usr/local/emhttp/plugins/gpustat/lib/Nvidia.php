@@ -90,17 +90,13 @@ class Nvidia extends Main
                 $retval['name'] = (string) $gpu->product_name;
             }
             if (isset($gpu->utilization)) {
-                if (isset($gpu->utilization->gpu_util)) {
-                    $retval['util'] = (string) $this->stripSpaces($gpu->utilization->gpu_util);
-                }
-                if (isset($gpu->utilization->memory_util)) {
-                    $retval['memutil'] = (string) $this->stripSpaces($gpu->utilization->memory_util);
-                }
-                if (isset($gpu->utilization->encoder_util)) {
-                    $retval['encutil'] = (string) $this->stripSpaces($gpu->utilization->encoder_util);
-                }
-                if (isset($gpu->utilization->decoder_util)) {
-                    $retval['decutil'] = (string) $this->stripSpaces($gpu->utilization->decoder_util);
+                $utils = [
+                    'gpu_util'=>'util','memory_util'=>'memutil','encoder_util'=>'encutil','decoder_util'=>'decutil',
+                ];
+                foreach ($utils AS $key => $value) {
+                    if (isset($gpu->utilization->$key)) {
+                        $retval[$value] = (string) $this->stripSpaces($gpu->utilization->$key);
+                    }
                 }
             }
             if (isset($gpu->temperature)) {
