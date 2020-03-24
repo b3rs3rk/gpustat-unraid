@@ -4,6 +4,7 @@ Icon="gpustat.png"
 <style type="text/css">
 <?php
     $gpustat_cfg = parse_plugin_cfg('gpustat', true);
+
 ?>
     #dash_gpustat_settings i, #dash_gpustat_toggle {margin-top:0;}
     span.gpu{width:150px;display:inline-block}
