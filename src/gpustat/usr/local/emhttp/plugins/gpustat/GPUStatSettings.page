@@ -37,6 +37,47 @@ Temperature Format:
     <?=mk_option($gpustat_cfg['TEMPFORMAT'], "F", "Fahrenheit");?>
   </select>
 
+<br>
+    <b>Enabled Pollers</b>
+<br><br><br>
+
+<table style="width:80%">
+    <tr>
+        <td style="width:10%"></td>
+        <td>
+            <input type="checkbox" id="DISPCLOCKS" name="DISPCLOCKS" value="1" <?php if ($gpustat_cfg['DISPCLOCKS']) { echo "checked"; } ?> />GPU/Memory Clocks
+        </td>
+        <td>
+            <input type="checkbox" id="DISPENCDEC" name="DISPENCDEC" value="1" <?php if ($gpustat_cfg['DISPENCDEC']) { echo "checked"; } ?> />Enc/Dec Util
+        </td>
+        <td>
+            <input type="checkbox" id="DISPTEMP" name="DISPTEMP" value="1" <?php if ($gpustat_cfg['DISPTEMP']) { echo "checked"; } ?> />Temperature
+        </td>
+        <td>
+            <input type="checkbox" id ="DISPFAN" name="DISPFAN" value="1" <?php if ($gpustat_cfg['DISPFAN']) { echo "checked"; } ?> />Fan Usage
+        </td>
+        <td style="width:10%"></td>
+    </tr>
+    <tr>
+        <td style="width:10%"></td>
+        <td>
+            <input type="checkbox" id="DISPPWRDRAW" name="DISPPWRDRAW" value="1" <?php if ($gpustat_cfg['DISPPWRDRAW']) { echo "checked"; } ?> />Power Draw
+        </td>
+        <td>
+            <input type="checkbox" id="DISPPWRSTATE" name="DISPPWRSTATE" value="1" <?php if ($gpustat_cfg['DISPPWRSTATE']) { echo "checked"; } ?> />Power State
+        </td>
+        <td>
+            <input type="checkbox" id="DISPTHROTTLE" name="DISPTHROTTLE" value="1" <?php if ($gpustat_cfg['DISPTHROTTLE']) { echo "checked"; } ?> />Throttle Status
+        </td>
+        <td>
+            <input type="checkbox" id="DISPSESSIONS" name="DISPSESSIONS" value="1" <?php if ($gpustat_cfg['DISPSESSIONS']) { echo "checked"; } ?> />Active Sessions
+        </td>
+        <td style="width:10%"></td>
+    </tr>
+</table>
+
+<br><br>
+
   <input id="DEFAULT" class="stopped" type="submit" value="Default" onClick="resetDATA(this.form)">
 : <input id="btnApply" type="submit" value="Apply"><input type="button" value="Done" onClick="done()">
 </form>
@@ -46,5 +87,13 @@ function resetDATA(form) {
     form.VENDOR.value = "nvidia";
     form.TEMPFORMAT.value = "C";
     form.GPUID.value = "0";
+    form.DISPCLOCKS.value = "1";
+    form.DISPENCDEC.value = "1";
+    form.DISPTEMP.value = "1";
+    form.DISPFAN.value = "1";
+    form.DISPPWRDRAW.value = "1";
+    form.DISPPWRSTATE.value = "1";
+    form.DISPTHROTTLE.value = "1";
+    form.DISPSESSIONS.value = "1";
 }
 </script>
