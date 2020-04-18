@@ -27,14 +27,32 @@ Icon="gpustat.png"
         <tr class='dash_gpustat_toggle gpu-enviro'>
             <td></td>
             <td colspan='2'>
-                <span class='gpu'>Clocks GPU/MEM:</span><span class='gpu-clock'></span>/<span class='gpu-memclock'></span><br>
-                <span class='gpu'>Enc/Dec Util:</span><span class='gpu-encutil'></span>/<span class='gpu-decutil'></span><br>
-                <span class='gpu'>Temperature:</span><span class='gpu-temp'></span>/<span class='gpu-tempmax'></span><br>
-                <span class='gpu'>Fan Usage:</span><span class='gpu-fan'></span><br>
-                <span class='gpu'>Power Draw:</span><span class='gpu-power'></span>/<span class='gpu-powermax'></span><br>
-                <span class='gpu'>Power State:</span><span class='gpu-perfstate'></span><br>
-                <span class='gpu'>Throttled:</span><span class='gpu-throttled'></span><span class='gpu-thrtlrsn'></span><br>
-                <span class='gpu'>Sessions:</span><span class='gpu-sessions'></span><br>
+                <?php
+                    if ($gpustat_cfg['DISPCLOCK']) {
+                        printf("<span class='gpu'>Clocks GPU/MEM:</span><span class='gpu-clock'></span>/<span class='gpu-memclock'></span><br>");
+                    }
+                    if ($gpustat_cfg['DISPENCDEC']) {
+                        printf("<span class='gpu'>Enc/Dec Util:</span><span class='gpu-encutil'></span>/<span class='gpu-decutil'></span><br>");
+                    }
+                    if ($gpustat_cfg['DISPTEMP']) {
+                        printf("<span class='gpu'>Temperature:</span><span class='gpu-temp'></span>/<span class='gpu-tempmax'></span><br>");
+                    }
+                    if ($gpustat_cfg['DISPFAN']) {
+                        printf("<span class='gpu'>Fan Usage:</span><span class='gpu-fan'></span><br>");
+                    }
+                    if ($gpustat_cfg['DISPPWRDRAW']) {
+                        printf("<span class='gpu'>Power Draw:</span><span class='gpu-power'></span>/<span class='gpu-powermax'></span><br>");
+                    }
+                    if ($gpustat_cfg['DISPPWRSTATE']) {
+                        printf("<span class='gpu'>Power State:</span><span class='gpu-perfstate'></span><br>");
+                    }
+                    if ($gpustat_cfg['DISPTHROTTLE']) {
+                        printf("<span class='gpu'>Throttled:</span><span class='gpu-throttled'></span><span class='gpu-thrtlrsn'></span><br>");
+                    }
+                    if ($gpustat_cfg['DISPSESSIONS']) {
+                        printf("<span class='gpu'>Sessions:</span><span class='gpu-sessions'></span><br>");
+                    }
+                ?>
             </td>
             <td></td>
         </tr>
