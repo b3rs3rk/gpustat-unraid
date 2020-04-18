@@ -2,7 +2,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "gpustat">
 <!ENTITY author    "b3rs3rk">
-<!ENTITY version   "2020.03.15">
+<!ENTITY version   "2020.04.18">
 <!ENTITY launch    "Settings/GPUStatSettings">
 <!ENTITY gitURL    "https://raw.githubusercontent.com/b3rs3rk/&name;-unraid/master">
 <!ENTITY pluginURL "&gitURL;/&name;.plg">
@@ -39,6 +39,10 @@
  </FILE>
 
 <CHANGES>
+###2020-04-18
+- [BETA] Allow User selectable metrics to be displayed in widget
+ * Go to settings and select the desired metrics after update
+
 ###2020-03-14
 - [BETA] Implement Multi-GPU Selectability
  * Select desired GPU for dashboard display from retrieved inventory
