@@ -28,7 +28,7 @@ Icon="gpustat.png"
             <td></td>
             <td colspan='2'>
                 <?php
-                    if ($gpustat_cfg['DISPCLOCK']) {
+                    if ($gpustat_cfg['DISPCLOCKS']) {
                         printf("<span class='gpu'>Clocks GPU/MEM:</span><span class='gpu-clock'></span>/<span class='gpu-memclock'></span><br>");
                     }
                     if ($gpustat_cfg['DISPENCDEC']) {
