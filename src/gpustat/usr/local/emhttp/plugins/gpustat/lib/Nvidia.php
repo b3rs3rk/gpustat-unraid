@@ -98,6 +98,15 @@ class Nvidia extends Main
                         $retval[$value] = (string) $this->stripSpaces($gpu->utilization->$key);
                     }
                 }
+                // If card doesn't support utilization property, fall back to computation for memory
+                if ($retval['memutil'] == "N/A" && isset($gpu->fb_memory_usage->total) && isset($gpu->fb_memory_usage->used)) {
+                    $memTotal = $this->stripText(' MiB', $gpu->fb_memory_usage->total);
+                    $memUsed = $this->stripText(' MiB', $gpu->fb_memory_usage->used);
+                    if ($memTotal !== "N/A" && $memUsed !== "N/A") {
+                        $retval['memutil'] = $this->roundFloat(((int) $memUsed / (int) $memTotal) * 100,-1);
+                    }
+                    unset($memTotal, $memUsed);
+                }
             }
             if (isset($gpu->temperature)) {
                 if (isset($gpu->temperature->gpu_temp)) {
@@ -108,7 +117,7 @@ class Nvidia extends Main
                 }
                 if ($this->settings['TEMPFORMAT'] == 'F') {
                     foreach (['temp', 'tempmax'] AS $key) {
-                        $retval[$key] = $this->convertCelsius((int) str_replace('C', '', $retval[$key])) . 'F';
+                        $retval[$key] = $this->convertCelsius((int) $this->stripText('C', $retval[$key])) . 'F';
                     }
                 }
             }
@@ -123,7 +132,7 @@ class Nvidia extends Main
                 foreach ($gpu->clocks_throttle_reasons->children() AS $reason => $throttle) {
                     if ($throttle == 'Active') {
                         $retval['throttled'] = 'Yes';
-                        $retval['thrtlrsn'] = ' (' . str_replace('clocks_throttle_reason_', '', $reason) . ')';
+                        $retval['thrtlrsn'] = ' (' . $this->stripText('clocks_throttle_reason_', $reason) . ')';
                         break;
                     }
                 }
@@ -133,15 +142,19 @@ class Nvidia extends Main
                     $retval['power'] = (string) $this->stripSpaces($gpu->power_readings->power_draw);
                 }
                 if (isset($gpu->power_readings->power_limit)) {
-                    $retval['powermax'] = (string) str_replace('.00 ', '', $gpu->power_readings->power_limit);
+                    $retval['powermax'] = (string) $this->stripText('.00 ', $gpu->power_readings->power_limit);
                 }
             }
             if (isset($gpu->clocks)) {
-                if (isset($gpu->clocks->graphics_clock)) {
-                    $retval['clock'] = (string) str_replace(' MHz', '', $gpu->clocks->graphics_clock);
+                if (isset($gpu->clocks->graphics_clock) && $gpu->clocks->graphics_clock !== "N/A") {
+                    $retval['clock'] = (string) $this->stripText(' MHz', $gpu->clocks->graphics_clock);
+                } elseif (isset($gpu->applications_clocks->graphics_clock)) {
+                    $retval['clock'] = (string) $this->stripText(' MHz', $gpu->applications_clocks->graphics_clock);
                 }
-                if (isset($gpu->clocks->mem_clock)) {
+                if (isset($gpu->clocks->mem_clock) && $gpu->clocks->mem_clock !== "N/A") {
                     $retval['memclock'] = (string) $gpu->clocks->mem_clock;
+                } elseif (isset($gpu->applications_clocks->mem_clock)) {
+                    $retval['clock'] = (string) $gpu->applications_clocks->mem_clock;
                 }
             }
             // For some reason, encoder_sessions->session_count is not reliable on my install, better to count processes

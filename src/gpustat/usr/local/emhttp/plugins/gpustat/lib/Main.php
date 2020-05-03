@@ -194,15 +194,28 @@ class Main
         
         return round($fahrenheit, -1, PHP_ROUND_HALF_UP);
     }
-
+    
     /**
      * Rounds a float to a whole number
      *
      * @param float $number
+     * @param int $precision
      * @return false|float
      */
-    protected static function roundFloat(float $number)
+    protected static function roundFloat(float $number, int $precision = 0)
     {
-        return round($number, 0, PHP_ROUND_HALF_UP);
+        return round($number, $precision, PHP_ROUND_HALF_UP);
+    }
+    
+    /**
+     * Replaces a string within a string with an empty string
+     *
+     * @param string $strip
+     * @param string $string
+     * @return string|string[]
+     */
+    protected static function stripText(string $strip, string $string)
+    {
+        return str_replace($strip, '', $string);
     }
 }
