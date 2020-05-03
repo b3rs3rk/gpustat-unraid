@@ -80,7 +80,7 @@ class Nvidia extends Main
 
             $gpu = $data->gpu;
             $retval = $this->pageData;
-    
+
             $retval += [
                 'vendor'    => 'NVIDIA',
                 'name'      => 'Graphics Card',
@@ -98,12 +98,12 @@ class Nvidia extends Main
                         $retval[$value] = (string) $this->stripSpaces($gpu->utilization->$key);
                     }
                 }
-                // If card doesn't support utilization property, fall back to computation for memory
-                if ($retval['memutil'] == "N/A" && isset($gpu->fb_memory_usage->total) && isset($gpu->fb_memory_usage->used)) {
+                // If card doesn't support utilization property, fall back to computation for memory usage
+                if ($retval['memutil'] == "N/A" && isset($gpu->fb_memory_usage->total, $gpu->fb_memory_usage->used)) {
                     $memTotal = $this->stripText(' MiB', $gpu->fb_memory_usage->total);
                     $memUsed = $this->stripText(' MiB', $gpu->fb_memory_usage->used);
-                    if ($memTotal !== "N/A" && $memUsed !== "N/A") {
-                        $retval['memutil'] = $this->roundFloat(((int) $memUsed / (int) $memTotal) * 100,-1);
+                    if ($memUsed !== "N/A" && $memTotal !== "N/A" && $memUsed <= $memTotal) {
+                        $retval['memutil'] = $this->roundFloat(((int) $memUsed / (int) $memTotal) * 100, -1) . '%';
                     }
                     unset($memTotal, $memUsed);
                 }

@@ -93,7 +93,7 @@ class Intel extends Main
                 $retval['power'] = (string) $this->roundFloat($gpu['power']['value']) . $gpu['power']['unit'];
             }
             if (isset($gpu['frequency']['requested'])) {
-                $retval['clock'] = (string) str_replace(' MHz', '', $gpu->clocks->graphics_clock);
+                $retval['clock'] = (string) $this->stripText(' MHz', $gpu->clocks->graphics_clock);
             }
         } else {
             new Error(Error::VENDOR_DATA_BAD_PARSE);

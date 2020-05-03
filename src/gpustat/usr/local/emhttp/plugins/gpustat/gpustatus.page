@@ -79,7 +79,8 @@ Icon="gpustat.png"
       if(data) {
         $.each(data, function (key, data) {
             $('.gpu-'+key).html(data);
-            $('#gpu-'+key).finish().animate({width:load},{step:function(){$('#'+key).css('overflow','visible').removeClass().addClass(color);}});
+            // Testing for animated CPU bars
+            //$('#gpu-'+key).finish().animate({width:load},{step:function(){$('#'+key).css('overflow','visible').removeClass().addClass(color);}});
         })
       }
     <?if ($update):?>
