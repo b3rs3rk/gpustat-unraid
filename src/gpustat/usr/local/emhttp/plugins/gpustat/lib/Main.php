@@ -5,7 +5,7 @@ namespace gpustat\lib;
 require_once('/usr/local/emhttp/plugins/dynamix/include/Wrappers.php');
 
 /**
- * Class GPUStat
+ * Class Main
  * @package gpustat\lib
  */
 class Main

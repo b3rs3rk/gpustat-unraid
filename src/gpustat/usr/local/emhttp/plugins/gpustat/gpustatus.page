@@ -5,7 +5,7 @@ Icon="gpustat.png"
 <?php
     $gpustat_cfg = parse_plugin_cfg('gpustat', true);
     $nv = false;
-    if ($gpustat_cfg['VENDOR']) == "nvidia") { $nv = true; }
+    if ($gpustat_cfg['VENDOR'] == "nvidia") { $nv = true; }
 ?>
     #dash_gpustat_settings i, #dash_gpustat_toggle {margin-top:0;}
     span.gpu{width:150px;display:inline-block}
