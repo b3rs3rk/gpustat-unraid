@@ -68,7 +68,7 @@ class Intel extends Main
     }
 
     /**
-     * Loads stdout into SimpleXMLObject then retrieves and returns specific definitions in an array
+     * Loads JSON into array then retrieves and returns specific definitions in an array
      */
     private function parseStatistics()
     {
