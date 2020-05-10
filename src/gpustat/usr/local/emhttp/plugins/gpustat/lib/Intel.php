@@ -89,6 +89,12 @@ class Intel extends Main
             if (isset($gpu['engines']['Video/0']['busy'])) {
                 $retval['encutil'] = (string) $this->roundFloat($gpu['engines']['Video/0']['busy']) . '%';
             }
+            if (isset($gpu['imc-bandwidth']['reads'])) {
+                $retval['rxutil'] = $this->roundFloat($gpu['imc-bandwidth']['reads']);
+            }
+            if (isset($gpu['imc-bandwidth']['writes'])) {
+                $retval['txutil'] = $this->roundFloat($gpu['imc-bandwidth']['writes']);
+            }
             if (isset($gpu['power']['value'])) {
                 $retval['power'] = (string) $this->roundFloat($gpu['power']['value']) . $gpu['power']['unit'];
             }

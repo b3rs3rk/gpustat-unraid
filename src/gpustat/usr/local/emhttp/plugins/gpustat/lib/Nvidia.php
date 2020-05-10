@@ -163,10 +163,10 @@ class Nvidia extends Main
             }
             if (isset($gpu->pci)) {
                 if (isset($gpu->pci->rx_util)) {
-                    $retval['rxutil'] = (string) $this->stripText(' KB/s', $gpu->pci->rx_util);
+                    $retval['rxutil'] = (string) $this->stripText(' KB/s', ($this->roundFloat($gpu->pci->rx_util / 1000)));
                 }
                 if (isset($gpu->pci->tx_util)) {
-                    $retval['rxutil'] = (string) $this->stripText(' KB/s', $gpu->pci->tx_util);
+                    $retval['txutil'] = (string) $this->stripText(' KB/s', ($this->roundFloat($gpu->pci->tx_util / 1000)));
                 }
             }
         } else {
