@@ -24,6 +24,9 @@ Unit ID for Dashboard:
     <?php
         if (isset($gpustat_data)) {
             foreach ($gpustat_data AS $gpu) {
+                if (!isset($gpu['guid'])) {
+                    $gpu['guid'] = 'Integrated';
+                }
                 $gpudesc = $gpu['id'] . ': ' . $gpu['model'] . ' - ' . $gpu['guid'];
                 printf(mk_option($gpustat_cfg['GPUID'], $gpu['guid'], $gpudesc));
             }
