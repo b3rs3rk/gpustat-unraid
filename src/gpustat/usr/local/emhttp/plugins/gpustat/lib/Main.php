@@ -37,7 +37,7 @@ class Main
      * @var bool
      */
     protected $cmdexists;
-    
+
     /**
      * GPUStat constructor.
      *
@@ -69,7 +69,7 @@ class Main
             'sessions'  =>  0,
         ];
     }
-    
+
     /**
      * Checks if vendor utility exists in the system and dies if it does not
      *
@@ -141,7 +141,7 @@ class Main
     {
         return parse_plugin_cfg(self::PLUGIN_NAME);
     }
-    
+
     /**
      * Triggers regex match all against class variable stdout and places matches in class variable inventory
      *
@@ -194,7 +194,7 @@ class Main
         
         return round($fahrenheit, -1, PHP_ROUND_HALF_UP);
     }
-    
+
     /**
      * Rounds a float to a whole number
      *
@@ -206,7 +206,7 @@ class Main
     {
         return round($number, $precision, PHP_ROUND_HALF_UP);
     }
-    
+
     /**
      * Replaces a string within a string with an empty string
      *
