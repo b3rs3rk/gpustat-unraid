@@ -25,7 +25,7 @@ Unit ID for Dashboard:
         if (isset($gpustat_data)) {
             foreach ($gpustat_data AS $gpu) {
                 $gpudesc = $gpu['id'] . ': ' . $gpu['model'] . ' - ' . $gpu['guid'];
-                printf(mk_option($gpustat_cfg['GPUID'], $gpu['id'], $gpudesc));
+                printf(mk_option($gpustat_cfg['GPUID'], $gpu['guid'], $gpudesc));
             }
         }
     ?>
@@ -86,7 +86,7 @@ Temperature Format:
 function resetDATA(form) {
     form.VENDOR.value = "nvidia";
     form.TEMPFORMAT.value = "C";
-    form.GPUID.value = "0";
+    form.GPUID.value = "";
     form.DISPCLOCKS.value = "1";
     form.DISPENCDEC.value = "1";
     form.DISPTEMP.value = "1";

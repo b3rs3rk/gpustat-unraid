@@ -13,7 +13,7 @@ class Nvidia extends Main
     const CMD_UTILITY = 'nvidia-smi';
     const INVENTORY_PARAM = '-L';
     const INVENTORY_REGEX = '/GPU\s(?P<id>\d):\s(?P<model>.*)\s\(UUID:\s(?P<guid>GPU-[0-9a-f-]+)\)/i';
-    const STATISTICS_PARAM = '-q -x -i %s 2>&1';
+    const STATISTICS_PARAM = '-q -x -g %s 2>&1';
 
     /**
      * Nvidia constructor.
