@@ -161,6 +161,14 @@ class Nvidia extends Main
             if (isset($gpu->processes) && isset($gpu->processes->process_info)) {
                 $retval['sessions'] = (int) count($gpu->processes->process_info);
             }
+            if (isset($gpu->pci)) {
+                if (isset($gpu->pci->rx_util)) {
+                    $retval['rxutil'] = (string) $this->stripText(' KB/s', $gpu->pci->rx_util);
+                }
+                if (isset($gpu->pci->tx_util)) {
+                    $retval['rxutil'] = (string) $this->stripText(' KB/s', $gpu->pci->tx_util);
+                }
+            }
         } else {
             new Error(Error::VENDOR_DATA_BAD_PARSE);
         }

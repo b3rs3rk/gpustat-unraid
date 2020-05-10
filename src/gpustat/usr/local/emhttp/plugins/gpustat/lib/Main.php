@@ -58,6 +58,8 @@ class Main
             'memutil'   => 'N/A',
             'encutil'   => 'N/A',
             'decutil'   => 'N/A',
+            'rxutil'    => 'N/A',
+            'txutil'    => 'N/A',
             'temp'      => 'N/A',
             'tempmax'   => 'N/A',
             'fan'       => 'N/A',

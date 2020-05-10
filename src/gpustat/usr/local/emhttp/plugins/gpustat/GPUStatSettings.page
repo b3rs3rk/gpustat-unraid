@@ -74,6 +74,16 @@ Temperature Format:
         </td>
         <td style="width:10%"></td>
     </tr>
+    <tr>
+        <td style="width:10%"></td>
+        <td>
+            <input type="checkbox" id="DISPPCIUTIL" name="DISPPCIUTIL" value="1" <?php if ($gpustat_cfg['DISPPCIUTIL']) { echo "checked"; } ?> />PCI RX/TX Usage
+        </td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td style="width:10%"></td>
+    </tr>
 </table>
 
 <br><br>
