@@ -18,6 +18,7 @@ If any issues occur, visit the support thread [here](https://forums.unraid.net/t
         * GPU/Memory Utilization
         * GPU/Memory Clocks
         * Encoder/Decoder Utilization
+        * PCI Bus Utilization
         * Temperature
         * Fan Utilization
         * Power Draw
@@ -28,6 +29,7 @@ If any issues occur, visit the support thread [here](https://forums.unraid.net/t
     Intel:
         * Render Engine Utilization
         * Encode/Decode Engine Utilization
+        * IMC Bandwidth Utilization
         * Power Draw
         * GPU Clock
 
