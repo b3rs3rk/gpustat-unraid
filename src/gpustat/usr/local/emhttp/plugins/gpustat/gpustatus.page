@@ -46,7 +46,7 @@ Icon="gpustat.png"
                         printf("<br>");
                     }
                     if ($gpustat_cfg['DISPPCIUTIL']) {
-                        printf("<span class='gpu'>PCI Rx/Tx:</span><span class='gpu-rxutil'></span>/<span class='gpu-txutil'></span><br> MB/s");
+                        printf("<span class='gpu'>PCI Rx/Tx:</span><span class='gpu-rxutil'></span>/<span class='gpu-txutil'></span> MB/s<br>");
                     }
                     if ($gpustat_cfg['DISPTEMP'] && $nv) {
                         printf("<span class='gpu'>Temperature:</span><span class='gpu-temp'></span>/<span class='gpu-tempmax'></span><br>");
