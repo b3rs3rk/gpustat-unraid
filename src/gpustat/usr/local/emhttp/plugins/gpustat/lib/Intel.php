@@ -10,7 +10,7 @@ class Intel extends Main
 {
     const CMD_UTILITY = 'intel_gpu_top';
     const INVENTORY_UTILITY = 'lspci';
-    const INVENTORY_PARAM = '| egrep (VGA|Display Controller)';
+    const INVENTORY_PARAM = '| egrep \'(VGA|Display Controller)\'';
     const INVENTORY_REGEX = '(?P<guid>\d+\:\d+\.\d+)\s+VGA.+\:\s+Intel\s+Corporation\s+(?P<model>.*)\s+\(rev/i';
     const STATISTICS_PARAM = '-J -s 5000';
 
