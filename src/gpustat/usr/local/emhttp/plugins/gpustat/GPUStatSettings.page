@@ -36,6 +36,12 @@ Temperature Format:
     <?=mk_option($gpustat_cfg['TEMPFORMAT'], "F", "Fahrenheit");?>
   </select>
 
+Automatic UI Refresh:
+: <select id="UIREFRESH" name="UIREFRESH" size="1">
+    <?=mk_option($gpustat_cfg['UIREFRESH'], "1", "Yes");?>
+    <?=mk_option($gpustat_cfg['UIREFRESH'], "0", "No");?>
+  </select>
+
 <br>
     <b>Enabled Pollers</b>
 <br><br><br>
@@ -94,5 +100,6 @@ function resetDATA(form) {
     form.DISPPWRSTATE.value = "1";
     form.DISPTHROTTLE.value = "1";
     form.DISPSESSIONS.value = "1";
+    form.UIREFRESH.value = "1";
 }
 </script>

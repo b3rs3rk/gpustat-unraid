@@ -39,6 +39,9 @@
  </FILE>
 
 <CHANGES>
+###2020-12-22
+- [BETA] Add automatic UI refresh
+
 ###2020-04-18
 - [BETA] Allow User selectable metrics to be displayed in widget
  * Go to settings and select the desired metrics after update
