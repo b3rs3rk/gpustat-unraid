@@ -36,10 +36,10 @@ Temperature Format:
     <?=mk_option($gpustat_cfg['TEMPFORMAT'], "F", "Fahrenheit");?>
   </select>
 
-Automatic UI Refresh:
-: <select id="UIREFRESH" name="UIREFRESH" size="1">
-    <?=mk_option($gpustat_cfg['UIREFRESH'], "1", "Yes");?>
+UI Automatic Refresh:
+: <select id="TEMPFORMAT" name="TEMPFORMAT" size="1">
     <?=mk_option($gpustat_cfg['UIREFRESH'], "0", "No");?>
+    <?=mk_option($gpustat_cfg['UIREFRESH'], "1", "Yes");?>
   </select>
 
 <br>

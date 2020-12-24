@@ -16,52 +16,91 @@ Icon="gpustat.png"
             <td class='next' colspan='3'>
                 <i class='icon-hardware'></i>
                 <div class='section'>GPU<br>
-                    <span class='gpu-vendor'></span> <span class='gpu-name'></span>
-                    <span id='util'>Utilization:  GPU <span class='gpu-util'></span> | MEM <span class='gpu-memutil'></span></span><br><br>
+                    <span id='load'>Load: <span class='gpu-util'></span></span>
+                    <span id='gpu-temp'>Temperature: <span class='gpu-temp'></span></span>
                 </div>
                 <i class='fa fa-fw chevron mt0' id='dash_gpustat_toggle' onclick='toggleChevron("dash_gpustat_toggle",0)'></i>
                 <a href='/Settings/GPUStatSettings' id='dash_gpustat_settings' title='Go to GPU Statistics settings'><i class='fa fa-fw fa-cog chevron mt0'></i></a>
+                <br><br>
             </td>
             <td></td>
         </tr>
-        <tr class='dash_gpustat_toggle gpu-enviro'>
+        <tr class="dash_gpustat_toggle gpu-enviro">
             <td></td>
-            <td colspan='2'>
-                <?php
-                    if ($gpustat_cfg['DISPCLOCKS']) {
-                        printf("<span class='gpu'>Clocks GPU/MEM:</span><span class='gpu-clock'></span>/<span class='gpu-memclock'></span><br>");
-                    }
-                    if ($gpustat_cfg['DISPENCDEC']) {
-                        printf("<span class='gpu'>Enc/Dec Util:</span><span class='gpu-encutil'></span>/<span class='gpu-decutil'></span><br>");
-                    }
-                    if ($gpustat_cfg['DISPTEMP']) {
-                        printf("<span class='gpu'>Temperature:</span><span class='gpu-temp'></span>/<span class='gpu-tempmax'></span><br>");
-                    }
-                    if ($gpustat_cfg['DISPFAN']) {
-                        printf("<span class='gpu'>Fan Usage:</span><span class='gpu-fan'></span><br>");
-                    }
-                    if ($gpustat_cfg['DISPPWRDRAW']) {
-                        printf("<span class='gpu'>Power Draw:</span><span class='gpu-power'></span>/<span class='gpu-powermax'></span><br>");
-                    }
-                    if ($gpustat_cfg['DISPPWRSTATE']) {
-                        printf("<span class='gpu'>Power State:</span><span class='gpu-perfstate'></span><br>");
-                    }
-                    if ($gpustat_cfg['DISPTHROTTLE']) {
-                        printf("<span class='gpu'>Throttled:</span><span class='gpu-throttled'></span><span class='gpu-thrtlrsn'></span><br>");
-                    }
-                    if ($gpustat_cfg['DISPSESSIONS']) {
-                        printf("<span class='gpu'>Sessions:</span><span class='gpu-sessions'></span><br>");
-                    }
-                ?>
+            <td colspan="3">
+                <span class='gpu-vendor'></span> <span class='gpu-name'></span>
             </td>
             <td></td>
         </tr>
+        <tr class="dash_gpustat_toggle gpu-enviro">
+            <td></td>
+            <td>Overall Load:</td>
+            <td colspan="2"><span class='gpu-util load'></span><div class='usage-disk sys'><span class='gpu-utilbar orangebar'></span><span></span></div></td>
+            <td></td>
+        </tr>
+        <tr class="dash_gpustat_toggle gpu-enviro">
+            <td></td>
+            <td>Encoder Utilization:</td>
+            <td colspan="2"><span class='gpu-encutil load'></span><div class='usage-disk sys'><span class='gpu-encutilbar orangebar'></span><span></span></div></td>
+            <td></td>
+        </tr>
+        <tr class="dash_gpustat_toggle gpu-enviro">
+            <td></td>
+            <td>Decoder Utilization:</td>
+            <td colspan="2"><span class='gpu-decutil load'></span><div class='usage-disk sys'><span class='gpu-decutilbar orangebar'></span><span></span></div></td>
+            <td></td>
+        </tr>
+        <tr class="dash_gpustat_toggle gpu-enviro">
+            <td></td>
+            <td>Memory Clock (MHz)</td>
+            <td colspan="2"><span class='gpu-memclock load'></span><div class='usage-disk sys'><span class='gpu-memclockbar orangebar'></span><span></span></div></td>
+            <td></td>
+        </tr>
+        <tr class="dash_gpustat_toggle gpu-enviro">
+            <td></td>
+            <td>GPU Clock (MHz)</td>
+            <td colspan="2"><span class='gpu-clock load'></span><div class='usage-disk sys'><span class='gpu-gpuclockbar orangebar'></span><span></span></div></td>
+            <td></td>
+        </tr>
+        <tr class="dash_gpustat_toggle gpu-enviro">
+            <td></td>
+            <td>Fan Usage</td>
+            <td colspan="2"><span class='gpu-fan load'></span><div class='usage-disk sys'><span class='gpu-fanbar orangebar'></span><span></span></div></td>
+            <td></td>
+        </tr>
+        <tr class="dash_gpustat_toggle gpu-enviro">
+            <td></td>
+            <td>Power Usage (Watts)</td>
+            <td colspan="2"><span class='gpu-power load'></span><div class='usage-disk sys'><span class='gpu-powerbar orangebar'></span><span></span></div></td>
+            <td></td>
+        </tr>
+        <tr class="dash_gpustat_toggle gpu-enviro">
+            <td></td>
+            <td>Power State</td>
+            <td><span class='gpu-perfstate load'></span></td>
+            <td>Throttled <span class='gpu-throttled load'></span></td>
+            <td></td>
+        </tr>
+        <tr class="dash_gpustat_toggle gpu-enviro">
+            <td></td>
+            <td>Sessions</td>
+            <td colspan="2"><span class='gpu-sessions load'></span></td>
+            <td></td>
+        </tr>
+
     </tbody>
 </table>
 <script>
     const gpustat_status = () => {
      $.getJSON('/plugins/gpustat/gpustatus.php', (data) => {
       if(data) {
+          $('.gpu-memclockbar').removeAttr('style').css('width', data["memclock"] / data["memclockmax"] * 100 + "%");
+          $('.gpu-gpuclockbar').removeAttr('style').css('width', data["clock"] / data["clockmax"] * 100 + "%");
+          $('.gpu-utilbar').removeAttr('style').css('width', data["util"]);
+          $('.gpu-encutilbar').removeAttr('style').css('width', data["encutil"]);
+          $('.gpu-decutilbar').removeAttr('style').css('width', data["decutil"]);
+          $('.gpu-fanbar').removeAttr('style').css('width', data["fan"]);
+          $('.gpu-powerbar').removeAttr('style').css('width', parseInt(data["power"] / data["powermax"] * 100) + '%');
         $.each(data, function (key, data) {
             $('.gpu-'+key).html(data);
         })

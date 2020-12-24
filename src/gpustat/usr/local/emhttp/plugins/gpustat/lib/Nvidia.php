@@ -69,7 +69,9 @@ class Nvidia extends Main
                 'vendor'    => 'NVIDIA',
                 'name'      => 'Graphics Card',
                 'clock'     => 'N/A',
+                'clockmax'     => 'N/A',
                 'memclock'  => 'N/A',
+                'memclockmax'  => 'N/A',
                 'util'      => 'N/A',
                 'memutil'   => 'N/A',
                 'encutil'   => 'N/A',
@@ -104,10 +106,10 @@ class Nvidia extends Main
             }
             if (isset($gpu->temperature)) {
                 if (isset($gpu->temperature->gpu_temp)) {
-                    $retval['temp'] = (string) $this->stripSpaces($gpu->temperature->gpu_temp);
+                    $retval['temp'] = (string) str_replace('C', '°C', $gpu->temperature->gpu_temp);
                 }
                 if (isset($gpu->temperature->gpu_temp_max_threshold)) {
-                    $retval['tempmax'] = (string) $this->stripSpaces($gpu->temperature->gpu_temp_max_threshold);
+                    $retval['tempmax'] = (string) str_replace('C', '°C', $gpu->temperature->gpu_temp_max_threshold);
                 }
                 if ($this->settings['TEMPFORMAT'] == 'F') {
                     foreach (['temp', 'tempmax'] AS $key) {
@@ -133,18 +135,20 @@ class Nvidia extends Main
             }
             if (isset($gpu->power_readings)) {
                 if (isset($gpu->power_readings->power_draw)) {
-                    $retval['power'] = (string) $this->stripSpaces($gpu->power_readings->power_draw);
+                    $retval['power'] = (string) preg_replace('/\.[0-9]+ W/', '', $gpu->power_readings->power_draw);
                 }
                 if (isset($gpu->power_readings->power_limit)) {
-                    $retval['powermax'] = (string) str_replace('.00 ', '', $gpu->power_readings->power_limit);
+                    $retval['powermax'] = (string) str_replace('.00 W', '', $gpu->power_readings->power_limit);
                 }
             }
             if (isset($gpu->clocks)) {
                 if (isset($gpu->clocks->graphics_clock)) {
                     $retval['clock'] = (string) str_replace(' MHz', '', $gpu->clocks->graphics_clock);
+                    $retval['clockmax'] = (string) str_replace(' MHz', '', $gpu->max_clocks->graphics_clock);
                 }
                 if (isset($gpu->clocks->mem_clock)) {
-                    $retval['memclock'] = (string) $gpu->clocks->mem_clock;
+                    $retval['memclock'] = (string) str_replace(' MHz', '', $gpu->clocks->mem_clock);
+                    $retval['memclockmax'] = (string) str_replace(' MHz', '', $gpu->max_clocks->mem_clock);
                 }
             }
             // For some reason, encoder_sessions->session_count is not reliable on my install, better to count processes
