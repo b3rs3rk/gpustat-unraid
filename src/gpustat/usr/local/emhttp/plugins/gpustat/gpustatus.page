@@ -35,43 +35,43 @@ Icon="gpustat.png"
         <tr class="dash_gpustat_toggle gpu-enviro">
             <td></td>
             <td>Overall Load:</td>
-            <td colspan="2"><span class='gpu-util load'></span><div class='usage-disk sys'><span class='gpu-utilbar orangebar'></span><span></span></div></td>
+            <td colspan="2"><span class='gpu-util load'></span><div class='usage-disk sys'><span class='gpu-utilbar'></span><span></span></div></td>
             <td></td>
         </tr>
         <tr class="dash_gpustat_toggle gpu-enviro">
             <td></td>
             <td>Encoder Utilization:</td>
-            <td colspan="2"><span class='gpu-encutil load'></span><div class='usage-disk sys'><span class='gpu-encutilbar orangebar'></span><span></span></div></td>
+            <td colspan="2"><span class='gpu-encutil load'></span><div class='usage-disk sys'><span class='gpu-encutilbar'></span><span></span></div></td>
             <td></td>
         </tr>
         <tr class="dash_gpustat_toggle gpu-enviro">
             <td></td>
             <td>Decoder Utilization:</td>
-            <td colspan="2"><span class='gpu-decutil load'></span><div class='usage-disk sys'><span class='gpu-decutilbar orangebar'></span><span></span></div></td>
+            <td colspan="2"><span class='gpu-decutil load'></span><div class='usage-disk sys'><span class='gpu-decutilbar'></span><span></span></div></td>
             <td></td>
         </tr>
         <tr class="dash_gpustat_toggle gpu-enviro">
             <td></td>
             <td>Memory Clock (MHz)</td>
-            <td colspan="2"><span class='gpu-memclock load'></span><div class='usage-disk sys'><span class='gpu-memclockbar orangebar'></span><span></span></div></td>
+            <td colspan="2"><span class='gpu-memclock load'></span><div class='usage-disk sys'><span class='gpu-memclockbar'></span><span></span></div></td>
             <td></td>
         </tr>
         <tr class="dash_gpustat_toggle gpu-enviro">
             <td></td>
             <td>GPU Clock (MHz)</td>
-            <td colspan="2"><span class='gpu-clock load'></span><div class='usage-disk sys'><span class='gpu-gpuclockbar orangebar'></span><span></span></div></td>
+            <td colspan="2"><span class='gpu-clock load'></span><div class='usage-disk sys'><span class='gpu-gpuclockbar'></span><span></span></div></td>
             <td></td>
         </tr>
         <tr class="dash_gpustat_toggle gpu-enviro">
             <td></td>
             <td>Fan Usage</td>
-            <td colspan="2"><span class='gpu-fan load'></span><div class='usage-disk sys'><span class='gpu-fanbar orangebar'></span><span></span></div></td>
+            <td colspan="2"><span class='gpu-fan load'></span><div class='usage-disk sys'><span class='gpu-fanbar'></span><span></span></div></td>
             <td></td>
         </tr>
         <tr class="dash_gpustat_toggle gpu-enviro">
             <td></td>
             <td>Power Usage (Watts)</td>
-            <td colspan="2"><span class='gpu-power load'></span><div class='usage-disk sys'><span class='gpu-powerbar orangebar'></span><span></span></div></td>
+            <td colspan="2"><span class='gpu-power load'></span><div class='usage-disk sys'><span class='gpu-powerbar'></span><span></span></div></td>
             <td></td>
         </tr>
         <tr class="dash_gpustat_toggle gpu-enviro">
@@ -87,26 +87,26 @@ Icon="gpustat.png"
             <td colspan="2"><span class='gpu-sessions load'></span></td>
             <td></td>
         </tr>
-
     </tbody>
 </table>
 <script>
     const gpustat_status = () => {
      $.getJSON('/plugins/gpustat/gpustatus.php', (data) => {
-      if(data) {
-          $('.gpu-memclockbar').removeAttr('style').css('width', data["memclock"] / data["memclockmax"] * 100 + "%");
-          $('.gpu-gpuclockbar').removeAttr('style').css('width', data["clock"] / data["clockmax"] * 100 + "%");
-          $('.gpu-utilbar').removeAttr('style').css('width', data["util"]);
-          $('.gpu-encutilbar').removeAttr('style').css('width', data["encutil"]);
-          $('.gpu-decutilbar').removeAttr('style').css('width', data["decutil"]);
-          $('.gpu-fanbar').removeAttr('style').css('width', data["fan"]);
-          $('.gpu-powerbar').removeAttr('style').css('width', parseInt(data["power"] / data["powermax"] * 100) + '%');
-        $.each(data, function (key, data) {
-            $('.gpu-'+key).html(data);
-        })
+         if(data) {
+            $('.gpu-memclockbar').removeAttr('style').css('width', data["memclock"] / data["memclockmax"] * 100 + "%");
+            $('.gpu-gpuclockbar').removeAttr('style').css('width', data["clock"] / data["clockmax"] * 100 + "%");
+            $('.gpu-utilbar').removeAttr('style').css('width', data["util"]);
+            $('.gpu-encutilbar').removeAttr('style').css('width', data["encutil"]);
+            $('.gpu-decutilbar').removeAttr('style').css('width', data["decutil"]);
+            $('.gpu-fanbar').removeAttr('style').css('width', data["fan"]);
+            $('.gpu-powerbar').removeAttr('style').css('width', parseInt(data["power"] / data["powermax"] * 100) + '%');
+
+            $.each(data, function (key, data) {
+                $('.gpu-'+key).html(data);
+            })
       }
     <?if ($gpustat_cfg['UIREFRESH']):?>
-      setTimeout(gpustat_status, <?=max(abs($display['refresh']),2000)?>);
+      setTimeout(gpustat_status, <?=max(abs($display['refresh']),1000)?>);
     <?endif;?>
      });
     };

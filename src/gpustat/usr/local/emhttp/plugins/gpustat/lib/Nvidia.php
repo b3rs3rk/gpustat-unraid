@@ -135,7 +135,7 @@ class Nvidia extends Main
             }
             if (isset($gpu->power_readings)) {
                 if (isset($gpu->power_readings->power_draw)) {
-                    $retval['power'] = (string) preg_replace('/\.[0-9]+ W/', '', $gpu->power_readings->power_draw);
+                    $retval['power'] = (string) preg_replace(' W', '', $gpu->power_readings->power_draw);
                 }
                 if (isset($gpu->power_readings->power_limit)) {
                     $retval['powermax'] = (string) str_replace('.00 W', '', $gpu->power_readings->power_limit);
