@@ -64,7 +64,7 @@ Encoder / Decoder Utilization:
     <?=mk_option($gpustat_cfg['DISPENCDEC'], "1", "Yes");?>
   </select>
 
-Encoder / Decoder Utilization:
+Fan Usage:
 : <select id="DISPFAN" name="DISPFAN" size="1">
     <?=mk_option($gpustat_cfg['DISPFAN'], "0", "No");?>
     <?=mk_option($gpustat_cfg['DISPFAN'], "1", "Yes");?>
