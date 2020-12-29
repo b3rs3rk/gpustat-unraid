@@ -67,13 +67,15 @@ class Nvidia extends Main
             $gpu = $data->gpu;
             $retval = [
                 'vendor'    => 'NVIDIA',
-                'name'      => 'Graphics Card',
-                'clock'     => 'N/A',
-                'clockmax'     => 'N/A',
-                'memclock'  => 'N/A',
-                'memclockmax'  => 'N/A',
+                'name'          => 'Graphics Card',
+                'clock'         => 'N/A',
+                'clockmax'      => 'N/A',
+                'memclock'      => 'N/A',
+                'memclockmax'   => 'N/A',
                 'util'      => 'N/A',
                 'memutil'   => 'N/A',
+                'memtotal'  => 'N/A',
+                'memused'   => 'N/A',
                 'encutil'   => 'N/A',
                 'decutil'   => 'N/A',
                 'temp'      => 'N/A',
@@ -94,8 +96,10 @@ class Nvidia extends Main
                 if (isset($gpu->utilization->gpu_util)) {
                     $retval['util'] = (string) $this->stripSpaces($gpu->utilization->gpu_util);
                 }
-                if (isset($gpu->utilization->memory_util)) {
-                    $retval['memutil'] = (string) $this->stripSpaces($gpu->utilization->memory_util);
+                if (isset($gpu->fb_memory_usage->free)) {
+                    $retval['memtotal'] = (string) str_replace(' MiB', '', $gpu->fb_memory_usage->total);
+                    $retval['memused'] = (string) str_replace(' MiB', '', $gpu->fb_memory_usage->used);
+                    $retval['memutil'] = round($retval['memused'] / $retval['memtotal'] * 100) . "%";
                 }
                 if (isset($gpu->utilization->encoder_util)) {
                     $retval['encutil'] = (string) $this->stripSpaces($gpu->utilization->encoder_util);

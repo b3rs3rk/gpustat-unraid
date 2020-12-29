@@ -38,6 +38,14 @@ Icon="gpustat.png"
             <td colspan="2"><span class='gpu-util load'></span><div class='usage-disk sys'><span class='gpu-utilbar'></span><span></span></div></td>
             <td></td>
         </tr>
+        <?php if($gpustat_cfg['DISPMEMUTIL']) : ?>
+            <tr class="dash_gpustat_toggle gpu-enviro">
+                <td></td>
+                <td>Memory Utilization:</td>
+                <td colspan="2"><span class='gpu-memutil load'></span><div class='usage-disk sys'><span class='gpu-memutilbar'></span><span></span></div></td>
+                <td></td>
+            </tr>
+        <?php endif; ?>
         <?php if($gpustat_cfg['DISPENCDEC']) : ?>
             <tr class="dash_gpustat_toggle gpu-enviro">
                 <td></td>
@@ -115,6 +123,7 @@ Icon="gpustat.png"
             $('.gpu-memclockbar').removeAttr('style').css('width', data["memclock"] / data["memclockmax"] * 100 + "%");
             $('.gpu-gpuclockbar').removeAttr('style').css('width', data["clock"] / data["clockmax"] * 100 + "%");
             $('.gpu-utilbar').removeAttr('style').css('width', data["util"]);
+            $('.gpu-memutilbar').removeAttr('style').css('width', data["memutil"]);
             $('.gpu-encutilbar').removeAttr('style').css('width', data["encutil"]);
             $('.gpu-decutilbar').removeAttr('style').css('width', data["decutil"]);
             $('.gpu-fanbar').removeAttr('style').css('width', data["fan"]);
