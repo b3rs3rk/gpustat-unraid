@@ -67,11 +67,15 @@ class Nvidia extends Main
             $gpu = $data->gpu;
             $retval = [
                 'vendor'    => 'NVIDIA',
-                'name'      => 'Graphics Card',
-                'clock'     => 'N/A',
-                'memclock'  => 'N/A',
+                'name'          => 'Graphics Card',
+                'clock'         => 'N/A',
+                'clockmax'      => 'N/A',
+                'memclock'      => 'N/A',
+                'memclockmax'   => 'N/A',
                 'util'      => 'N/A',
                 'memutil'   => 'N/A',
+                'memtotal'  => 'N/A',
+                'memused'   => 'N/A',
                 'encutil'   => 'N/A',
                 'decutil'   => 'N/A',
                 'temp'      => 'N/A',
@@ -92,8 +96,10 @@ class Nvidia extends Main
                 if (isset($gpu->utilization->gpu_util)) {
                     $retval['util'] = (string) $this->stripSpaces($gpu->utilization->gpu_util);
                 }
-                if (isset($gpu->utilization->memory_util)) {
-                    $retval['memutil'] = (string) $this->stripSpaces($gpu->utilization->memory_util);
+                if (isset($gpu->fb_memory_usage->free)) {
+                    $retval['memtotal'] = (string) str_replace(' MiB', '', $gpu->fb_memory_usage->total);
+                    $retval['memused'] = (string) str_replace(' MiB', '', $gpu->fb_memory_usage->used);
+                    $retval['memutil'] = round($retval['memused'] / $retval['memtotal'] * 100) . "%";
                 }
                 if (isset($gpu->utilization->encoder_util)) {
                     $retval['encutil'] = (string) $this->stripSpaces($gpu->utilization->encoder_util);
@@ -104,10 +110,10 @@ class Nvidia extends Main
             }
             if (isset($gpu->temperature)) {
                 if (isset($gpu->temperature->gpu_temp)) {
-                    $retval['temp'] = (string) $this->stripSpaces($gpu->temperature->gpu_temp);
+                    $retval['temp'] = (string) str_replace('C', '°C', $gpu->temperature->gpu_temp);
                 }
                 if (isset($gpu->temperature->gpu_temp_max_threshold)) {
-                    $retval['tempmax'] = (string) $this->stripSpaces($gpu->temperature->gpu_temp_max_threshold);
+                    $retval['tempmax'] = (string) str_replace('C', '°C', $gpu->temperature->gpu_temp_max_threshold);
                 }
                 if ($this->settings['TEMPFORMAT'] == 'F') {
                     foreach (['temp', 'tempmax'] AS $key) {
@@ -133,18 +139,20 @@ class Nvidia extends Main
             }
             if (isset($gpu->power_readings)) {
                 if (isset($gpu->power_readings->power_draw)) {
-                    $retval['power'] = (string) $this->stripSpaces($gpu->power_readings->power_draw);
+                    $retval['power'] = (string) str_replace(' W', '', $gpu->power_readings->power_draw);
                 }
                 if (isset($gpu->power_readings->power_limit)) {
-                    $retval['powermax'] = (string) str_replace('.00 ', '', $gpu->power_readings->power_limit);
+                    $retval['powermax'] = (string) str_replace('.00 W', '', $gpu->power_readings->power_limit);
                 }
             }
             if (isset($gpu->clocks)) {
                 if (isset($gpu->clocks->graphics_clock)) {
                     $retval['clock'] = (string) str_replace(' MHz', '', $gpu->clocks->graphics_clock);
+                    $retval['clockmax'] = (string) str_replace(' MHz', '', $gpu->max_clocks->graphics_clock);
                 }
                 if (isset($gpu->clocks->mem_clock)) {
-                    $retval['memclock'] = (string) $gpu->clocks->mem_clock;
+                    $retval['memclock'] = (string) str_replace(' MHz', '', $gpu->clocks->mem_clock);
+                    $retval['memclockmax'] = (string) str_replace(' MHz', '', $gpu->max_clocks->mem_clock);
                 }
             }
             // For some reason, encoder_sessions->session_count is not reliable on my install, better to count processes
