@@ -3,7 +3,7 @@ name: Feature request
 about: Suggest an idea for this project
 title: "[ENHANCEMENT] - Briefly describe feature here"
 labels: enhancement
-assignees: mlapaglia
+assignees: b3rs3rk
 
 ---
 

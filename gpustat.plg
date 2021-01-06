@@ -1,11 +1,12 @@
 <?xml version='1.0' standalone='yes'?>
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "gpustat">
-<!ENTITY author    "mlapaglia">
+<!ENTITY author    "b3rs3rk">
 <!ENTITY version   "2020.12.29a">
 <!ENTITY launch    "Settings/GPUStatSettings">
-<!ENTITY gitURL    "https://raw.githubusercontent.com/mlapaglia/&name;-unraid/master">
+<!ENTITY gitURL    "https://raw.githubusercontent.com/b3rs3rk/&name;-unraid/master">
 <!ENTITY pluginURL "&gitURL;/&name;.plg">
+<!ENTITY md5       "72f7d2690659ea4121a5f22b639a5bdb">
 <!ENTITY pkgURL    "&gitURL;/pkg">
 <!ENTITY plgPATH   "/boot/config/plugins/&name;">
 <!ENTITY plgNAME   "&name;-&version;-x86_64">
@@ -53,6 +54,7 @@
 ###2020-12-29
 - [BETA] Add automatic UI refresh
  * Aligned style with unraid's CPU sidebar
+ * Fixed saving UI preferences in unraid 6.9
 
 ###2020-04-18
 - [BETA] Allow User selectable metrics to be displayed in widget

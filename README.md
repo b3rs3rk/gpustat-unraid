@@ -4,7 +4,7 @@ An UnRAID plugin for displaying GPU status
 ## Manual Installation
     - Verify you have Unraid-Nvidia Build 6.7.1+ Installed
     - Within UnRAID Web UI navigate to Plugins -> Install Plugin
-    - Enter https://raw.githubusercontent.com/mlapaglia/gpustat-unraid/master/gpustat.plg
+    - Enter https://raw.githubusercontent.com/b3rs3rk/gpustat-unraid/master/gpustat.plg
     - Select Install
     - Navigate to Settings -> GPU Statistics and select vendor (only choice is NVIDIA at this time)
     - Select Done

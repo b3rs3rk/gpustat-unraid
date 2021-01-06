@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Containers>
     <Plugin>True</Plugin>
-    <PluginURL>https://raw.githubusercontent.com/mlapaglia/gpustat-unraid/master/gpustat.plg</PluginURL>
-    <PluginAuthor>mlapaglia</PluginAuthor>
+    <PluginURL>https://raw.githubusercontent.com/b3rs3rk/gpustat-unraid/master/gpustat.plg</PluginURL>
+    <PluginAuthor>b3rs3rk</PluginAuthor>
     <Beta>True</Beta>
     <Category>Tools:System</Category>
     <Date>2020-03-08</Date>
@@ -11,8 +11,8 @@
         This plugin parses GPU statistic data from vendor specific utilities and displays a subset of them on the dashboard
     </Description>
     <MinVer>6.7.1</MinVer>
-    <Project>https://github.com/mlapaglia/gpustat-unraid</Project>
+    <Project>https://github.com/b3rs3rk/gpustat-unraid</Project>
     <Support>https://forums.unraid.net/topic/89453-plugin-gpu-statistics/</Support>
-    <Icon>https://raw.githubusercontent.com/mlapaglia/gpustat-unraid/master/src/gpustat/usr/local/emhttp/plugins/gpustat/images/gpustat.png</Icon>
-    <License>MIT Copyright 2020 mlapaglia</License>
+    <Icon>https://raw.githubusercontent.com/b3rs3rk/gpustat-unraid/master/src/gpustat/usr/local/emhttp/plugins/gpustat/images/gpustat.png</Icon>
+    <License>MIT Copyright 2020 b3rs3rk</License>
 </Containers>
