@@ -51,11 +51,6 @@
  </FILE>
 
 <CHANGES>
-###2020-12-29
-- [BETA] Add automatic UI refresh
- * Aligned style with unraid's CPU sidebar
- * Fixed saving UI preferences in unraid 6.9
-
 ###2020-04-18
 - [BETA] Allow User selectable metrics to be displayed in widget
  * Go to settings and select the desired metrics after update
