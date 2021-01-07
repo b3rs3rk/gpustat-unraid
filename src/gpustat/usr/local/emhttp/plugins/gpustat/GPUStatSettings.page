@@ -36,44 +36,63 @@ Temperature Format:
     <?=mk_option($gpustat_cfg['TEMPFORMAT'], "F", "Fahrenheit");?>
   </select>
 
+UI Automatic Refresh:
+: <select id="UIREFRESH" name="UIREFRESH" size="1">
+    <?=mk_option($gpustat_cfg['UIREFRESH'], "0", "No");?>
+    <?=mk_option($gpustat_cfg['UIREFRESH'], "1", "Yes");?>
+  </select>
+
 <br>
     <b>Enabled Pollers</b>
-<br><br><br>
+<br>
 
-<table style="width:80%">
-    <tr>
-        <td style="width:10%"></td>
-        <td>
-            <input type="checkbox" id="DISPCLOCKS" name="DISPCLOCKS" value="1" <?php if ($gpustat_cfg['DISPCLOCKS']) { echo "checked"; } ?> />GPU/Memory Clocks
-        </td>
-        <td>
-            <input type="checkbox" id="DISPENCDEC" name="DISPENCDEC" value="1" <?php if ($gpustat_cfg['DISPENCDEC']) { echo "checked"; } ?> />Enc/Dec Util
-        </td>
-        <td>
-            <input type="checkbox" id="DISPTEMP" name="DISPTEMP" value="1" <?php if ($gpustat_cfg['DISPTEMP']) { echo "checked"; } ?> />Temperature
-        </td>
-        <td>
-            <input type="checkbox" id ="DISPFAN" name="DISPFAN" value="1" <?php if ($gpustat_cfg['DISPFAN']) { echo "checked"; } ?> />Fan Usage
-        </td>
-        <td style="width:10%"></td>
-    </tr>
-    <tr>
-        <td style="width:10%"></td>
-        <td>
-            <input type="checkbox" id="DISPPWRDRAW" name="DISPPWRDRAW" value="1" <?php if ($gpustat_cfg['DISPPWRDRAW']) { echo "checked"; } ?> />Power Draw
-        </td>
-        <td>
-            <input type="checkbox" id="DISPPWRSTATE" name="DISPPWRSTATE" value="1" <?php if ($gpustat_cfg['DISPPWRSTATE']) { echo "checked"; } ?> />Power State
-        </td>
-        <td>
-            <input type="checkbox" id="DISPTHROTTLE" name="DISPTHROTTLE" value="1" <?php if ($gpustat_cfg['DISPTHROTTLE']) { echo "checked"; } ?> />Throttle Status
-        </td>
-        <td>
-            <input type="checkbox" id="DISPSESSIONS" name="DISPSESSIONS" value="1" <?php if ($gpustat_cfg['DISPSESSIONS']) { echo "checked"; } ?> />Active Sessions
-        </td>
-        <td style="width:10%"></td>
-    </tr>
-</table>
+GPU and Memory Clocks:
+: <select id="DISPCLOCKS" name="DISPCLOCKS" size="1">
+    <?=mk_option($gpustat_cfg['DISPCLOCKS'], "0", "No");?>
+    <?=mk_option($gpustat_cfg['DISPCLOCKS'], "1", "Yes");?>
+  </select>
+
+Memory Utilization:
+: <select id="DISPMEMUTIL" name="DISPMEMUTIL" size="1">
+    <?=mk_option($gpustat_cfg['DISPMEMUTIL'], "0", "No");?>
+    <?=mk_option($gpustat_cfg['DISPMEMUTIL'], "1", "Yes");?>
+  </select>
+
+Encoder / Decoder Utilization:
+: <select id="DISPENCDEC" name="DISPENCDEC" size="1">
+    <?=mk_option($gpustat_cfg['DISPENCDEC'], "0", "No");?>
+    <?=mk_option($gpustat_cfg['DISPENCDEC'], "1", "Yes");?>
+  </select>
+
+Fan Usage:
+: <select id="DISPFAN" name="DISPFAN" size="1">
+    <?=mk_option($gpustat_cfg['DISPFAN'], "0", "No");?>
+    <?=mk_option($gpustat_cfg['DISPFAN'], "1", "Yes");?>
+  </select>
+
+Power Draw:
+: <select id="DISPPWRDRAW" name="DISPPWRDRAW" size="1">
+    <?=mk_option($gpustat_cfg['DISPPWRDRAW'], "0", "No");?>
+    <?=mk_option($gpustat_cfg['DISPPWRDRAW'], "1", "Yes");?>
+  </select>
+
+Power State:
+: <select id="DISPPWRSTATE" name="DISPPWRSTATE" size="1">
+    <?=mk_option($gpustat_cfg['DISPPWRSTATE'], "0", "No");?>
+    <?=mk_option($gpustat_cfg['DISPPWRSTATE'], "1", "Yes");?>
+  </select>
+
+Throttle Status:
+: <select id="DISPTHROTTLE" name="DISPTHROTTLE" size="1">
+    <?=mk_option($gpustat_cfg['DISPTHROTTLE'], "0", "No");?>
+    <?=mk_option($gpustat_cfg['DISPTHROTTLE'], "1", "Yes");?>
+  </select>
+
+Active Sessions:
+: <select id="DISPSESSIONS" name="DISPSESSIONS" size="1">
+    <?=mk_option($gpustat_cfg['DISPSESSIONS'], "0", "No");?>
+    <?=mk_option($gpustat_cfg['DISPSESSIONS'], "1", "Yes");?>
+  </select>
 
 <br><br>
 
@@ -94,5 +113,7 @@ function resetDATA(form) {
     form.DISPPWRSTATE.value = "1";
     form.DISPTHROTTLE.value = "1";
     form.DISPSESSIONS.value = "1";
+    form.UIREFRESH.value = "1";
+    form.DISPMEMUTIL.value = "1";
 }
 </script>
