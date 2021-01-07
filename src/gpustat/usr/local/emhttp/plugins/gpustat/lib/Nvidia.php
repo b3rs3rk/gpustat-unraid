@@ -66,27 +66,27 @@ class Nvidia extends Main
 
             $gpu = $data->gpu;
             $retval = [
-                'vendor'    => 'NVIDIA',
+                'vendor'        => 'NVIDIA',
                 'name'          => 'Graphics Card',
                 'clock'         => 'N/A',
                 'clockmax'      => 'N/A',
                 'memclock'      => 'N/A',
                 'memclockmax'   => 'N/A',
-                'util'      => 'N/A',
-                'memutil'   => 'N/A',
-                'memtotal'  => 'N/A',
-                'memused'   => 'N/A',
-                'encutil'   => 'N/A',
-                'decutil'   => 'N/A',
-                'temp'      => 'N/A',
-                'tempmax'   => 'N/A',
-                'fan'       => 'N/A',
-                'perfstate' => 'N/A',
-                'throttled' => 'N/A',
-                'thrtlrsn'  => '',
-                'power'     => 'N/A',
-                'powermax'  => 'N/A',
-                'sessions'  =>  0,
+                'util'          => 'N/A',
+                'memutil'       => 'N/A',
+                'memtotal'      => 'N/A',
+                'memused'       => 'N/A',
+                'encutil'       => 'N/A',
+                'decutil'       => 'N/A',
+                'temp'          => 'N/A',
+                'tempmax'       => 'N/A',
+                'fan'           => 'N/A',
+                'perfstate'     => 'N/A',
+                'throttled'     => 'N/A',
+                'thrtlrsn'      => '',
+                'power'         => 'N/A',
+                'powermax'      => 'N/A',
+                'sessions'      =>  0,
             ];
 
             if (isset($gpu->product_name)) {
@@ -96,7 +96,7 @@ class Nvidia extends Main
                 if (isset($gpu->utilization->gpu_util)) {
                     $retval['util'] = (string) $this->stripSpaces($gpu->utilization->gpu_util);
                 }
-                if (isset($gpu->fb_memory_usage->free)) {
+                if (isset($gpu->fb_memory_usage->used) && isset($gpu->fb_memory_usage->total)) {
                     $retval['memtotal'] = (string) str_replace(' MiB', '', $gpu->fb_memory_usage->total);
                     $retval['memused'] = (string) str_replace(' MiB', '', $gpu->fb_memory_usage->used);
                     $retval['memutil'] = round($retval['memused'] / $retval['memtotal'] * 100) . "%";
@@ -146,11 +146,11 @@ class Nvidia extends Main
                 }
             }
             if (isset($gpu->clocks)) {
-                if (isset($gpu->clocks->graphics_clock)) {
+                if (isset($gpu->clocks->graphics_clock) && isset($gpu->max_clocks->graphics_clock)) {
                     $retval['clock'] = (string) str_replace(' MHz', '', $gpu->clocks->graphics_clock);
                     $retval['clockmax'] = (string) str_replace(' MHz', '', $gpu->max_clocks->graphics_clock);
                 }
-                if (isset($gpu->clocks->mem_clock)) {
+                if (isset($gpu->clocks->mem_clock) && isset($gpu->max_clocks->mem_clock)) {
                     $retval['memclock'] = (string) str_replace(' MHz', '', $gpu->clocks->mem_clock);
                     $retval['memclockmax'] = (string) str_replace(' MHz', '', $gpu->max_clocks->mem_clock);
                 }
