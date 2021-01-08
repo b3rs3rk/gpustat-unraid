@@ -18,11 +18,19 @@ If any issues occur, visit the support thread [here](https://forums.unraid.net/t
         * GPU/Memory Utilization
         * GPU/Memory Clocks
         * Encoder/Decoder Utilization
+        * PCI Bus Utilization
         * Temperature
         * Fan Utilization
         * Power Draw
         * Power State
         * Throttled (Y/N) and Reason for Throttle
         * Active Processes
-    
+
+    Intel:
+        * Render Engine Utilization
+        * Encode/Decode Engine Utilization
+        * IMC Bandwidth Utilization
+        * Power Draw
+        * GPU Clock
+
 The bulk of this code was adapted from/inspired by @realies and @CyanLabs corsairpsu-unraid project!

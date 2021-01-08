@@ -2,6 +2,8 @@
 
 namespace gpustat\lib;
 
+use SimpleXMLElement;
+
 /**
  * Class Nvidia
  * @package gpustat\lib
@@ -11,7 +13,7 @@ class Nvidia extends Main
     const CMD_UTILITY = 'nvidia-smi';
     const INVENTORY_PARAM = '-L';
     const INVENTORY_REGEX = '/GPU\s(?P<id>\d):\s(?P<model>.*)\s\(UUID:\s(?P<guid>GPU-[0-9a-f-]+)\)/i';
-    const STATISTICS_PARAM = '-q -x -i %s 2>&1';
+    const STATISTICS_PARAM = '-q -x -g %s 2>&1';
 
     /**
      * Nvidia constructor.
@@ -28,16 +30,23 @@ class Nvidia extends Main
      *
      * @return array
      */
-    public function getInventory ()
+    public function getInventory()
     {
-        $this->stdout = shell_exec(self::CMD_UTILITY . ES . self::INVENTORY_PARAM);
-        if (!empty($this->stdout) && strlen($this->stdout) > 0) {
-            preg_match_all(self::INVENTORY_REGEX, $this->stdout, $this->inventory, PREG_SET_ORDER);
-        } else {
-            new Error(Error::VENDOR_DATA_NOT_RETURNED);
+        $result = [];
+
+        if ($this->cmdexists) {
+            $this->stdout = shell_exec(self::CMD_UTILITY . ES . self::INVENTORY_PARAM);
+            if (!empty($this->stdout) && strlen($this->stdout) > 0) {
+                $this->parseInventory(self::INVENTORY_REGEX);
+            } else {
+                new Error(Error::VENDOR_DATA_NOT_RETURNED, '', false);
+            }
+            if ($this->cmdexists) {
+                $result = $this->inventory;
+            }
         }
 
-        return $this->inventory;
+        return $result;
     }
 
     /**
@@ -45,24 +54,29 @@ class Nvidia extends Main
      */
     public function getStatistics()
     {
-        //Command invokes nvidia-smi in query all mode with XML return
-        $this->stdout = shell_exec(self::CMD_UTILITY . ES . sprintf(self::STATISTICS_PARAM, $this->settings['GPUID']));
-        if (!empty($this->stdout) && strlen($this->stdout) > 0) {
-            $this->parseStatistics();
+        if ($this->cmdexists) {
+            //Command invokes nvidia-smi in query all mode with XML return
+            $this->stdout = shell_exec(self::CMD_UTILITY . ES . sprintf(self::STATISTICS_PARAM, $this->settings['GPUID']));
+            if (!empty($this->stdout) && strlen($this->stdout) > 0) {
+                $this->parseStatistics();
+            } else {
+                new Error(Error::VENDOR_DATA_NOT_RETURNED);
+            }
         } else {
-            new Error(Error::VENDOR_DATA_NOT_RETURNED);
+            new Error(Error::VENDOR_UTILITY_NOT_FOUND);
         }
     }
 
     /**
      * Loads stdout into SimpleXMLObject then retrieves and returns specific definitions in an array
      */
-    private function parseStatistics () {
+    private function parseStatistics()
+    {
 
         $data = @simplexml_load_string($this->stdout);
         $retval = array();
 
-        if (!empty($data->gpu)) {
+        if ($data instanceof SimpleXMLElement && !empty($data->gpu)) {
 
             $gpu = $data->gpu;
             $retval = [
@@ -101,11 +115,14 @@ class Nvidia extends Main
                     $retval['memused'] = (string) str_replace(' MiB', '', $gpu->fb_memory_usage->used);
                     $retval['memutil'] = round($retval['memused'] / $retval['memtotal'] * 100) . "%";
                 }
-                if (isset($gpu->utilization->encoder_util)) {
-                    $retval['encutil'] = (string) $this->stripSpaces($gpu->utilization->encoder_util);
-                }
-                if (isset($gpu->utilization->decoder_util)) {
-                    $retval['decutil'] = (string) $this->stripSpaces($gpu->utilization->decoder_util);
+                // If card doesn't support utilization property, fall back to computation for memory usage
+                if ($retval['memutil'] == "N/A" && isset($gpu->fb_memory_usage->total, $gpu->fb_memory_usage->used)) {
+                    $memTotal = $this->stripText(' MiB', $gpu->fb_memory_usage->total);
+                    $memUsed = $this->stripText(' MiB', $gpu->fb_memory_usage->used);
+                    if ($memUsed !== "N/A" && $memTotal !== "N/A" && $memUsed <= $memTotal) {
+                        $retval['memutil'] = $this->roundFloat(((int) $memUsed / (int) $memTotal) * 100, -1) . '%';
+                    }
+                    unset($memTotal, $memUsed);
                 }
             }
             if (isset($gpu->temperature)) {
@@ -117,7 +134,7 @@ class Nvidia extends Main
                 }
                 if ($this->settings['TEMPFORMAT'] == 'F') {
                     foreach (['temp', 'tempmax'] AS $key) {
-                        $retval[$key] = $this->convertCelsius((int) str_replace('C', '', $retval[$key])) . 'F';
+                        $retval[$key] = $this->convertCelsius((int) $this->stripText('C', $retval[$key])) . 'F';
                     }
                 }
             }
@@ -132,7 +149,7 @@ class Nvidia extends Main
                 foreach ($gpu->clocks_throttle_reasons->children() AS $reason => $throttle) {
                     if ($throttle == 'Active') {
                         $retval['throttled'] = 'Yes';
-                        $retval['thrtlrsn'] = ' (' . str_replace('clocks_throttle_reason_', '', $reason) . ')';
+                        $retval['thrtlrsn'] = ' (' . $this->stripText('clocks_throttle_reason_', $reason) . ')';
                         break;
                     }
                 }
@@ -159,8 +176,17 @@ class Nvidia extends Main
             if (isset($gpu->processes) && isset($gpu->processes->process_info)) {
                 $retval['sessions'] = (int) count($gpu->processes->process_info);
             }
+            if (isset($gpu->pci)) {
+                if (isset($gpu->pci->rx_util)) {
+                    $retval['rxutil'] = (string) $this->stripText(' KB/s', ($this->roundFloat($gpu->pci->rx_util / 1000)));
+                }
+                if (isset($gpu->pci->tx_util)) {
+                    $retval['txutil'] = (string) $this->stripText(' KB/s', ($this->roundFloat($gpu->pci->tx_util / 1000)));
+                }
+            }
+        } else {
+            new Error(Error::VENDOR_DATA_BAD_PARSE);
         }
-
         $this->echoJson($retval);
     }
 }

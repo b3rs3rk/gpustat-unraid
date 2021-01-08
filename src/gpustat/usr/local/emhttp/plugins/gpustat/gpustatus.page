@@ -4,9 +4,11 @@ Icon="gpustat.png"
 <style type="text/css">
 <?php
     $gpustat_cfg = parse_plugin_cfg('gpustat', true);
+    $nv = false;
+    if ($gpustat_cfg['VENDOR'] == "nvidia") { $nv = true; }
 ?>
     #dash_gpustat_settings i, #dash_gpustat_toggle {margin-top:0;}
-    span.gpu{width:124px;display:inline-block}
+    span.gpu{width:150px;display:inline-block}
 </style>
 <table id='db-box1' class='dash_gpustat dashboard box1' style='display:none'>
     <thead sort='953'><tr class='hidden'><td></td><td colspan='3'></td><td></td></tr></thead>
@@ -18,6 +20,7 @@ Icon="gpustat.png"
                 <div class='section'>GPU<br>
                     <span id='load'>Load: <span class='gpu-util'></span></span>
                     <span id='gpu-temp'>Temperature: <span class='gpu-temp'></span></span>
+                    <?php if ($nv) { printf(" | MEM <span class='gpu-memutil'></span></span><br><br>"); } ?>
                 </div>
                 <i class='fa fa-fw chevron mt0' id='dash_gpustat_toggle' onclick='toggleChevron("dash_gpustat_toggle",0)'></i>
                 <a href='/Settings/GPUStatSettings' id='dash_gpustat_settings' title='Go to GPU Statistics settings'><i class='fa fa-fw fa-cog chevron mt0'></i></a>

@@ -16,6 +16,7 @@ Title="GPU Statistics"
 Vendor:
 : <select id="VENDOR" name="VENDOR" size="1">
     <?=mk_option($gpustat_cfg['VENDOR'], "nvidia", "NVIDIA");?>
+    <?=mk_option($gpustat_cfg['VENDOR'], "intel", "Intel");?>
   </select>
 
 Unit ID for Dashboard:
@@ -23,8 +24,11 @@ Unit ID for Dashboard:
     <?php
         if (isset($gpustat_data)) {
             foreach ($gpustat_data AS $gpu) {
+                if (!isset($gpu['guid'])) {
+                    $gpu['guid'] = 'Integrated';
+                }
                 $gpudesc = $gpu['id'] . ': ' . $gpu['model'] . ' - ' . $gpu['guid'];
-                printf(mk_option($gpustat_cfg['GPUID'], $gpu['id'], $gpudesc));
+                printf(mk_option($gpustat_cfg['GPUID'], $gpu['guid'], $gpudesc));
             }
         }
     ?>
