@@ -44,7 +44,7 @@ People *love* thorough bug reports. I'm not even kidding.
 ## Use a Consistent Coding Style
 Use existing repository code (that you should have already reviewed) as a guide
 
-* 4 spaces for indentation rather than tabs
+* PHP should use tabs instead of spaces
 
 ## License
 By contributing, you agree that your contributions will be licensed under its MIT License.
