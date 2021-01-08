@@ -3,7 +3,7 @@
     <Plugin>True</Plugin>
     <PluginURL>https://raw.githubusercontent.com/b3rs3rk/gpustat-unraid/master/gpustat.plg</PluginURL>
     <PluginAuthor>b3rs3rk</PluginAuthor>
-    <Beta>True</Beta>
+    <Beta>False</Beta>
     <Category>Tools:System Drivers:</Category>
     <Date>2020-03-08</Date>
     <Name>GPU Statistics</Name>
