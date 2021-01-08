@@ -2,7 +2,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "gpustat">
 <!ENTITY author    "b3rs3rk">
-<!ENTITY version   "2020.04.18a">
+<!ENTITY version   "2021.01.08">
 <!ENTITY launch    "Settings/GPUStatSettings">
 <!ENTITY gitURL    "https://raw.githubusercontent.com/b3rs3rk/&name;-unraid/master">
 <!ENTITY pluginURL "&gitURL;/&name;.plg">
@@ -39,6 +39,11 @@
  </FILE>
 
 <CHANGES>
+###2021-01-08
+- [RELEASE] Switch to slider bars instead of raw data output
+ * GPUStat plugin now refreshes data on 6.9
+ * Thanks to @mlapaglia for the contribution
+
 ###2020-04-18
 - [BETA] Allow User selectable metrics to be displayed in widget
  * Go to settings and select the desired metrics after update
