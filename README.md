@@ -38,3 +38,7 @@ If any issues occur, visit the support thread [here](https://forums.unraid.net/t
         * Interrupts per Second
 
 The bulk of this code was adapted from/inspired by @realies and @CyanLabs corsairpsu-unraid project!
+
+## Contributor Thanks
+
+    Thanks to @mlapaglia for his work on UI slider bars!
