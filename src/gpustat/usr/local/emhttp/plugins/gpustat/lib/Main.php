@@ -46,7 +46,7 @@ class Main
     public function __construct(array $settings = [])
     {
         $this->settings = $settings;
-        $this->checkCommand($this->settings['cmd']);
+        $this->checkCommand($this->settings['cmd'], true);
 
         $this->stdout = '';
         $this->inventory = [];
@@ -81,7 +81,7 @@ class Main
      *
      * @param string $utility
      */
-    protected function checkCommand(string $utility)
+    protected function checkCommand(string $utility, $error = true)
     {
         $this->cmdexists = false;
         // Check if vendor utility is available
@@ -91,7 +91,9 @@ class Main
             $this->cmdexists = true;
         } else {
             // Send the error but don't die because we need to continue for inventory
-            new Error(Error::VENDOR_UTILITY_NOT_FOUND, '', false);
+            if ($error) {
+                new Error(Error::VENDOR_UTILITY_NOT_FOUND, '', false);
+            }
         }
     }
 
@@ -100,41 +102,14 @@ class Main
      *
      * @param string $command
      * @param string $argument
+     * @param bool $escape
      */
-    protected function runCommand(string $command, string $argument = '')
+    protected function runCommand(string $command, string $argument = '', $escape = true)
     {
-        $this->stdout = shell_exec(escapeshellarg($command . ES . $argument));
-    }
-
-    /**
-     * Runs a command, waits for output and closes it immediately once received
-     *
-     * @param string $command
-     * @param string $argument
-     */
-    protected function runLongCommand(string $command = '', string $argument = '')
-    {
-        $cmdDescriptor = [['pipe', 'w']];
-
-        if (!empty($command)) {
-            $process = proc_open(escapeshellarg($command . ES . $argument), $cmdDescriptor, $pipes);
-            if (is_resource($process)) {
-                $iter = 0;
-                // Programs that don't self terminate need to be closed
-                while (empty($this->stdout) && $iter <= 10) {
-                    usleep(10000);
-                    $this->stdout = stream_get_contents($pipes[0]);
-                    if (!empty($this->stdout)) {
-                        break;
-                    }
-                    usleep(100000);
-                    $iter++;
-                }
-                fclose($pipes[0]);
-                proc_close($process);
-            } else {
-                new Error(Error::PROCESS_NOT_OPENED);
-            }
+        if ($escape) {
+            $this->stdout = shell_exec(escapeshellarg($command . ES . $argument));
+       } else {
+           $this->stdout = shell_exec($command . ES . $argument);
         }
     }
 

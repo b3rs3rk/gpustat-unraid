@@ -35,14 +35,12 @@ class Nvidia extends Main
         $result = [];
 
         if ($this->cmdexists) {
-            $this->stdout = shell_exec(self::CMD_UTILITY . ES . self::INVENTORY_PARAM);
+            $this->runCommand(self::CMD_UTILITY, self::INVENTORY_PARAM, false);
             if (!empty($this->stdout) && strlen($this->stdout) > 0) {
                 $this->parseInventory(self::INVENTORY_REGEX);
-            } else {
-                new Error(Error::VENDOR_DATA_NOT_RETURNED, '', false);
-            }
-            if ($this->cmdexists) {
-                $result = $this->inventory;
+                if (!empty($this->inventory)) {
+                    $result = $this->inventory;
+                }
             }
         }
 

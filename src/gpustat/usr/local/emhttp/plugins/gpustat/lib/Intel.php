@@ -10,10 +10,11 @@ class Intel extends Main
 {
     const CMD_UTILITY = 'intel_gpu_top';
     const INVENTORY_UTILITY = 'lspci';
-    const INVENTORY_PARAM = "| egrep '(VGA|Display Controller)'";
+    const INVENTORY_PARAM = "| grep VGA";
     const INVENTORY_REGEX =
-        '/VGA.+\:\s+Intel\s+Corporation\s+(?P<model>.*)(\sFamily)?(\sIntegrated)?(\sGraphics)?(\sController)?(\s\[\d+\:\d+\])?\s\(/iU';
+        '/VGA.+\:\s+Intel\s+Corporation\s+(?P<model>.*)\s+(Family|Integrated|Graphics|Controller|Series|\()/iU';
     const STATISTICS_PARAM = '-J -s 5000';
+    const STATISTICS_WRAPPER = 'timeout -k 1 .100';
 
     /**
      * Intel constructor.
@@ -32,19 +33,23 @@ class Intel extends Main
      */
     public function getInventory(): array
     {
-        $result = [];
+        $result = $inventory = [];
 
         if ($this->cmdexists) {
-            $this->checkCommand(self::INVENTORY_UTILITY);
+            $this->checkCommand(self::INVENTORY_UTILITY, false);
             if ($this->cmdexists) {
-                $this->runCommand(self::INVENTORY_UTILITY, self::INVENTORY_PARAM);
+                $this->runCommand(self::INVENTORY_UTILITY, self::INVENTORY_PARAM, false);
                 if (!empty($this->stdout) && strlen($this->stdout) > 0) {
                     $this->parseInventory(self::INVENTORY_REGEX);
                 }
-                if (isset($this->inventory[0])) {
-                    // Only one iGPU per system, so mark it ID 99
-                    $this->inventory[0]['id'] = '99';
-                    $result = $this->inventory[0];
+                if (!empty($this->inventory)) {
+                    // Only one iGPU per system, so mark it ID 99 and pad other results
+                    $inventory[0] = [
+                        'id' => 99,
+                        'model' => $this->inventory[0]['model'],
+                        'guid' => '0000-00-000-000000',
+                    ];
+                    $result = $inventory;
                 }
             }
         }
@@ -59,7 +64,8 @@ class Intel extends Main
     {
         if ($this->cmdexists) {
             //Command invokes intel_gpu_top in JSON output mode with an update rate of 5 seconds
-            $this->runLongCommand(self::CMD_UTILITY, self::STATISTICS_PARAM);
+            $command = self::STATISTICS_WRAPPER . ES . self::CMD_UTILITY;
+            $this->runCommand($command, self::STATISTICS_PARAM, false);
             if (!empty($this->stdout) && strlen($this->stdout) > 0) {
                 $this->parseStatistics();
             } else {
