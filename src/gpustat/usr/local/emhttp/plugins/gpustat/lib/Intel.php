@@ -114,7 +114,7 @@ class Intel extends Main
                 $this->pageData['power'] = (string) $this->roundFloat($data['power']['value']) . $data['power']['unit'];
             }
             if (isset($data['frequency']['actual'])) {
-                $this->pageData['clock'] = (string) $this->stripText(' MHz', $data->clocks->graphics_clock);
+                $this->pageData['clock'] = (string) $data['frequency']['actual'];
             }
         } else {
             new Error(Error::VENDOR_DATA_BAD_PARSE);
