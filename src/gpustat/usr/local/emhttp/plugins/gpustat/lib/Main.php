@@ -69,7 +69,7 @@ class Main
     {
         $this->cmdexists = false;
         // Check if vendor utility is available
-        $this->runCommand(self::COMMAND_EXISTS_CHECKER, $utility);
+        $this->runCommand(self::COMMAND_EXISTS_CHECKER, $utility, false);
         // When checking for existence of the command, we want the return to be NULL
         if (!empty($this->stdout)) {
             $this->cmdexists = true;
