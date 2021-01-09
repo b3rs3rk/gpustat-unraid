@@ -52,23 +52,27 @@ class Main
         $this->inventory = [];
 
         $this->pageData = [
-            'clock'     => 'N/A',
-            'memclock'  => 'N/A',
-            'util'      => 'N/A',
-            'memutil'   => 'N/A',
-            'encutil'   => 'N/A',
-            'decutil'   => 'N/A',
-            'rxutil'    => 'N/A',
-            'txutil'    => 'N/A',
-            'temp'      => 'N/A',
-            'tempmax'   => 'N/A',
-            'fan'       => 'N/A',
-            'perfstate' => 'N/A',
-            'throttled' => 'N/A',
-            'thrtlrsn'  => '',
-            'power'     => 'N/A',
-            'powermax'  => 'N/A',
-            'sessions'  =>  0,
+            'clock'         => 'N/A',
+            'clockmax'      => 'N/A',
+            'memclock'      => 'N/A',
+            'memclockmax'   => 'N/A',
+            'util'          => 'N/A',
+            'memutil'       => 'N/A',
+            'memtotal'      => 'N/A',
+            'memused'       => 'N/A',
+            'encutil'       => 'N/A',
+            'decutil'       => 'N/A',
+            'temp'          => 'N/A',
+            'tempmax'       => 'N/A',
+            'fan'           => 'N/A',
+            'perfstate'     => 'N/A',
+            'throttled'     => 'N/A',
+            'thrtlrsn'      => '',
+            'power'         => 'N/A',
+            'powermax'      => 'N/A',
+            'rxutil'        => 'N/A',
+            'sessions'      =>  0,
+            'txutil'        => 'N/A',
         ];
     }
 
@@ -156,14 +160,12 @@ class Main
 
     /**
      * Echoes JSON to web renderer -- used to populate page data
-     *
-     * @param array $data
      */
-    protected function echoJson(array $data = [])
+    protected function echoJson()
     {
         // Page file JavaScript expects a JSON encoded string
-        if (is_array($data)) {
-            $json = json_encode($data);
+        if (is_array($this->pageData)) {
+            $json = json_encode($this->pageData);
             header('Content-Type: application/json');
             header('Content-Length:' . ES . strlen($json));
             echo $json;

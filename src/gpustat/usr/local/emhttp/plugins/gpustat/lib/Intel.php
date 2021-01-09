@@ -10,7 +10,7 @@ class Intel extends Main
 {
     const CMD_UTILITY = 'intel_gpu_top';
     const INVENTORY_UTILITY = 'lspci';
-    const INVENTORY_PARAM = '| egrep \'(VGA|Display Controller)\'';
+    const INVENTORY_PARAM = "| egrep '(VGA|Display Controller)'";
     const INVENTORY_REGEX =
         '/VGA.+\:\s+Intel\s+Corporation\s+(?P<model>.*)(\sFamily)?(\sIntegrated)?(\sGraphics)?(\sController)?(\s\[\d+\:\d+\])?\s\(/iU';
     const STATISTICS_PARAM = '-J -s 5000';
@@ -30,7 +30,7 @@ class Intel extends Main
      *
      * @return array
      */
-    public function getInventory()
+    public function getInventory(): array
     {
         $result = [];
 
@@ -73,38 +73,37 @@ class Intel extends Main
      */
     private function parseStatistics()
     {
-        $gpu = json_decode($this->stdout, true);
-        $retval = array();
+        $data = json_decode($this->stdout, true);
+        $this->stdout = '';
 
-        if (!empty($gpu[0])) {
+        if (!empty($data[0])) {
 
-            $retval = $this->pageData;
-            $retval += [
+            $this->pageData += [
                 'vendor'    => 'Intel',
                 'name'      => 'Integrated Graphics',
             ];
 
-            if (isset($gpu['engines']['Render/3D/0']['busy'])) {
-                $retval['util'] = (string) $this->roundFloat($gpu['engines']['Render/3D/0']['busy']) . '%';
+            if (isset($data['engines']['Render/3D/0']['busy'])) {
+                $this->pageData['util'] = (string) $this->roundFloat($data['engines']['Render/3D/0']['busy']) . '%';
             }
-            if (isset($gpu['engines']['Video/0']['busy'])) {
-                $retval['encutil'] = (string) $this->roundFloat($gpu['engines']['Video/0']['busy']) . '%';
+            if (isset($data['engines']['Video/0']['busy'])) {
+                $this->pageData['encutil'] = (string) $this->roundFloat($data['engines']['Video/0']['busy']) . '%';
             }
-            if (isset($gpu['imc-bandwidth']['reads'])) {
-                $retval['rxutil'] = $this->roundFloat($gpu['imc-bandwidth']['reads']);
+            if (isset($data['imc-bandwidth']['reads'])) {
+                $this->pageData['rxutil'] = $this->roundFloat($data['imc-bandwidth']['reads']);
             }
-            if (isset($gpu['imc-bandwidth']['writes'])) {
-                $retval['txutil'] = $this->roundFloat($gpu['imc-bandwidth']['writes']);
+            if (isset($data['imc-bandwidth']['writes'])) {
+                $this->pageData['txutil'] = $this->roundFloat($data['imc-bandwidth']['writes']);
             }
-            if (isset($gpu['power']['value'])) {
-                $retval['power'] = (string) $this->roundFloat($gpu['power']['value']) . $gpu['power']['unit'];
+            if (isset($data['power']['value'])) {
+                $this->pageData['power'] = (string) $this->roundFloat($data['power']['value']) . $data['power']['unit'];
             }
-            if (isset($gpu['frequency']['requested'])) {
-                $retval['clock'] = (string) $this->stripText(' MHz', $gpu->clocks->graphics_clock);
+            if (isset($data['frequency']['requested'])) {
+                $this->pageData['clock'] = (string) $this->stripText(' MHz', $data->clocks->graphics_clock);
             }
         } else {
             new Error(Error::VENDOR_DATA_BAD_PARSE);
         }
-        $this->echoJson($retval);
+        $this->echoJson();
     }
 }
