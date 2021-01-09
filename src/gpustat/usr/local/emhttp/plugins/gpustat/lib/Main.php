@@ -46,33 +46,16 @@ class Main
     public function __construct(array $settings = [])
     {
         $this->settings = $settings;
-        $this->checkCommand($this->settings['cmd'], true);
+        $this->checkCommand($this->settings['cmd']);
 
         $this->stdout = '';
         $this->inventory = [];
 
         $this->pageData = [
+            'bwutil'        => 'N/A',
             'clock'         => 'N/A',
-            'clockmax'      => 'N/A',
-            'memclock'      => 'N/A',
-            'memclockmax'   => 'N/A',
             'util'          => 'N/A',
-            'memutil'       => 'N/A',
-            'memtotal'      => 'N/A',
-            'memused'       => 'N/A',
-            'encutil'       => 'N/A',
-            'decutil'       => 'N/A',
-            'temp'          => 'N/A',
-            'tempmax'       => 'N/A',
-            'fan'           => 'N/A',
-            'perfstate'     => 'N/A',
-            'throttled'     => 'N/A',
-            'thrtlrsn'      => '',
             'power'         => 'N/A',
-            'powermax'      => 'N/A',
-            'rxutil'        => 'N/A',
-            'sessions'      =>  0,
-            'txutil'        => 'N/A',
         ];
     }
 
@@ -80,6 +63,7 @@ class Main
      * Checks if vendor utility exists in the system and dies if it does not
      *
      * @param string $utility
+     * @param bool $error
      */
     protected function checkCommand(string $utility, $error = true)
     {
@@ -87,7 +71,7 @@ class Main
         // Check if vendor utility is available
         $this->runCommand(self::COMMAND_EXISTS_CHECKER, $utility);
         // When checking for existence of the command, we want the return to be NULL
-        if (is_null($this->stdout)) {
+        if (!empty($this->stdout)) {
             $this->cmdexists = true;
         } else {
             // Send the error but don't die because we need to continue for inventory
@@ -107,9 +91,9 @@ class Main
     protected function runCommand(string $command, string $argument = '', $escape = true)
     {
         if ($escape) {
-            $this->stdout = shell_exec(escapeshellarg($command . ES . $argument));
-       } else {
-           $this->stdout = shell_exec($command . ES . $argument);
+            $this->stdout = shell_exec(sprintf("%s %s", $command, escapeshellarg($argument)));
+        } else {
+            $this->stdout = shell_exec(sprintf("%s %s", $command, $argument));
         }
     }
 

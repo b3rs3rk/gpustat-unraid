@@ -9,7 +9,7 @@ Title="GPU Statistics"
     include_once './plugins/gpustat/gpustatus.php';
 ?>
 
-<b>GPU Statistics</b>
+<h3><b>Runtime</b></h3>
 <form markdown="1" method="POST" action="/update.php" target="progressFrame">
   <input type="hidden" name="#file" value="gpustat/gpustat.cfg" />
 
@@ -43,15 +43,30 @@ UI Automatic Refresh:
     <?=mk_option($gpustat_cfg['UIREFRESH'], "1", "Yes");?>
   </select>
 
+<h3><b>Enabled Pollers</b></h3>
 <br>
-    <b>Enabled Pollers</b>
-<br>
+
+<h4><b>Multiple Vendors</b></h4>
 
 GPU and Memory Clocks:
 : <select id="DISPCLOCKS" name="DISPCLOCKS" size="1">
     <?=mk_option($gpustat_cfg['DISPCLOCKS'], "0", "No");?>
     <?=mk_option($gpustat_cfg['DISPCLOCKS'], "1", "Yes");?>
   </select>
+
+PCI/IMC Utilization:
+: <select id="DISPPCIUTIL" name="DISPPCIUTIL" size="1">
+    <?=mk_option($gpustat_cfg['DISPPCIUTIL'], "0", "No");?>
+    <?=mk_option($gpustat_cfg['DISPPCIUTIL'], "1", "Yes");?>
+  </select>
+
+Power Draw:
+: <select id="DISPPWRDRAW" name="DISPPWRDRAW" size="1">
+    <?=mk_option($gpustat_cfg['DISPPWRDRAW'], "0", "No");?>
+    <?=mk_option($gpustat_cfg['DISPPWRDRAW'], "1", "Yes");?>
+  </select>
+
+<h4><b>Nvidia Specific</b></h4>
 
 Memory Utilization:
 : <select id="DISPMEMUTIL" name="DISPMEMUTIL" size="1">
@@ -69,12 +84,6 @@ Fan Usage:
 : <select id="DISPFAN" name="DISPFAN" size="1">
     <?=mk_option($gpustat_cfg['DISPFAN'], "0", "No");?>
     <?=mk_option($gpustat_cfg['DISPFAN'], "1", "Yes");?>
-  </select>
-
-Power Draw:
-: <select id="DISPPWRDRAW" name="DISPPWRDRAW" size="1">
-    <?=mk_option($gpustat_cfg['DISPPWRDRAW'], "0", "No");?>
-    <?=mk_option($gpustat_cfg['DISPPWRDRAW'], "1", "Yes");?>
   </select>
 
 Power State:
@@ -95,10 +104,40 @@ Active Sessions:
     <?=mk_option($gpustat_cfg['DISPSESSIONS'], "1", "Yes");?>
   </select>
 
+<h4><b>Intel Specific</b></h4>
+
+3D Render Load:
+: <select id="DISP3DRENDER" name="DISP3DRENDER" size="1">
+    <?=mk_option($gpustat_cfg['DISP3DRENDER'], "0", "No");?>
+    <?=mk_option($gpustat_cfg['DISP3DRENDER'], "1", "Yes");?>
+  </select>
+
+Blitter Load:
+: <select id="DISPBLITTER" name="DISPBLITTER" size="1">
+    <?=mk_option($gpustat_cfg['DISPBLITTER'], "0", "No");?>
+    <?=mk_option($gpustat_cfg['DISPBLITTER'], "1", "Yes");?>
+  </select>
+
+Video Load:
+: <select id="DISPVIDEO" name="DISPVIDEO" size="1">
+    <?=mk_option($gpustat_cfg['DISPVIDEO'], "0", "No");?>
+    <?=mk_option($gpustat_cfg['DISPVIDEO'], "1", "Yes");?>
+  </select>
+
+Video Enhance Load:
+: <select id="DISPVIDENH" name="DISPVIDENH" size="1">
+    <?=mk_option($gpustat_cfg['DISPVIDENH'], "0", "No");?>
+    <?=mk_option($gpustat_cfg['DISPVIDENH'], "1", "Yes");?>
+  </select>
+
 <br><br>
 
   <input id="DEFAULT" class="stopped" type="submit" value="Default" onClick="resetDATA(this.form)">
 : <input id="btnApply" type="submit" value="Apply"><input type="button" value="Done" onClick="done()">
+
+<br><br><br>
+Note: Where noted, not all metrics are provided by the vendor utilities and this plugin cannot magically make that work.
+
 </form>
 
 <script type="text/javascript">
@@ -110,11 +149,16 @@ function resetDATA(form) {
     form.DISPENCDEC.value = "1";
     form.DISPTEMP.value = "1";
     form.DISPFAN.value = "1";
+    form.DISPPCIUTIL.value = "1";
     form.DISPPWRDRAW.value = "1";
     form.DISPPWRSTATE.value = "1";
     form.DISPTHROTTLE.value = "1";
     form.DISPSESSIONS.value = "1";
     form.UIREFRESH.value = "1";
     form.DISPMEMUTIL.value = "1";
+    form.DISP3DRENDER.value = "1";
+    form.DISPBLITTER.value = "1";
+    form.DISPVIDEO.value = "1";
+    form.DISPVIDENH.value = "1";
 }
 </script>

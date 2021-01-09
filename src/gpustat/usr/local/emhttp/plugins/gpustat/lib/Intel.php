@@ -82,29 +82,38 @@ class Intel extends Main
         $data = json_decode($this->stdout, true);
         $this->stdout = '';
 
-        if (!empty($data[0])) {
+        if (!empty($data)) {
 
             $this->pageData += [
                 'vendor'    => 'Intel',
                 'name'      => 'Integrated Graphics',
+                '3drender'  => 'N/A',
+                'blitter'   => 'N/A',
+                'video'     => 'N/A',
+                'videnh'    => 'N/A',
             ];
 
             if (isset($data['engines']['Render/3D/0']['busy'])) {
-                $this->pageData['util'] = (string) $this->roundFloat($data['engines']['Render/3D/0']['busy']) . '%';
+                $this->pageData['util'] = $this->pageData['3drender'] = (string) $this->roundFloat($data['engines']['Render/3D/0']['busy']) . '%';
+            }
+            if (isset($data['engines']['Blitter/0']['busy'])) {
+                $this->pageData['blitter'] = (string) $this->roundFloat($data['engines']['Blitter/0']['busy']) . '%';
             }
             if (isset($data['engines']['Video/0']['busy'])) {
-                $this->pageData['encutil'] = (string) $this->roundFloat($data['engines']['Video/0']['busy']) . '%';
+                $this->pageData['video'] = (string) $this->roundFloat($data['engines']['Video/0']['busy']) . '%';
             }
-            if (isset($data['imc-bandwidth']['reads'])) {
+            if (isset($data['engines']['VideoEnhance/0']['busy'])) {
+                $this->pageData['videnh'] = (string) $this->roundFloat($data['engines']['VideoEnhance/0']['busy']) . '%';
+            }
+            if (isset($data['imc-bandwidth']['reads']) && isset($data['imc-bandwidth']['writes'])) {
                 $this->pageData['rxutil'] = $this->roundFloat($data['imc-bandwidth']['reads']);
-            }
-            if (isset($data['imc-bandwidth']['writes'])) {
                 $this->pageData['txutil'] = $this->roundFloat($data['imc-bandwidth']['writes']);
+                $this->pageData['bwutil'] = $this->pageData['rxutil'] . " | " . $this->pageData['txutil'];
             }
             if (isset($data['power']['value'])) {
                 $this->pageData['power'] = (string) $this->roundFloat($data['power']['value']) . $data['power']['unit'];
             }
-            if (isset($data['frequency']['requested'])) {
+            if (isset($data['frequency']['actual'])) {
                 $this->pageData['clock'] = (string) $this->stripText(' MHz', $data->clocks->graphics_clock);
             }
         } else {
