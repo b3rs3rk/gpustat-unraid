@@ -91,6 +91,7 @@ class Nvidia extends Main
                 'temp'          => 'N/A',
                 'tempmax'       => 'N/A',
                 'fan'           => 'N/A',
+                'pcimax'        => 'N/A',
                 'perfstate'     => 'N/A',
                 'throttled'     => 'N/A',
                 'thrtlrsn'      => '',
@@ -105,19 +106,10 @@ class Nvidia extends Main
                 if (isset($data->utilization->gpu_util)) {
                     $this->pageData['util'] = (string) $this->stripSpaces($data->utilization->gpu_util);
                 }
-                if (isset($data->fb_memory_usage->used) && isset($data->fb_memory_usage->total)) {
+                if (isset($data->fb_memory_usage->used, $data->fb_memory_usage->total)) {
                     $this->pageData['memtotal'] = (string) $this->stripText(' MiB', $data->fb_memory_usage->total);
                     $this->pageData['memused'] = (string) $this->stripText(' MiB', $data->fb_memory_usage->used);
                     $this->pageData['memutil'] = round($this->pageData['memused'] / $this->pageData['memtotal'] * 100) . "%";
-                }
-                // If card doesn't support mem utilization property, fall back to computation for memory usage
-                if ($this->pageData['memutil'] == 'N/A' && isset($data->fb_memory_usage->total, $data->fb_memory_usage->used)) {
-                    $memTotal = $this->stripText(' MiB', $data->fb_memory_usage->total);
-                    $memUsed = $this->stripText(' MiB', $data->fb_memory_usage->used);
-                    if ($memUsed !== "N/A" && $memTotal !== "N/A" && $memUsed <= $memTotal) {
-                        $this->pageData['memutil'] = $this->roundFloat(((int) $memUsed / (int) $memTotal) * 100, -1) . '%';
-                    }
-                    unset($memTotal, $memUsed);
                 }
                 if (isset($data->utilization->encoder_util)) {
                     $this->pageData['encutil'] = (string) $this->stripSpaces($data->utilization->encoder_util);
@@ -157,32 +149,38 @@ class Nvidia extends Main
             }
             if (isset($data->power_readings)) {
                 if (isset($data->power_readings->power_draw)) {
-                    $this->pageData['power'] = (string) $this->stripText(' W', $data->power_readings->power_draw);
+                    $this->pageData['power'] = (string) $this->stripText(' ', $data->power_readings->power_draw);
                 }
                 if (isset($data->power_readings->power_limit)) {
                     $this->pageData['powermax'] = (string) $this->stripText('.00 W', $data->power_readings->power_limit);
                 }
             }
-            if (isset($data->clocks)) {
-                if (isset($data->clocks->graphics_clock) && isset($data->max_clocks->graphics_clock)) {
+            if (isset($data->clocks, $data->max_clocks)) {
+                if (isset($data->clocks->graphics_clock, $data->max_clocks->graphics_clock)) {
                     $this->pageData['clock'] = (string) $this->stripText(' MHz', $data->clocks->graphics_clock);
                     $this->pageData['clockmax'] = (string) $this->stripText(' MHz', $data->max_clocks->graphics_clock);
                 }
-                if (isset($data->clocks->mem_clock) && isset($data->max_clocks->mem_clock)) {
+                if (isset($data->clocks->mem_clock, $data->max_clocks->mem_clock)) {
                     $this->pageData['memclock'] = (string) $this->stripText(' MHz', $data->clocks->mem_clock);
                     $this->pageData['memclockmax'] = (string) $this->stripText(' MHz', $data->max_clocks->mem_clock);
                 }
             }
             // For some reason, encoder_sessions->session_count is not reliable on my install, better to count processes
-            if (isset($data->processes) && isset($data->processes->process_info)) {
+            if (isset($data->processes->process_info)) {
                 $this->pageData['sessions'] = (int) count($data->processes->process_info);
             }
             if (isset($data->pci)) {
-                if (isset($data->pci->rx_util) && isset($data->pci->tx_util)) {
-                    $this->pageData['rxutil'] = (string) $this->stripText(' KB/s', ($this->roundFloat($data->pci->rx_util / 1000)));
-                    $this->pageData['txutil'] = (string) $this->stripText(' KB/s', ($this->roundFloat($data->pci->tx_util / 1000)));
-                    $this->pageData['bwutil'] = (string) $this->pageData['rxutil'] . " | " . $this->pageData['txutil'];
+                if (isset($data->pci->rx_util, $data->pci->tx_util)) {
+                    $this->pageData['rxutil'] = (string) $this->roundFloat($this->stripText('KB/s', $data->pci->rx_util) / 1000, 2) . " MB/s";
+                    $this->pageData['txutil'] = (string) $this->roundFloat($this->stripText('KB/s', $data->pci->tx_util) / 1000, 2) . " MB/s";
                 }
+                /* TODO: Implement PCI Bandwidth utilization as slider bar with calculated bus maximum
+                if (isset($data->pci->pci_gpu_link_info->pcie_gen->current_link_gen, $data->pci->pci_gpu_link_info->link_width->current_link_width)) {
+                    $generation = $data->pci->pci_gpu_link_info->pcie_gen->current_link_gen;
+                    $width = (int) $this->stripText('x', $data->pci->pci_gpu_link_info->link_width->current_link_width);
+                    $this->pageData['pcimax'] = pow(2,$generation - 1) * 250 * $width;
+                }
+                */
             }
         } else {
             new Error(Error::VENDOR_DATA_BAD_PARSE);

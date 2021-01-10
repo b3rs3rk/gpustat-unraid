@@ -2,6 +2,8 @@
 
 namespace gpustat\lib;
 
+use JsonException;
+
 /**
  * Class Intel
  * @package gpustat\lib
@@ -13,8 +15,8 @@ class Intel extends Main
     const INVENTORY_PARAM = "| grep VGA";
     const INVENTORY_REGEX =
         '/VGA.+\:\s+Intel\s+Corporation\s+(?P<model>.*)\s+(Family|Integrated|Graphics|Controller|Series|\()/iU';
-    const STATISTICS_PARAM = '-J -s 5000';
-    const STATISTICS_WRAPPER = 'timeout -k 1 .100';
+    const STATISTICS_PARAM = '-J -s 250';
+    const STATISTICS_WRAPPER = 'timeout -k .500 .400';
 
     /**
      * Intel constructor.
@@ -79,8 +81,24 @@ class Intel extends Main
      */
     private function parseStatistics()
     {
-        $data = json_decode($this->stdout, true);
-        $this->stdout = '';
+        // JSON output from intel_gpu_top with multiple array indexes isn't properly formatted
+        $stdout = "[" . str_replace(["\n","\t"], '', $this->stdout) . "]";
+
+        try {
+            $data = json_decode($stdout, true, 512, JSON_THROW_ON_ERROR);
+        } catch (JsonException $e) {
+            $data = [];
+            new Error(Error::VENDOR_DATA_BAD_PARSE, $e->getMessage(), true);
+        }
+
+        // Need to make sure we have at least two array indexes to take the second one
+        if ($count = count($data) < 2) {
+            new Error(Error::VENDOR_DATA_NOT_ENOUGH, "Count: $count");
+        }
+
+        // intel_gpu_top will never show utilization counters on the first sample so we need the second position
+        $data = $data[1];
+        unset($stdout, $this->stdout);
 
         if (!empty($data)) {
 
@@ -105,10 +123,9 @@ class Intel extends Main
             if (isset($data['engines']['VideoEnhance/0']['busy'])) {
                 $this->pageData['videnh'] = (string) $this->roundFloat($data['engines']['VideoEnhance/0']['busy']) . '%';
             }
-            if (isset($data['imc-bandwidth']['reads']) && isset($data['imc-bandwidth']['writes'])) {
-                $this->pageData['rxutil'] = $this->roundFloat($data['imc-bandwidth']['reads']);
-                $this->pageData['txutil'] = $this->roundFloat($data['imc-bandwidth']['writes']);
-                $this->pageData['bwutil'] = $this->pageData['rxutil'] . " | " . $this->pageData['txutil'];
+            if (isset($data['imc-bandwidth']['reads'], $data['imc-bandwidth']['writes'])) {
+                $this->pageData['rxutil'] = $this->roundFloat($data['imc-bandwidth']['reads'], 2);
+                $this->pageData['txutil'] = $this->roundFloat($data['imc-bandwidth']['writes'], 2);
             }
             if (isset($data['power']['value'])) {
                 $this->pageData['power'] = (string) $this->roundFloat($data['power']['value']) . $data['power']['unit'];

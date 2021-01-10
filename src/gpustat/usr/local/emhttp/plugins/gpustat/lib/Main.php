@@ -52,10 +52,11 @@ class Main
         $this->inventory = [];
 
         $this->pageData = [
-            'bwutil'        => 'N/A',
             'clock'         => 'N/A',
             'util'          => 'N/A',
             'power'         => 'N/A',
+            'rxutil'        => 'N/A',
+            'txutil'        => 'N/A',
         ];
     }
 
@@ -141,7 +142,6 @@ class Main
      */
     protected static function stripSpaces(string $text = '')
     {
-        
         return str_replace(' ', '', $text);
     }
 
