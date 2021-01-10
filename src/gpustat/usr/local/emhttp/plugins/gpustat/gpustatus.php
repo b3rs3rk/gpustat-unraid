@@ -18,6 +18,7 @@ if (!isset($gpustat_cfg)) {
 
 // $gpu_inventory should be set if called from settings page code
 if (isset($gpustat_inventory) && $gpustat_inventory) {
+    $gpustat_cfg['inventory'] = true;
     // Settings page looks for $gpu_data specifically -- inventory all supported GPU types
     $gpustat_data = (new Nvidia($gpustat_cfg))->getInventory();
     $gpustat_data += (new Intel($gpustat_cfg))->getInventory();

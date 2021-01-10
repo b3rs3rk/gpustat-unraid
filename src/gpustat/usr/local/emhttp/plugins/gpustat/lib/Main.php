@@ -46,7 +46,11 @@ class Main
     public function __construct(array $settings = [])
     {
         $this->settings = $settings;
-        $this->checkCommand($this->settings['cmd']);
+        if (isset($this->settings['inventory'])) {
+            $this->checkCommand($this->settings['cmd'], false);
+        } else {
+            $this->checkCommand($this->settings['cmd']);
+        }
 
         $this->stdout = '';
         $this->inventory = [];
@@ -167,7 +171,13 @@ class Main
      */
     protected static function roundFloat(float $number, int $precision = 0)
     {
-        return round($number, $precision, PHP_ROUND_HALF_UP);
+        if ($precision > 0) {
+            $result = number_format(round($number, $precision, PHP_ROUND_HALF_UP), $precision, '.','');
+        } else {
+            $result = round($number, $precision, PHP_ROUND_HALF_UP);
+        }
+
+        return $result;
     }
 
     /**

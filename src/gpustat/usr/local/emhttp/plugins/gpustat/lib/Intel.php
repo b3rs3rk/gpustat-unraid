@@ -124,14 +124,14 @@ class Intel extends Main
                 $this->pageData['videnh'] = (string) $this->roundFloat($data['engines']['VideoEnhance/0']['busy']) . '%';
             }
             if (isset($data['imc-bandwidth']['reads'], $data['imc-bandwidth']['writes'])) {
-                $this->pageData['rxutil'] = $this->roundFloat($data['imc-bandwidth']['reads'], 2);
-                $this->pageData['txutil'] = $this->roundFloat($data['imc-bandwidth']['writes'], 2);
+                $this->pageData['rxutil'] = $this->roundFloat($data['imc-bandwidth']['reads'], 2) . " MB/s";
+                $this->pageData['txutil'] = $this->roundFloat($data['imc-bandwidth']['writes'], 2) . " MB/s";
             }
             if (isset($data['power']['value'])) {
                 $this->pageData['power'] = (string) $this->roundFloat($data['power']['value']) . $data['power']['unit'];
             }
             if (isset($data['frequency']['actual'])) {
-                $this->pageData['clock'] = (string) $data['frequency']['actual'];
+                $this->pageData['clock'] = (int) $this->roundFloat($data['frequency']['actual']);
             }
         } else {
             new Error(Error::VENDOR_DATA_BAD_PARSE);
