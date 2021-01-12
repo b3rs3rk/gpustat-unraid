@@ -1,8 +1,31 @@
 Menu="Dashboard"
 Icon="gpustat.png"
 ---
-<style type="text/css">
 <?php
+    /*
+      MIT License
+
+      Copyright (c) 2020-2021 b3rs3rk
+
+      Permission is hereby granted, free of charge, to any person obtaining a copy
+      of this software and associated documentation files (the "Software"), to deal
+      in the Software without restriction, including without limitation the rights
+      to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+      copies of the Software, and to permit persons to whom the Software is
+      furnished to do so, subject to the following conditions:
+
+      The above copyright notice and this permission notice shall be included in all
+      copies or substantial portions of the Software.
+
+      THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+      IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+      FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+      AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+      LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+      OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+      SOFTWARE.
+    */
+
     $gpustat_cfg = parse_plugin_cfg('gpustat', true);
 
     $nv = $intel = false;
@@ -11,8 +34,12 @@ Icon="gpustat.png"
         $gpu_nv = true;
     } elseif ($gpustat_cfg['VENDOR'] == "intel") {
         $gpu_intel = true;
+    } else {
+        // If vendor isn't set the config hasn't been saved, don't render the plugin
+        exit;
     }
 ?>
+<style type="text/css">
     #dash_gpustat_settings i, #dash_gpustat_toggle {margin-top:0;}
     span.gpu{width:150px;display:inline-block}
 </style>
@@ -25,9 +52,9 @@ Icon="gpustat.png"
                 <i class='icon-hardware'></i>
                 <div class='section'>GPU<br>
                     <span id='load'>Load: <span class='gpu-util'></span></span>
-                    <?php if ($gpu_nv) : ?>
-                        <span id='gpu-temp'>Temperature: <span class='gpu-temp'></span></span>
-                    <?php endif; ?>
+<?php if ($gpu_nv) : ?>
+                    <span id='gpu-temp'>Temperature: <span class='gpu-temp'></span></span>
+<?php endif; ?>
                 </div>
                 <i class='fa fa-fw chevron mt0' id='dash_gpustat_toggle' onclick='toggleChevron("dash_gpustat_toggle",0)'></i>
                 <a href='/Settings/GPUStatSettings' id='dash_gpustat_settings' title='Go to GPU Statistics settings'><i class='fa fa-fw fa-cog chevron mt0'></i></a>
@@ -37,183 +64,186 @@ Icon="gpustat.png"
         </tr>
         <tr class="dash_gpustat_toggle gpu-enviro">
             <td></td>
-            <td colspan="3">
-                <span class='gpu-vendor'></span> <span class='gpu-name'></span>
-            </td>
+            <td colspan="3"><span class='gpu-vendor'></span> <span class='gpu-name'></span></td>
             <td></td>
         </tr>
-        <?php if ($gpu_nv) : ?>
-            <tr class="dash_gpustat_toggle gpu-enviro">
-                <td></td>
-                <td>Load - Memory</td>
-                <td><span class='gpu-util load'></span><div class='usage-disk sys'><span class='gpu-utilbar'></span><span></span></div></td>
-                <?php if($gpustat_cfg['DISPMEMUTIL']) : ?>
-                    <td><span class='gpu-memutil load'></span><div class='usage-disk sys'><span class='gpu-memutilbar'></span><span></span></div></td>
-                <?php endif; ?>
-                <td></td>
-            </tr>
-            <?php if($gpustat_cfg['DISPENCDEC']) : ?>
-                <tr class="dash_gpustat_toggle gpu-enviro">
-                    <td></td>
-                    <td>Encoder - Decoder</td>
-                    <td><span class='gpu-encutil load'></span><div class='usage-disk sys'><span class='gpu-encutilbar'></span><span></span></div></td>
-                    <td><span class='gpu-decutil load'></span><div class='usage-disk sys'><span class='gpu-decutilbar'></span><span></span></div></td>
-                    <td></td>
-                </tr>
-            <?php endif; ?>
-            <?php if($gpustat_cfg['DISPCLOCKS']) : ?>
-                <tr class="dash_gpustat_toggle gpu-enviro">
-                    <td></td>
-                    <td>GPU - Memory (MHz)</td>
-                    <td><span class='gpu-clock load'></span><div class='usage-disk sys'><span class='gpu-gpuclockbar'></span><span></span></div></td>
-                    <td><span class='gpu-memclock load'></span><div class='usage-disk sys'><span class='gpu-memclockbar'></span><span></span></div></td>
-                    <td></td>
-                </tr>
-            <?php endif; ?>
-            <?php if($gpustat_cfg['DISPFAN'] || $gpustat_cfg['DISPPWRDRAW']) : ?>
-                <tr class="dash_gpustat_toggle gpu-enviro">
-                    <td></td>
-                    <td>Fan - Power</td>
-                    <?php if($gpustat_cfg['DISPFAN']) : ?>
-                        <td><span class='gpu-fan load'></span><div class='usage-disk sys'><span class='gpu-fanbar'></span><span></span></div></td>
-                    <?php endif; ?>
-                    <?php if($gpustat_cfg['DISPPWRDRAW']) : ?>
-                        <td><span class='gpu-power load'></span><div class='usage-disk sys'><span class='gpu-powerbar'></span><span></span></div></td>
-                    <?php endif; ?>
-                    <td></td>
-                </tr>
-            <?php endif; ?>
-            <?php if($gpustat_cfg['DISPPCIUTIL']) : ?>
-                <tr class="dash_gpustat_toggle gpu-enviro">
-                    <td></td>
-                    <td>PCI Bus Utilization</td>
-                    <td>&emsp;&ensp;Receive: <span class='gpu-rxutil'></span></td>
-                    <td>&emsp;&ensp;Transmit: <span class='gpu-txutil'></span></td>
-                    <td></td>
-                </tr>
-            <?php endif; ?>
-            <?php if($gpustat_cfg['DISPTHROTTLE']) : ?>
-                <tr class="dash_gpustat_toggle gpu-enviro">
-                    <td></td>
-                    <td>Throttled</td>
-                    <td><span class='gpu-throttled load'></span>&nbsp;<span class='gpu-thrtlrsn load'></span></td>
-                    <td></td>
-                </tr>
-            <?php endif; ?>
-            <?php if($gpustat_cfg['DISPPWRSTATE']) : ?>
-                <tr class="dash_gpustat_toggle gpu-enviro">
-                    <td></td>
-                    <td>Power State</td>
-                    <td><span class='gpu-perfstate load'></span></td>
-                    <td></td>
-                </tr>
-            <?php endif; ?>
-            <?php if($gpustat_cfg['DISPSESSIONS']) : ?>
-                <tr class="dash_gpustat_toggle gpu-enviro">
-                    <td></td>
-                    <td>Sessions</td>
-                    <td colspan="2"><span class='gpu-sessions load'></span></td>
-                    <td></td>
-                </tr>
-            <?php endif; ?>
-        <?php endif; ?>
-        <?php if ($gpu_intel) : ?>
-            <?php if($gpustat_cfg['DISP3DRENDER']) : ?>
-                <tr class="dash_gpustat_toggle gpu-enviro">
-                    <td></td>
-                    <td>3D Render Load</td>
-                    <td colspan="2"><span class='gpu-3drender load'></span><div class='usage-disk sys'><span class='gpu-3drenderbar'></span><span></span></div></td>
-                    <td></td>
-                </tr>
-            <?php endif; ?>
-            <?php if($gpustat_cfg['DISPBLITTER']) : ?>
-                <tr class="dash_gpustat_toggle gpu-enviro">
-                    <td></td>
-                    <td>Blitter Load</td>
-                    <td colspan="2"><span class='gpu-blitter load'></span><div class='usage-disk sys'><span class='gpu-blitterbar'></span><span></span></div></td>
-                    <td></td>
-                </tr>
-            <?php endif; ?>
-            <?php if($gpustat_cfg['DISPVIDEO']) : ?>
-                <tr class="dash_gpustat_toggle gpu-enviro">
-                    <td></td>
-                    <td>Video Load</td>
-                    <td colspan="2"><span class='gpu-video load'></span><div class='usage-disk sys'><span class='gpu-videobar'></span><span></span></div></td>
-                    <td></td>
-                </tr>
-            <?php endif; ?>
-            <?php if($gpustat_cfg['DISPVIDENH']) : ?>
-                <tr class="dash_gpustat_toggle gpu-enviro">
-                    <td></td>
-                    <td>Video Enhance Load</td>
-                    <td colspan="2"><span class='gpu-videnh load'></span><div class='usage-disk sys'><span class='gpu-videnhbar'></span><span></span></div></td>
-                    <td></td>
-                </tr>
-            <?php endif; ?>
-            <?php if($gpustat_cfg['DISPPWRDRAW']) : ?>
-                <tr class="dash_gpustat_toggle gpu-enviro">
-                    <td></td>
-                    <td>Power Draw</td>
-                    <td colspan="2"><span class='gpu-power load'></span><div class='usage-disk sys'><span class='gpu-powerutilbar'></span><span></span></div></td>
-                    <td></td>
-                </tr>
-            <?php endif; ?>
-            <?php if($gpustat_cfg['DISPPCIUTIL']) : ?>
-                <tr class="dash_gpustat_toggle gpu-enviro">
-                    <td></td>
-                    <td>IMC Bus Utilization</td>
-                    <td colspan="2">Receive: <span class='gpu-rxutil'></span> &emsp; Transmit: <span class='gpu-txutil'></span></td>
-                    <td></td>
-                </tr>
-            <?php endif; ?>
-            <?php if($gpustat_cfg['DISPCLOCKS']) : ?>
-                <tr class="dash_gpustat_toggle gpu-enviro">
-                    <td></td>
-                    <td>GPU Clock (MHz)</td>
-                    <td colspan="2"><span class='gpu-clock load'></span></td>
-                    <td></td>
-                </tr>
-            <?php endif; ?>
-            <?php if($gpustat_cfg['DISPINTERRUPT']) : ?>
-                <tr class="dash_gpustat_toggle gpu-enviro">
-                    <td></td>
-                    <td>Interrupts/Sec</td>
-                    <td colspan="2"><span class='gpu-interrupts load'></span></td>
-                    <td></td>
-                </tr>
-            <?php endif; ?>
-        <?php endif; ?>
+<?php if ($gpu_nv) : ?>
+        <tr class="dash_gpustat_toggle gpu-enviro">
+            <td></td>
+            <td>Load - Memory</td>
+            <td><span class='gpu-util load'></span><div class='usage-disk sys'><span class='gpu-utilbar'></span><span></span></div></td>
+<?php if($gpustat_cfg['DISPMEMUTIL']) : ?>
+            <td><span class='gpu-memutil load'></span><div class='usage-disk sys'><span class='gpu-memutilbar'></span><span></span></div></td>
+<?php endif; ?>
+            <td></td>
+        </tr>
+<?php if($gpustat_cfg['DISPENCDEC']) : ?>
+        <tr class="dash_gpustat_toggle gpu-enviro">
+            <td></td>
+            <td>Encoder - Decoder</td>
+            <td><span class='gpu-encutil load'></span><div class='usage-disk sys'><span class='gpu-encutilbar'></span><span></span></div></td>
+            <td><span class='gpu-decutil load'></span><div class='usage-disk sys'><span class='gpu-decutilbar'></span><span></span></div></td>
+            <td></td>
+        </tr>
+<?php endif; ?>
+<?php if($gpustat_cfg['DISPCLOCKS']) : ?>
+        <tr class="dash_gpustat_toggle gpu-enviro">
+            <td></td>
+            <td>GPU - Memory (MHz)</td>
+            <td><span class='gpu-clock load'></span><div class='usage-disk sys'><span class='gpu-gpuclockbar'></span><span></span></div></td>
+            <td><span class='gpu-memclock load'></span><div class='usage-disk sys'><span class='gpu-memclockbar'></span><span></span></div></td>
+            <td></td>
+        </tr>
+<?php endif; ?>
+<?php if($gpustat_cfg['DISPFAN'] || $gpustat_cfg['DISPPWRDRAW']) : ?>
+        <tr class="dash_gpustat_toggle gpu-enviro">
+            <td></td>
+            <td>Fan - Power</td>
+<?php if($gpustat_cfg['DISPFAN']) : ?>
+            <td><span class='gpu-fan load'></span><div class='usage-disk sys'><span class='gpu-fanbar'></span><span></span></div></td>
+<?php endif; ?>
+<?php if($gpustat_cfg['DISPPWRDRAW']) : ?>
+            <td><span class='gpu-power load'></span><div class='usage-disk sys'><span class='gpu-powerbar'></span><span></span></div></td>
+<?php endif; ?>
+            <td></td>
+        </tr>
+<?php endif; ?>
+<?php if($gpustat_cfg['DISPPCIUTIL']) : ?>
+        <tr class="dash_gpustat_toggle gpu-enviro">
+            <td></td>
+            <td>PCI Bus Utilization</td>
+            <td>&emsp;&ensp;Receive: <span class='gpu-rxutil'></span></td>
+            <td>&emsp;&ensp;Transmit: <span class='gpu-txutil'></span></td>
+            <td></td>
+        </tr>
+<?php endif; ?>
+<?php if($gpustat_cfg['DISPTHROTTLE']) : ?>
+        <tr class="dash_gpustat_toggle gpu-enviro">
+            <td></td>
+            <td>Throttled</td>
+            <td colspan="2"><span class='gpu-throttled load'></span>&nbsp;<span class='gpu-thrtlrsn load'></span></td>
+            <td></td>
+        </tr>
+<?php endif; ?>
+<?php if($gpustat_cfg['DISPPWRSTATE']) : ?>
+        <tr class="dash_gpustat_toggle gpu-enviro">
+            <td></td>
+            <td>Power State</td>
+            <td colspan="2"><span class='gpu-perfstate load'></span></td>
+            <td></td>
+        </tr>
+<?php endif; ?>
+<?php if($gpustat_cfg['DISPSESSIONS']) : ?>
+        <tr class="dash_gpustat_toggle gpu-enviro">
+            <td></td>
+            <td>Sessions</td>
+            <td colspan="2"><span class='gpu-sessions load'></span></td>
+            <td></td>
+        </tr>
+<?php endif; ?>
+<?php endif; ?>
+<?php if ($gpu_intel) : ?>
+<?php if($gpustat_cfg['DISP3DRENDER']) : ?>
+        <tr class="dash_gpustat_toggle gpu-enviro">
+            <td></td>
+            <td>3D Render Load</td>
+            <td colspan="2"><span class='gpu-3drender load'></span><div class='usage-disk sys'><span class='gpu-3drenderbar'></span><span></span></div></td>
+            <td></td>
+        </tr>
+<?php endif; ?>
+<?php if($gpustat_cfg['DISPBLITTER']) : ?>
+        <tr class="dash_gpustat_toggle gpu-enviro">
+            <td></td>
+            <td>Blitter Load</td>
+            <td colspan="2"><span class='gpu-blitter load'></span><div class='usage-disk sys'><span class='gpu-blitterbar'></span><span></span></div></td>
+            <td></td>
+        </tr>
+<?php endif; ?>
+<?php if($gpustat_cfg['DISPVIDEO']) : ?>
+        <tr class="dash_gpustat_toggle gpu-enviro">
+            <td></td>
+            <td>Video Load</td>
+            <td colspan="2"><span class='gpu-video load'></span><div class='usage-disk sys'><span class='gpu-videobar'></span><span></span></div></td>
+            <td></td>
+        </tr>
+<?php endif; ?>
+<?php if($gpustat_cfg['DISPVIDENH']) : ?>
+        <tr class="dash_gpustat_toggle gpu-enviro">
+            <td></td>
+            <td>Video Enhance Load</td>
+            <td colspan="2"><span class='gpu-videnh load'></span><div class='usage-disk sys'><span class='gpu-videnhbar'></span><span></span></div></td>
+            <td></td>
+        </tr>
+<?php endif; ?>
+<?php if($gpustat_cfg['DISPPWRDRAW']) : ?>
+        <tr class="dash_gpustat_toggle gpu-enviro">
+            <td></td>
+            <td>Power Draw</td>
+            <td colspan="2"><span class='gpu-power load'></span><div class='usage-disk sys'><span class='gpu-powerutilbar'></span><span></span></div></td>
+            <td></td>
+        </tr>
+<?php endif; ?>
+<?php if($gpustat_cfg['DISPPCIUTIL']) : ?>
+        <tr class="dash_gpustat_toggle gpu-enviro">
+            <td></td>
+            <td>IMC Bus Utilization</td>
+            <td colspan="2">Receive: <span class='gpu-rxutil'></span> &emsp; Transmit: <span class='gpu-txutil'></span></td>
+            <td></td>
+        </tr>
+<?php endif; ?>
+<?php if($gpustat_cfg['DISPCLOCKS']) : ?>
+        <tr class="dash_gpustat_toggle gpu-enviro">
+            <td></td>
+            <td>GPU Clock (MHz)</td>
+            <td colspan="2"><span class='gpu-clock load'></span></td>
+            <td></td>
+        </tr>
+<?php endif; ?>
+<?php if($gpustat_cfg['DISPINTERRUPT']) : ?>
+        <tr class="dash_gpustat_toggle gpu-enviro">
+            <td></td>
+            <td>Interrupts/Sec</td>
+            <td colspan="2"><span class='gpu-interrupts load'></span></td>
+            <td></td>
+        </tr>
+<?php endif; ?>
+<?php endif; ?>
     </tbody>
 </table>
-<script>
+<script type="text/javascript">
     const gpustat_status = () => {
-     $.getJSON('/plugins/gpustat/gpustatus.php', (data) => {
-         if(data) {
-            // Nvidia Slider Bars
-            $('.gpu-memclockbar').removeAttr('style').css('width', data["memclock"] / data["memclockmax"] * 100 + "%");
-            $('.gpu-gpuclockbar').removeAttr('style').css('width', data["clock"] / data["clockmax"] * 100 + "%");
-            $('.gpu-utilbar').removeAttr('style').css('width', data["util"]);
-            $('.gpu-memutilbar').removeAttr('style').css('width', data["memutil"]);
-            $('.gpu-encutilbar').removeAttr('style').css('width', data["encutil"]);
-            $('.gpu-decutilbar').removeAttr('style').css('width', data["decutil"]);
-            $('.gpu-fanbar').removeAttr('style').css('width', data["fan"]);
-            $('.gpu-powerbar').removeAttr('style').css('width', parseInt(data["power"].replace("W","") / data["powermax"] * 100) + "%");
+        $.getJSON('/plugins/gpustat/gpustatus.php', (data) => {
+            if(data) {
+                // Nvidia Slider Bars
+                $('.gpu-memclockbar').removeAttr('style').css('width', data["memclock"] / data["memclockmax"] * 100 + "%");
+                $('.gpu-gpuclockbar').removeAttr('style').css('width', data["clock"] / data["clockmax"] * 100 + "%");
+                $('.gpu-utilbar').removeAttr('style').css('width', data["util"]);
+                $('.gpu-memutilbar').removeAttr('style').css('width', data["memutil"]);
+                $('.gpu-encutilbar').removeAttr('style').css('width', data["encutil"]);
+                $('.gpu-decutilbar').removeAttr('style').css('width', data["decutil"]);
+                $('.gpu-fanbar').removeAttr('style').css('width', data["fan"]);
+                $('.gpu-powerbar').removeAttr('style').css('width', parseInt(data["power"].replace("W","") / data["powermax"] * 100) + "%");
 
-            // Intel Slider Bars
-            $('.gpu-3drenderbar').removeAttr('style').css('width', data["3drender"]);
-            $('.gpu-blitterbar').removeAttr('style').css('width', data["blitter"]);
-            $('.gpu-videobar').removeAttr('style').css('width', data["video"]);
-            $('.gpu-videnhbar').removeAttr('style').css('width', data["videnh"]);
-            $('.gpu-powerutilbar').removeAttr('style').css('width', data["powerutil"]);
+                // Intel Slider Bars
+                $('.gpu-3drenderbar').removeAttr('style').css('width', data["3drender"]);
+                $('.gpu-blitterbar').removeAttr('style').css('width', data["blitter"]);
+                $('.gpu-videobar').removeAttr('style').css('width', data["video"]);
+                $('.gpu-videnhbar').removeAttr('style').css('width', data["videnh"]);
+                $('.gpu-powerutilbar').removeAttr('style').css('width', data["powerutil"]);
 
-            $.each(data, function (key, data) {
-                $('.gpu-'+key).html(data);
-            })
-         }
-    <?if ($gpustat_cfg['UIREFRESH']):?>
-      setTimeout(gpustat_status, <?=max(abs($display['refresh']),1000)?>);
-    <?endif;?>
-     });
+                $.each(data, function (key, data) {
+                    $('.gpu-'+key).html(data);
+                })
+            }
+<?php
+    if ($gpustat_cfg['UIREFRESH']) {
+        if (!isset($gpustat_cfg['UIREFRESHINT']) || !is_numeric($gpustat_cfg['UIREFRESHINT'])) {
+            $gpustat_cfg['UIREFRESHINT'] = 1000;
+        }
+        printf(sprintf("\t\t\tsetTimeout(gpustat_status, %0s);\n", max(abs($display['refresh']), $gpustat_cfg['UIREFRESHINT'])));
+    }
+?>
+        });
     };
     $(gpustat_status);
 
