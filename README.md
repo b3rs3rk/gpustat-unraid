@@ -33,6 +33,8 @@ If any issues occur, visit the support thread [here](https://forums.unraid.net/t
         * VideoEnhance Engine Utilization
         * IMC Bandwidth Throughput
         * Power Draw
+        * Power Demand (rc6)
         * GPU Clock
+        * Interrupts per Second
 
 The bulk of this code was adapted from/inspired by @realies and @CyanLabs corsairpsu-unraid project!
