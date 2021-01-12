@@ -129,6 +129,12 @@ Video Enhance Load:
     <?=mk_option($gpustat_cfg['DISPVIDENH'], "1", "Yes");?>
   </select>
 
+Interrupts Per Second:
+: <select id="DISPINTERRUPT" name="DISPINTERRUPT" size="1">
+    <?=mk_option($gpustat_cfg['DISPINTERRUPT'], "0", "No");?>
+    <?=mk_option($gpustat_cfg['DISPINTERRUPT'], "1", "Yes");?>
+  </select>
+
 <br><br>
 
   <input id="DEFAULT" class="stopped" type="submit" value="Default" onClick="resetDATA(this.form)">
@@ -159,5 +165,6 @@ function resetDATA(form) {
     form.DISPBLITTER.value = "1";
     form.DISPVIDEO.value = "1";
     form.DISPVIDENH.value = "1";
+    form.DISPINTERRUPT.value = "1";
 }
 </script>

@@ -25,7 +25,9 @@ Icon="gpustat.png"
                 <i class='icon-hardware'></i>
                 <div class='section'>GPU<br>
                     <span id='load'>Load: <span class='gpu-util'></span></span>
-                    <?php if ($gpu_nv) { printf("<span id='gpu-temp'>Temperature: <span class='gpu-temp'></span></span>"); } ?>
+                    <?php if ($gpu_nv) : ?>
+                        <span id='gpu-temp'>Temperature: <span class='gpu-temp'></span></span>
+                    <?php endif; ?>
                 </div>
                 <i class='fa fa-fw chevron mt0' id='dash_gpustat_toggle' onclick='toggleChevron("dash_gpustat_toggle",0)'></i>
                 <a href='/Settings/GPUStatSettings' id='dash_gpustat_settings' title='Go to GPU Statistics settings'><i class='fa fa-fw fa-cog chevron mt0'></i></a>
@@ -152,7 +154,7 @@ Icon="gpustat.png"
                 <tr class="dash_gpustat_toggle gpu-enviro">
                     <td></td>
                     <td>Power Draw</td>
-                    <td><span class='gpu-power load'></span></td>
+                    <td colspan="2"><span class='gpu-power load'></span><div class='usage-disk sys'><span class='gpu-powerutilbar'></span><span></span></div></td>
                     <td></td>
                 </tr>
             <?php endif; ?>
@@ -172,6 +174,14 @@ Icon="gpustat.png"
                     <td></td>
                 </tr>
             <?php endif; ?>
+            <?php if($gpustat_cfg['DISPINTERRUPT']) : ?>
+                <tr class="dash_gpustat_toggle gpu-enviro">
+                    <td></td>
+                    <td>Interrupts/Sec</td>
+                    <td colspan="2"><span class='gpu-interrupts load'></span></td>
+                    <td></td>
+                </tr>
+            <?php endif; ?>
         <?php endif; ?>
     </tbody>
 </table>
@@ -179,6 +189,7 @@ Icon="gpustat.png"
     const gpustat_status = () => {
      $.getJSON('/plugins/gpustat/gpustatus.php', (data) => {
          if(data) {
+            // Nvidia Slider Bars
             $('.gpu-memclockbar').removeAttr('style').css('width', data["memclock"] / data["memclockmax"] * 100 + "%");
             $('.gpu-gpuclockbar').removeAttr('style').css('width', data["clock"] / data["clockmax"] * 100 + "%");
             $('.gpu-utilbar').removeAttr('style').css('width', data["util"]);
@@ -187,10 +198,13 @@ Icon="gpustat.png"
             $('.gpu-decutilbar').removeAttr('style').css('width', data["decutil"]);
             $('.gpu-fanbar').removeAttr('style').css('width', data["fan"]);
             $('.gpu-powerbar').removeAttr('style').css('width', parseInt(data["power"].replace("W","") / data["powermax"] * 100) + "%");
+
+            // Intel Slider Bars
             $('.gpu-3drenderbar').removeAttr('style').css('width', data["3drender"]);
             $('.gpu-blitterbar').removeAttr('style').css('width', data["blitter"]);
             $('.gpu-videobar').removeAttr('style').css('width', data["video"]);
             $('.gpu-videnhbar').removeAttr('style').css('width', data["videnh"]);
+            $('.gpu-powerutilbar').removeAttr('style').css('width', data["powerutil"]);
 
             $.each(data, function (key, data) {
                 $('.gpu-'+key).html(data);

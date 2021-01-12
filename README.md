@@ -18,18 +18,20 @@ If any issues occur, visit the support thread [here](https://forums.unraid.net/t
         * GPU/Memory Utilization
         * GPU/Memory Clocks
         * Encoder/Decoder Utilization
-        * PCI Bus Utilization
+        * PCI Bus Throughput
         * Temperature
         * Fan Utilization
         * Power Draw
         * Power State
         * Throttled (Y/N) and Reason for Throttle
-        * Active Processes
+        * Active Process Count
 
     Intel:
-        * Render Engine Utilization
-        * Encode/Decode Engine Utilization
-        * IMC Bandwidth Utilization
+        * 3D Render Engine Utilization
+        * Blitter Engine Utilization
+        * Video Engine Utilization
+        * VideoEnhance Engine Utilization
+        * IMC Bandwidth Throughput
         * Power Draw
         * GPU Clock
 

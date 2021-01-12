@@ -149,7 +149,8 @@ class Nvidia extends Main
             }
             if (isset($data->power_readings)) {
                 if (isset($data->power_readings->power_draw)) {
-                    $this->pageData['power'] = (string) $this->stripText(' ', $data->power_readings->power_draw);
+                    $this->pageData['power'] = (float) $this->stripText(' W', $data->power_readings->power_draw);
+                    $this->pageData['power'] = (string) $this->roundFloat($this->pageData['power']) . 'W';
                 }
                 if (isset($data->power_readings->power_limit)) {
                     $this->pageData['powermax'] = (string) $this->stripText('.00 W', $data->power_readings->power_limit);
