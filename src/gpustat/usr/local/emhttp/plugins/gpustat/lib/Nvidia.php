@@ -196,8 +196,8 @@ class Nvidia extends Main
             }
             if (isset($data->pci)) {
                 if (isset($data->pci->rx_util, $data->pci->tx_util)) {
-                    $this->pageData['rxutil'] = (string) $this->roundFloat($this->stripText('KB/s', $data->pci->rx_util) / 1000, 2) . " MB/s";
-                    $this->pageData['txutil'] = (string) $this->roundFloat($this->stripText('KB/s', $data->pci->tx_util) / 1000, 2) . " MB/s";
+                    $this->pageData['rxutil'] = (string) $this->roundFloat((float) $this->stripText('KB/s', $data->pci->rx_util) / 1000) . " MB/s";
+                    $this->pageData['txutil'] = (string) $this->roundFloat((float) $this->stripText('KB/s', $data->pci->tx_util) / 1000) . " MB/s";
                 }
                 /* TODO: Implement PCI Bandwidth utilization as slider bar with calculated bus maximum
                 if (isset($data->pci->pci_gpu_link_info->pcie_gen->current_link_gen, $data->pci->pci_gpu_link_info->link_width->current_link_width)) {
