@@ -12,7 +12,16 @@
 <!ENTITY emhttp    "/usr/local/emhttp/plugins/&name;">
 ]>
 
-<PLUGIN name="&name;" author="&author;" version="&version;" support="https://forums.unraid.net/topic/89453-plugin-gpu-statistics/" icon="icon-hardware" launch="&launch;" pluginURL="&pluginURL;">
+<PLUGIN
+    name="&name;"
+    author="&author;"
+    version="&version;"
+    min="6.7.1"
+    support="https://forums.unraid.net/topic/89453-plugin-gpu-statistics/"
+    icon="icon-hardware"
+    launch="&launch;"
+    pluginURL="&pluginURL;"
+>
 
 <!--
   MIT License
@@ -79,15 +88,9 @@
   <INLINE>
    <![CDATA[
     <?php
-    $version = parse_ini_file("/etc/unraid-version");
 
     $banner_out = "\n********************************************************************\n" .
         "\n%s\n\n********************************************************************\n";
-
-    if (version_compare($version['version'],"6.7.1", "<") ) {
-        echo(sprintf($banner_out, "GPUStat requires unRaid version 6.7.1 or greater to run.  Terminating install."));
-        exit(1);
-    }
 
     if (`which nvidia-smi`) {
         echo(sprintf($banner_out, "NVIDIA vendor utility found. Continuing install."));
