@@ -2,7 +2,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "gpustat">
 <!ENTITY author    "b3rs3rk">
-<!ENTITY version   "2021.01.08">
+<!ENTITY version   "2021.01.13">
 <!ENTITY launch    "Settings/GPUStatSettings">
 <!ENTITY gitURL    "https://raw.githubusercontent.com/b3rs3rk/&name;-unraid/master">
 <!ENTITY pluginURL "&gitURL;/&name;.plg">
@@ -31,7 +31,7 @@
  <FILE Name="/boot/config/plugins/gpustat/gpustat.cfg">
   <INLINE>
    <![CDATA[
-    VENDOR=nvidia
+    VENDOR=""
     GPUID=""
     TEMPFORMAT=C
     DISPCLOCKS="1"
@@ -43,11 +43,26 @@
     DISPPWRSTATE="1"
     DISPTHROTTLE="1"
     DISPSESSIONS="1"
+    UIREFRESH="1"
+    UIREFRESHINT="1000"
+    DISPMEMUTIL="1"
+    DISP3DRENDER="1"
+    DISPBLITTER="1"
+    DISPVIDEO="1"
+    DISPVIDENH="1"
+    DISPINTERRUPT="1"
    ]]>
   </INLINE>
  </FILE>
 
 <CHANGES>
+###2021-01-13
+- [RELEASE] Implement iGPU Support
+ * Slight Nvidia changes to reduce plugin size with all metrics enabled
+ * Add PCI/IMC Bus Utilization for NVIDIA/Intel
+ * Make dashboard refresh interval configurable
+ * Thanks to @ich777 for all of his help in testing Intel
+
 ###2021-01-08
 - [RELEASE] Switch to slider bars instead of raw data output
  * GPUStat plugin now refreshes data on 6.9
