@@ -97,8 +97,8 @@
     <?php
     $version = parse_ini_file("/etc/unraid-version");
 
-    $banner_out = "\n********************************************************************\n\" .
-        n%s\n\n********************************************************************\n";
+    $banner_out = "\n********************************************************************\n" .
+        "\n%s\n\n********************************************************************\n";
 
     if (version_compare($version['version'],"6.7.1", "<") ) {
         echo(sprintf($banner_out, "GPUStat requires unRaid version 6.7.1 or greater to run.  Terminating install."));
