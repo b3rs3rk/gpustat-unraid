@@ -101,18 +101,18 @@
         n%s\n\n********************************************************************\n";
 
     if (version_compare($version['version'],"6.7.1", "<") ) {
-        sprintf($banner_out, "GPUStat requires unRaid version 6.7.1 or greater to run.  Terminating install.");
+        echo(sprintf($banner_out, "GPUStat requires unRaid version 6.7.1 or greater to run.  Terminating install."));
         exit(1);
     }
 
     if (`which nvidia-smi`) {
-        printf(sprintf($banner_out, "NVIDIA vendor utility found. Continuing install."));
+        echo(sprintf($banner_out, "NVIDIA vendor utility found. Continuing install."));
     }
     elseif (`which intel_gpu_top`) {
-        printf(sprintf($banner_out, "Intel vendor utility found. Continuing install."));
+        echo(sprintf($banner_out, "Intel vendor utility found. Continuing install."));
     }
     else {
-        printf(sprintf($banner_out, "No vendor utilities found.  Plugin install terminated due to failed prerequisites."));
+        echo(sprintf($banner_out, "No vendor utilities found.  Plugin install terminated due to failed prerequisites."));
         exit(1);
     }
 
