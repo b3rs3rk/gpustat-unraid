@@ -74,22 +74,6 @@
 - [BETA] Implements basic NVIDIA Support for single-GPU systems
 </CHANGES>
 
- <!-- The 'source' file. -->
- <FILE Name="&plgPATH;/&plgNAME;.txz" Min="6.4" Run="upgradepkg --install-new">
-  <URL>&pkgURL;/&plgNAME;.txz</URL>
- </FILE>
-
- <!-- The 'remove' script. -->
- <FILE Run="/bin/bash" Method="remove">
-  <INLINE>
-   echo "Removing &name;..."
-   removepkg &plgPATH;/*.txz
-   rm -rf &plgPATH;
-   rm -rf &emhttp;
-   echo "&name; has been removed"
-  </INLINE>
- </FILE>
-
  <!-- The 'pre-install' script. -->
  <FILE Run="/usr/bin/php">
   <INLINE>
@@ -121,6 +105,11 @@
   </INLINE>
  </FILE>
 
+ <!-- The 'source' file. -->
+ <FILE Name="&plgPATH;/&plgNAME;.txz" Min="6.4" Run="upgradepkg --install-new">
+  <URL>&pkgURL;/&plgNAME;.txz</URL>
+ </FILE>
+
  <!-- Install default plugin cfg  -->
  <FILE Name="/boot/config/plugins/gpustat/gpustat.cfg">
   <INLINE>
@@ -148,4 +137,15 @@
    ]]>
   </INLINE>
  </FILE>
+
+  <!-- The 'remove' script. -->
+  <FILE Run="/bin/bash" Method="remove">
+   <INLINE>
+    echo "Removing &name;..."
+    removepkg &plgPATH;/*.txz
+    rm -rf &plgPATH;
+    rm -rf &emhttp;
+    echo "&name; has been removed"
+   </INLINE>
+  </FILE>
 </PLUGIN>
