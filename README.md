@@ -1,7 +1,25 @@
 # gpustat-unraid
 An UnRAID plugin for displaying GPU status
 
+## Pre-Requisites
+
+#### NVIDIA:
+- UnRAID 6.9.0 Beta 34 and below needs one of the following
+    * UNRAID-Nvidia Plugin with Nvidia Kernel Installed
+    * Custom Kernel build with Nvidia drivers (e.g. end of the original post in this [thread](https://forums.unraid.net/topic/92865-support-ich777-nvidiadvbzfsiscsimft-kernel-helperbuilder-docker/))
+- UnRAID 6.9.0 Beta 35 and newer needs one of the following
+    * Nvidia Plugin by @ich777 from Community Apps
+    * Custom Kernel build with Nvidia drivers (e.g. end of the original post in this [thread](https://forums.unraid.net/topic/92865-support-ich777-nvidiadvbzfsiscsimft-kernel-helperbuilder-docker/))
+
+#### INTEL:
+- UnRAID (All Versions)
+    * Intel GPU TOP plugin by @ich777 from Community Apps
+
+Note: From an UnRAID console if `nvidia-smi` (NVIDIA) or `intel_gpu_top` (Intel) cannot be found or run for any reason,
+the plugin will fail for that vendor.  If neither command exists, the plugin install will fail.
+
 ## Manual Installation
+    - Make sure all pre-requisites are installed and configured as needed
     - Verify you have Unraid-Nvidia Build 6.7.1+ Installed
     - Within UnRAID Web UI navigate to Plugins -> Install Plugin
     - Enter https://raw.githubusercontent.com/b3rs3rk/gpustat-unraid/master/gpustat.plg
