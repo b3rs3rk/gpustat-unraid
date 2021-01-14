@@ -36,7 +36,8 @@ Icon="gpustat.png"
         $gpu_intel = true;
     } else {
         // If vendor isn't set the config hasn't been saved, don't render the plugin
-        exit;
+        $gpu_unknown = true;
+        $unknown_msg = "Default settings found.  Go to plugin settings page and apply at least once.";
     }
 ?>
 <style type="text/css">
@@ -51,17 +52,20 @@ Icon="gpustat.png"
             <td class='next' colspan='3'>
                 <i class='icon-hardware'></i>
                 <div class='section'>GPU<br>
+<?php if ($gpu_unknown) : printf("\t\t\t\t<span>" . $unknown_msg . "</span></div>"); else : ?>
                     <span id='load'>Load: <span class='gpu-util'></span></span>
 <?php if ($gpu_nv) : ?>
                     <span id='gpu-temp'>Temperature: <span class='gpu-temp'></span></span>
 <?php endif; ?>
                 </div>
+<?php endif; ?>
                 <i class='fa fa-fw chevron mt0' id='dash_gpustat_toggle' onclick='toggleChevron("dash_gpustat_toggle",0)'></i>
                 <a href='/Settings/GPUStatSettings' id='dash_gpustat_settings' title='Go to GPU Statistics settings'><i class='fa fa-fw fa-cog chevron mt0'></i></a>
                 <br><br>
             </td>
             <td></td>
         </tr>
+<?php if ($gpu_unknown) : printf("\t</tbody>\n</table>"); else : ?>
         <tr class="dash_gpustat_toggle gpu-enviro">
             <td></td>
             <td colspan="3"><span class='gpu-vendor'></span> <span class='gpu-name'></span></td>
@@ -210,6 +214,8 @@ Icon="gpustat.png"
 <?php endif; ?>
     </tbody>
 </table>
+<?php endif; ?>
+
 <script type="text/javascript">
     const gpustat_status = () => {
         $.getJSON('/plugins/gpustat/gpustatus.php', (data) => {
