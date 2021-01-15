@@ -37,7 +37,7 @@ Icon="gpustat.png"
     } else {
         // If vendor isn't set the config hasn't been saved, don't render the plugin
         $gpu_unknown = true;
-        $unknown_msg = "Default settings found.  Go to plugin settings page and apply at least once.";
+        $unknown_msg = "Default vendor set - Change vendor in GPUStat settings page and apply.";
     }
 ?>
 <style type="text/css">

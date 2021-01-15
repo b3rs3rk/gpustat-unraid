@@ -40,6 +40,7 @@ Title="GPU Statistics"
 
 Vendor:
 : <select id="VENDOR" name="VENDOR" size="1">
+    <?=mk_option($gpustat_cfg['VENDOR'], "", "Change Me");?>
     <?=mk_option($gpustat_cfg['VENDOR'], "nvidia", "NVIDIA");?>
     <?=mk_option($gpustat_cfg['VENDOR'], "intel", "Intel");?>
   </select>
