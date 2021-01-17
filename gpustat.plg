@@ -98,6 +98,12 @@
     elseif (`which intel_gpu_top`) {
         echo(sprintf($banner_out, "Intel vendor utility found. Continuing install."));
     }
+    elseif (`ls /boot/config/plugins/nvidia-driver`) {
+        echo(sprintf($banner_out, "NVIDIA vendor utility found. Continuing install."));
+    }
+    elseif (`ls /boot/config/plugins/intel-gpu-top`) {
+        echo(sprintf($banner_out, "Intel vendor utility found. Continuing install."));
+    }
     else {
         echo(sprintf($banner_out, "No vendor utilities found.  Plugin install terminated due to failed prerequisites."));
         exit(1);
