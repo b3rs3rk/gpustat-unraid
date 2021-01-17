@@ -26,6 +26,7 @@
 
 namespace gpustat\lib;
 
+/** @noinspection PhpIncludeInspection */
 require_once('/usr/local/emhttp/plugins/dynamix/include/Wrappers.php');
 
 /**
@@ -133,6 +134,7 @@ class Main
      */
     public static function getSettings()
     {
+        /** @noinspection PhpUndefinedFunctionInspection */
         return parse_plugin_cfg(self::PLUGIN_NAME);
     }
 

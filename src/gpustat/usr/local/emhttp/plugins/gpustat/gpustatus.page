@@ -68,7 +68,11 @@ Icon="gpustat.png"
 <?php if ($gpu_unknown) : printf("\t</tbody>\n</table>"); else : ?>
         <tr class="dash_gpustat_toggle gpu-enviro">
             <td></td>
-            <td colspan="3"><span class='gpu-vendor'></span> <span class='gpu-name'></span></td>
+            <td><span class='gpu-vendor'></span>&nbsp;<span class='gpu-name'></span></td>
+<?php if ($gpu_nv) : ?>
+            <td>&emsp;&ensp;<span id='gpu-pciegen'>PCIe Gen (Max): <span class='gpu-pciegen'></span>&nbsp;(<span class='gpu-pciegenmax'></span>)</span></td>
+            <td>&emsp;&ensp;<span id='gpu-pciewidth'>Lanes (Max): <span class='gpu-pciewidth'></span>&nbsp;(<span class='gpu-pciewidthmax'></span>)</span></td>
+<?php endif; ?>
             <td></td>
         </tr>
 <?php if ($gpu_nv) : ?>
@@ -115,9 +119,9 @@ Icon="gpustat.png"
 <?php if($gpustat_cfg['DISPPCIUTIL']) : ?>
         <tr class="dash_gpustat_toggle gpu-enviro">
             <td></td>
-            <td>PCI Bus Utilization</td>
-            <td>&emsp;&ensp;Receive: <span class='gpu-rxutil'></span></td>
-            <td>&emsp;&ensp;Transmit: <span class='gpu-txutil'></span></td>
+            <td>PCI Bus Rx/Tx (MB/s)</td>
+            <td><span class='gpu-rxutil load'></span><div class='usage-disk sys'><span class='gpu-rxutilbar'></span><span></span></div></td>
+            <td><span class='gpu-txutil load'></span><div class='usage-disk sys'><span class='gpu-txutilbar'></span><span></span></div></td>
             <td></td>
         </tr>
 <?php endif; ?>
@@ -229,6 +233,8 @@ Icon="gpustat.png"
                 $('.gpu-decutilbar').removeAttr('style').css('width', data["decutil"]);
                 $('.gpu-fanbar').removeAttr('style').css('width', data["fan"]);
                 $('.gpu-powerbar').removeAttr('style').css('width', parseInt(data["power"].replace("W","") / data["powermax"] * 100) + "%");
+                $('.gpu-rxutilbar').removeAttr('style').css('width', parseInt(data["rxutil"] / data["pciemax"] * 100) + "%");
+                $('.gpu-txutilbar').removeAttr('style').css('width', parseInt(data["txutil"] / data["pciemax"] * 100) + "%");
 
                 // Intel Slider Bars
                 $('.gpu-3drenderbar').removeAttr('style').css('width', data["3drender"]);
