@@ -33,7 +33,7 @@ namespace gpustat\lib;
 class Error
 {
     // Unknown Errors Placeholder
-    const UNKNOWN                   = ['code' => 100, 'message' => 'An unkown error occurred'];
+    const UNKNOWN                   = ['code' => 100, 'message' => 'An unknown error occurred.'];
     // Configuration Errors
     const CONFIG_SETTINGS_NOT_VALID = ['code' => 200, 'message' => 'Configuration file contains invalid settings.'];
     // Vendor Utility Errors
@@ -53,7 +53,7 @@ class Error
      */
     public function __construct(array $error = self::UNKNOWN, string $extra_info = '', bool $die = true)
     {
-        $error = 'Error' . ES . $error['code'] . ':' . ES . $error['message'] . $extra_info . "\n\n";
+        $error = sprintf("\nError %0d: %1s %2s\n\n", $error['code'], $error['message'], $extra_info);
 
         if ($die) {
             die($error);

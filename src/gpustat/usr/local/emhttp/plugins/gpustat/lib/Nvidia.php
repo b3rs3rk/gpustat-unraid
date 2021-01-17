@@ -115,10 +115,14 @@ class Nvidia extends Main
                 'temp'          => 'N/A',
                 'tempmax'       => 'N/A',
                 'fan'           => 'N/A',
-                'pcimax'        => 'N/A',
+                'pciemax'       => 'N/A',
                 'perfstate'     => 'N/A',
                 'throttled'     => 'N/A',
                 'thrtlrsn'      => '',
+                'pciegen'       => 'N/A',
+                'pciegenmax'    => 'N/A',
+                'pciewidth'     => 'N/A',
+                'picewidthmax'  => 'N/A',
                 'powermax'      => 'N/A',
                 'sessions'      =>  0,
             ];
@@ -196,16 +200,25 @@ class Nvidia extends Main
             }
             if (isset($data->pci)) {
                 if (isset($data->pci->rx_util, $data->pci->tx_util)) {
-                    $this->pageData['rxutil'] = (string) $this->roundFloat((float) $this->stripText('KB/s', $data->pci->rx_util) / 1000) . " MB/s";
-                    $this->pageData['txutil'] = (string) $this->roundFloat((float) $this->stripText('KB/s', $data->pci->tx_util) / 1000) . " MB/s";
+                    $this->pageData['rxutil'] = (string) $this->roundFloat($this->stripText(' KB/s', $data->pci->rx_util) / 1000);
+                    $this->pageData['txutil'] = (string) $this->roundFloat($this->stripText(' KB/s', $data->pci->tx_util) / 1000);
                 }
-                /* TODO: Implement PCI Bandwidth utilization as slider bar with calculated bus maximum
-                if (isset($data->pci->pci_gpu_link_info->pcie_gen->current_link_gen, $data->pci->pci_gpu_link_info->link_width->current_link_width)) {
-                    $generation = $data->pci->pci_gpu_link_info->pcie_gen->current_link_gen;
-                    $width = (int) $this->stripText('x', $data->pci->pci_gpu_link_info->link_width->current_link_width);
-                    $this->pageData['pcimax'] = pow(2,$generation - 1) * 250 * $width;
+                if (isset(
+                        $data->pci->pci_gpu_link_info->pcie_gen->current_link_gen,
+                        $data->pci->pci_gpu_link_info->pcie_gen->max_link_gen,
+                        $data->pci->pci_gpu_link_info->link_widths->current_link_width,
+                        $data->pci->pci_gpu_link_info->link_widths->max_link_width
+                    )
+                ) {
+                    $generation = (int) $data->pci->pci_gpu_link_info->pcie_gen->current_link_gen;
+                    $width = (int) $this->stripText('x', $data->pci->pci_gpu_link_info->link_widths->current_link_width);
+                    // @ 16x Lanes: Gen 1 = 4000, 2 = 8000, 3 = 16000 MB/s -- Slider bars won't be that active with most workloads
+                    $this->pageData['pciemax'] = pow(2,$generation - 1) * 250 * $width;
+                    $this->pageData['pciegen'] = $generation;
+                    $this->pageData['pciewidth'] = $width;
+                    $this->pageData['pciegenmax'] = (int) $data->pci->pci_gpu_link_info->pcie_gen->max_link_gen;
+                    $this->pageData['pciewidthmax'] = (int) $this->stripText('x', $data->pci->pci_gpu_link_info->link_widths->max_link_width);
                 }
-                */
             }
         } else {
             new Error(Error::VENDOR_DATA_BAD_PARSE);

@@ -158,7 +158,7 @@ class Intel extends Main
             }
             // According to the sparse documentation, rc6 is a percentage of how little the GPU is requesting power
             if (isset($data['rc6']['value'])) {
-                $this->pageData['powerutil'] = (string) $this->roundFloat( 100 - $data['rc6']['value']);
+                $this->pageData['powerutil'] = (string) $this->roundFloat(100 - $data['rc6']['value']);
             }
             if (isset($data['frequency']['actual'])) {
                 $this->pageData['clock'] = (int) $this->roundFloat($data['frequency']['actual']);
