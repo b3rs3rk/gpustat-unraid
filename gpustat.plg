@@ -48,6 +48,14 @@
 -->
 
 <CHANGES>
+###20201-01-17
+- [RELEASE]
+ * Implement PCI Utilization slider for NVIDIA
+ * Fix issue with plugin not installing on boot
+
+###2021-01-15
+- Fix for default settings fiasco
+
 ###2021-01-13
 - [RELEASE] Implement iGPU Support
  * Slight Nvidia changes to reduce plugin size with all metrics enabled
