@@ -92,16 +92,10 @@
     $banner_out = "\n********************************************************************\n" .
         "\n%s\n\n********************************************************************\n";
 
-    if (`which nvidia-smi`) {
+    if (`which nvidia-smi` || file_exists('/boot/config/plugins/nvidia-driver')) {
         echo(sprintf($banner_out, "NVIDIA vendor utility found. Continuing install."));
     }
-    elseif (`which intel_gpu_top`) {
-        echo(sprintf($banner_out, "Intel vendor utility found. Continuing install."));
-    }
-    elseif (`ls /boot/config/plugins/nvidia-driver`) {
-        echo(sprintf($banner_out, "NVIDIA vendor utility found. Continuing install."));
-    }
-    elseif (`ls /boot/config/plugins/intel-gpu-top`) {
+    elseif (`which intel_gpu_top` || file_exists('/boot/config/plugins/intel-gpu-top')) {
         echo(sprintf($banner_out, "Intel vendor utility found. Continuing install."));
     }
     else {
