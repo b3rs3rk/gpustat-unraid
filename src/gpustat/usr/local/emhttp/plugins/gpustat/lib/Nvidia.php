@@ -40,6 +40,8 @@ class Nvidia extends Main
     const STATISTICS_PARAM = '-q -x -g %s 2>&1';
     const SUPPORTED_APPS = [
         'plex'  => 'Plex Transcoder',
+        'jelly' => 'jellyfin-ffmpeg',
+        'emby'  => '/bin/ffmpeg',
     ];
 
     /**
@@ -225,13 +227,14 @@ class Nvidia extends Main
                     $this->pageData['rxutil'] = (string) $this->roundFloat($this->stripText(' KB/s', $data->pci->rx_util) / 1000);
                     $this->pageData['txutil'] = (string) $this->roundFloat($this->stripText(' KB/s', $data->pci->tx_util) / 1000);
                 }
-                if (isset(
+                if (
+                    isset(
                         $data->pci->pci_gpu_link_info->pcie_gen->current_link_gen,
                         $data->pci->pci_gpu_link_info->pcie_gen->max_link_gen,
                         $data->pci->pci_gpu_link_info->link_widths->current_link_width,
                         $data->pci->pci_gpu_link_info->link_widths->max_link_width
                     )
-                ) {
+                )   {
                     $this->pageData['pciegen'] = $generation = (int) $data->pci->pci_gpu_link_info->pcie_gen->current_link_gen;
                     $this->pageData['pciewidth'] = $width = (int) $this->stripText('x', $data->pci->pci_gpu_link_info->link_widths->current_link_width);
                     // @ 16x Lanes: Gen 1 = 4000, 2 = 8000, 3 = 16000 MB/s -- Slider bars won't be that active with most workloads

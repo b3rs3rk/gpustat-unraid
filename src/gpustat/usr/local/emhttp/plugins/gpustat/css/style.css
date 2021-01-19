@@ -7,9 +7,12 @@ span.gpu {
     display: inline-block;
 }
 
+span.gpu-img-span {
+    display: none;
+}
+
 .gpu-image {
-    padding-left: 20px;
-    height: 12%;
-    width: 12%;
-    visibility: hidden;
+    padding-left: 8px;
+    height: 6%;
+    width: 6%;
 }

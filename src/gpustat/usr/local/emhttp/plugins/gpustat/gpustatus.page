@@ -147,8 +147,11 @@ Icon="gpustat.png"
         <tr class="dash_gpustat_toggle gpu-enviro">
             <td></td>
             <td>Session Total - Apps</td>
-            <td><span class='gpu-sessions load'></span></td>
-            <td><span id='gpu-plex'><img class='gpu-image gpu-img-plex' src="/plugins/gpustat/images/plex.png"></span>
+            <td colspan="2">
+                <span class='gpu-sessions load'></span>
+                <span class='gpu-img-span gpu-img-span-plex'><img class='gpu-image' src="/plugins/gpustat/images/plex.png"></span>
+                <span class='gpu-img-span gpu-img-span-jelly'><img class='gpu-image' src="/plugins/gpustat/images/jellyfin.png"></span>
+                <span class='gpu-img-span gpu-img-span-emby'><img class='gpu-image' src="/plugins/gpustat/images/emby.png"></span>
             </td>
             <td></td>
         </tr>

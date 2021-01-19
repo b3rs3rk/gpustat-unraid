@@ -22,9 +22,19 @@ const gpustat_status = () => {
 
             // App Using Hardware
             if (data["plexusing"]) {
-                $('.gpu-img-plex').css('visibility', "visible");
+                $('.gpu-img-span-plex').css('display', "inline");
             } else {
-                $('.gpu-img-plex').css('visibility', "hidden");
+                $('.gpu-img-span-plex').css('display', "none");
+            }
+            if (data["jellyusing"]) {
+                $('.gpu-img-span-jelly').css('display', "inline");
+            } else {
+                $('.gpu-img-span-jelly').css('display', "none");
+            }
+            if (data["embyusing"]) {
+                $('.gpu-img-span-emby').css('display', "inline");
+            } else {
+                $('.gpu-img-span-emby').css('display', "none");
             }
 
             $.each(data, function (key, data) {
