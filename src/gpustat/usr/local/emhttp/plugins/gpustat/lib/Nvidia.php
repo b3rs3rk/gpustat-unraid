@@ -126,7 +126,7 @@ class Nvidia extends Main
                 'pciegen'       => 'N/A',
                 'pciegenmax'    => 'N/A',
                 'pciewidth'     => 'N/A',
-                'picewidthmax'  => 'N/A',
+                'pciewidthmax'  => 'N/A',
                 'powermax'      => 'N/A',
                 'sessions'      =>  0,
             ];
@@ -224,8 +224,13 @@ class Nvidia extends Main
             }
             if (isset($data->pci)) {
                 if (isset($data->pci->rx_util, $data->pci->tx_util)) {
-                    $this->pageData['rxutil'] = (string) $this->roundFloat($this->stripText(' KB/s', $data->pci->rx_util) / 1000);
-                    $this->pageData['txutil'] = (string) $this->roundFloat($this->stripText(' KB/s', $data->pci->tx_util) / 1000);
+                    // Not all cards support PCI RX/TX Measurements
+                    if ($data->pci->rx_util !== 'N/A') {
+                        $this->pageData['rxutil'] = (string) $this->roundFloat($this->stripText(' KB/s', $data->pci->rx_util) / 1000);
+                    }
+                    if ($data->pci->tx_util !== 'N/A') {
+                        $this->pageData['txutil'] = (string) $this->roundFloat($this->stripText(' KB/s', $data->pci->tx_util) / 1000);
+                    }
                 }
                 if (
                     isset(
