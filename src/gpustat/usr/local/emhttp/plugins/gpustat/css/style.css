@@ -1,0 +1,15 @@
+#dash_gpustat_settings i, #dash_gpustat_toggle {
+    margin-top: 0;
+}
+
+span.gpu {
+    width: 150px;
+    display: inline-block;
+}
+
+.gpu-image {
+    padding-left: 20px;
+    height: 12%;
+    width: 12%;
+    visibility: hidden;
+}

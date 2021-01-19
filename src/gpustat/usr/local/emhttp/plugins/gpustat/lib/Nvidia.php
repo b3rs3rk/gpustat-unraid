@@ -38,6 +38,9 @@ class Nvidia extends Main
     const INVENTORY_PARAM = '-L';
     const INVENTORY_REGEX = '/GPU\s(?P<id>\d):\s(?P<model>.*)\s\(UUID:\s(?P<guid>GPU-[0-9a-f-]+)\)/i';
     const STATISTICS_PARAM = '-q -x -g %s 2>&1';
+    const SUPPORTED_APPS = [
+        'plex'  => 'Plex Transcoder',
+    ];
 
     /**
      * Nvidia constructor.
@@ -94,7 +97,6 @@ class Nvidia extends Main
      */
     private function parseStatistics()
     {
-
         $data = @simplexml_load_string($this->stdout);
         $this->stdout = '';
 
@@ -125,6 +127,13 @@ class Nvidia extends Main
                 'picewidthmax'  => 'N/A',
                 'powermax'      => 'N/A',
                 'sessions'      =>  0,
+            ];
+
+            // App HW Usage
+            $this->pageData += [
+                'plexusing'     => false,
+                'plexmem'       => 0,
+                'plexcount'     => 0,
             ];
 
             if (isset($data->product_name)) {
@@ -197,6 +206,19 @@ class Nvidia extends Main
             // For some reason, encoder_sessions->session_count is not reliable on my install, better to count processes
             if (isset($data->processes->process_info)) {
                 $this->pageData['sessions'] = (int) count($data->processes->process_info);
+                if ($this->pageData['sessions'] > 0) {
+                    foreach ($data->processes->children() AS $process) {
+                        foreach (self::SUPPORTED_APPS AS $id => $app) {
+                            if (isset($process->process_name)) {
+                                if (strpos($process->process_name, $app) !== false) {
+                                    $this->pageData[$id . "using"] = true;
+                                    $this->pageData[$id . "mem"] += (int) $this->stripText(' MiB', $process->used_memory);
+                                    $this->pageData[$id . "count"]++;
+                                }
+                            }
+                        }
+                    }
+                }
             }
             if (isset($data->pci)) {
                 if (isset($data->pci->rx_util, $data->pci->tx_util)) {
@@ -210,12 +232,10 @@ class Nvidia extends Main
                         $data->pci->pci_gpu_link_info->link_widths->max_link_width
                     )
                 ) {
-                    $generation = (int) $data->pci->pci_gpu_link_info->pcie_gen->current_link_gen;
-                    $width = (int) $this->stripText('x', $data->pci->pci_gpu_link_info->link_widths->current_link_width);
+                    $this->pageData['pciegen'] = $generation = (int) $data->pci->pci_gpu_link_info->pcie_gen->current_link_gen;
+                    $this->pageData['pciewidth'] = $width = (int) $this->stripText('x', $data->pci->pci_gpu_link_info->link_widths->current_link_width);
                     // @ 16x Lanes: Gen 1 = 4000, 2 = 8000, 3 = 16000 MB/s -- Slider bars won't be that active with most workloads
-                    $this->pageData['pciemax'] = pow(2,$generation - 1) * 250 * $width;
-                    $this->pageData['pciegen'] = $generation;
-                    $this->pageData['pciewidth'] = $width;
+                    $this->pageData['pciemax'] = pow(2, $generation - 1) * 250 * $width;
                     $this->pageData['pciegenmax'] = (int) $data->pci->pci_gpu_link_info->pcie_gen->max_link_gen;
                     $this->pageData['pciewidthmax'] = (int) $this->stripText('x', $data->pci->pci_gpu_link_info->link_widths->max_link_width);
                 }
