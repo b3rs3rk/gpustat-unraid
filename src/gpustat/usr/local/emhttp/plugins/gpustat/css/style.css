@@ -1,5 +1,3 @@
-<?php
-
 /*
   MIT License
 
@@ -24,39 +22,21 @@
   SOFTWARE.
 */
 
-define('ES', ' ');
-
-include 'lib/Main.php';
-include 'lib/Nvidia.php';
-include 'lib/Intel.php';
-include 'lib/Error.php';
-
-use \gpustat\lib\Main;
-use \gpustat\lib\Nvidia;
-use \gpustat\lib\Intel;
-use \gpustat\lib\Error;
-
-if (!isset($gpustat_cfg)) {
-    $gpustat_cfg = Main::getSettings();
+#dash_gpustat_settings i, #dash_gpustat_toggle {
+    margin-top: 0;
 }
 
-// $gpu_inventory should be set if called from settings page code
-if (isset($gpustat_inventory) && $gpustat_inventory) {
-    $gpustat_cfg['inventory'] = true;
-    // Settings page looks for $gpu_data specifically -- inventory all supported GPU types
-    $gpustat_data = (new Nvidia($gpustat_cfg))->getInventory();
-    $gpustat_data += (new Intel($gpustat_cfg))->getInventory();
+span.gpu {
+    width: 150px;
+    display: inline-block;
+}
 
-} else {
+span.gpu-img-span {
+    display: none;
+}
 
-    switch ($gpustat_cfg['VENDOR']) {
-        case 'nvidia':
-            (new Nvidia($gpustat_cfg))->getStatistics();
-            break;
-        case 'intel':
-            (new Intel($gpustat_cfg))->getStatistics();
-            break;
-        default:
-            print_r(new Error(Error::CONFIG_SETTINGS_NOT_VALID, ''));
-    }
+.gpu-image {
+    padding-left: 8px;
+    height: 6%;
+    width: 6%;
 }

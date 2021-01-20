@@ -92,7 +92,19 @@ Power Draw:
     <?=mk_option($gpustat_cfg['DISPPWRDRAW'], "1", "Yes");?>
   </select>
 
+Power State:
+: <select id="DISPPWRSTATE" name="DISPPWRSTATE" size="1">
+    <?=mk_option($gpustat_cfg['DISPPWRSTATE'], "0", "No");?>
+    <?=mk_option($gpustat_cfg['DISPPWRSTATE'], "1", "Yes");?>
+  </select>
+
 <h4><b>Nvidia Specific</b></h4>
+
+Temperature:
+: <select id="DISPTEMP" name="DISPTEMP" size="1">
+    <?=mk_option($gpustat_cfg['DISPTEMP'], "0", "No");?>
+    <?=mk_option($gpustat_cfg['DISPTEMP'], "1", "Yes");?>
+  </select>
 
 Memory Utilization:
 : <select id="DISPMEMUTIL" name="DISPMEMUTIL" size="1">
@@ -110,12 +122,6 @@ Fan Usage:
 : <select id="DISPFAN" name="DISPFAN" size="1">
     <?=mk_option($gpustat_cfg['DISPFAN'], "0", "No");?>
     <?=mk_option($gpustat_cfg['DISPFAN'], "1", "Yes");?>
-  </select>
-
-Power State:
-: <select id="DISPPWRSTATE" name="DISPPWRSTATE" size="1">
-    <?=mk_option($gpustat_cfg['DISPPWRSTATE'], "0", "No");?>
-    <?=mk_option($gpustat_cfg['DISPPWRSTATE'], "1", "Yes");?>
   </select>
 
 Throttle Status:

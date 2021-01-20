@@ -28,7 +28,7 @@ Icon="gpustat.png"
 
     $gpustat_cfg = parse_plugin_cfg('gpustat', true);
 
-    $nv = $intel = false;
+    $gpu_nv = $gpu_intel = false;
 
     if ($gpustat_cfg['VENDOR'] == "nvidia") {
         $gpu_nv = true;
@@ -40,10 +40,11 @@ Icon="gpustat.png"
         $unknown_msg = "Default vendor set - Change vendor in GPUStat settings page and apply.";
     }
 ?>
+
 <style type="text/css">
-    #dash_gpustat_settings i, #dash_gpustat_toggle {margin-top:0;}
-    span.gpu{width:150px;display:inline-block}
+    @import url("/plugins/gpustat/css/style.css");
 </style>
+
 <table id='db-box1' class='dash_gpustat dashboard box1' style='display:none'>
     <thead sort='953'><tr class='hidden'><td></td><td colspan='3'></td><td></td></tr></thead>
     <tbody sort='953' class='sortable'>
@@ -70,8 +71,10 @@ Icon="gpustat.png"
             <td></td>
             <td><span class='gpu-vendor'></span>&nbsp;<span class='gpu-name'></span></td>
 <?php if ($gpu_nv) : ?>
+<?php if($gpustat_cfg['DISPPCIUTIL']) : ?>
             <td>&emsp;&ensp;<span id='gpu-pciegen'>PCIe Gen (Max): <span class='gpu-pciegen'></span>&nbsp;(<span class='gpu-pciegenmax'></span>)</span></td>
             <td>&emsp;&ensp;<span id='gpu-pciewidth'>Lanes (Max): <span class='gpu-pciewidth'></span>&nbsp;(<span class='gpu-pciewidthmax'></span>)</span></td>
+<?php endif; ?>
 <?php endif; ?>
             <td></td>
         </tr>
@@ -144,8 +147,13 @@ Icon="gpustat.png"
 <?php if($gpustat_cfg['DISPSESSIONS']) : ?>
         <tr class="dash_gpustat_toggle gpu-enviro">
             <td></td>
-            <td>Sessions</td>
-            <td colspan="2"><span class='gpu-sessions load'></span></td>
+            <td>Session Total - Apps</td>
+            <td colspan="2">
+                <span class='gpu-sessions load'></span>
+                <span class='gpu-img-span gpu-img-span-plex'><img class='gpu-image' src="/plugins/gpustat/images/plex.png"></span>
+                <span class='gpu-img-span gpu-img-span-jelly'><img class='gpu-image' src="/plugins/gpustat/images/jellyfin.png"></span>
+                <span class='gpu-img-span gpu-img-span-emby'><img class='gpu-image' src="/plugins/gpustat/images/emby.png"></span>
+            </td>
             <td></td>
         </tr>
 <?php endif; ?>
@@ -219,54 +227,11 @@ Icon="gpustat.png"
     </tbody>
 </table>
 <?php endif; ?>
-
+<script type="text/javascript" src="/plugins/gpustat/scripts/gpustat.js"></script>
 <script type="text/javascript">
-    const gpustat_status = () => {
-        $.getJSON('/plugins/gpustat/gpustatus.php', (data) => {
-            if(data) {
-                // Nvidia Slider Bars
-                $('.gpu-memclockbar').removeAttr('style').css('width', data["memclock"] / data["memclockmax"] * 100 + "%");
-                $('.gpu-gpuclockbar').removeAttr('style').css('width', data["clock"] / data["clockmax"] * 100 + "%");
-                $('.gpu-utilbar').removeAttr('style').css('width', data["util"]);
-                $('.gpu-memutilbar').removeAttr('style').css('width', data["memutil"]);
-                $('.gpu-encutilbar').removeAttr('style').css('width', data["encutil"]);
-                $('.gpu-decutilbar').removeAttr('style').css('width', data["decutil"]);
-                $('.gpu-fanbar').removeAttr('style').css('width', data["fan"]);
-                $('.gpu-powerbar').removeAttr('style').css('width', parseInt(data["power"].replace("W","") / data["powermax"] * 100) + "%");
-                $('.gpu-rxutilbar').removeAttr('style').css('width', parseInt(data["rxutil"] / data["pciemax"] * 100) + "%");
-                $('.gpu-txutilbar').removeAttr('style').css('width', parseInt(data["txutil"] / data["pciemax"] * 100) + "%");
-
-                // Intel Slider Bars
-                $('.gpu-3drenderbar').removeAttr('style').css('width', data["3drender"]);
-                $('.gpu-blitterbar').removeAttr('style').css('width', data["blitter"]);
-                $('.gpu-videobar').removeAttr('style').css('width', data["video"]);
-                $('.gpu-videnhbar').removeAttr('style').css('width', data["videnh"]);
-                $('.gpu-powerutilbar').removeAttr('style').css('width', data["powerutil"]);
-
-                $.each(data, function (key, data) {
-                    $('.gpu-'+key).html(data);
-                })
-            }
-<?php
-    if ($gpustat_cfg['UIREFRESH']) {
-        if (!isset($gpustat_cfg['UIREFRESHINT']) || !is_numeric($gpustat_cfg['UIREFRESHINT'])) {
-            $gpustat_cfg['UIREFRESHINT'] = 1000;
-        }
-        printf(sprintf("\t\t\tsetTimeout(gpustat_status, %0s);\n", max(abs($display['refresh']), $gpustat_cfg['UIREFRESHINT'])));
-    }
-?>
-        });
-    };
     $(gpustat_status);
-
-    $(function() {
-      // append data from the table into the correct one
-      $('#db-box1').append($('.dash_gpustat').html());
-
-      // reload toggle to get the correct state
-      toggleView('dash_gpustat_toggle', true);
-
-      // reload sorting to get the stored data (cookie)
-      sortTable($('#db-box1'),$.cookie('db-box1'));
-    });
+    if (<?=$gpustat_cfg['UIREFRESH'];?>) {
+        setInterval(gpustat_status, <?=max(abs($display['refresh']), $gpustat_cfg['UIREFRESHINT']);?>);
+    }
+    $(gpustat_dash);
 </script>
