@@ -136,6 +136,12 @@ class Nvidia extends Main
                 'plexusing'     => false,
                 'plexmem'       => 0,
                 'plexcount'     => 0,
+                'jellyusing'     => false,
+                'jellymem'       => 0,
+                'jellycount'     => 0,
+                'embyusing'     => false,
+                'embymem'       => 0,
+                'embycount'     => 0,
             ];
 
             if (isset($data->product_name)) {
@@ -145,107 +151,127 @@ class Nvidia extends Main
                 if (isset($data->utilization->gpu_util)) {
                     $this->pageData['util'] = (string) $this->stripSpaces($data->utilization->gpu_util);
                 }
-                if (isset($data->fb_memory_usage->used, $data->fb_memory_usage->total)) {
-                    $this->pageData['memtotal'] = (string) $this->stripText(' MiB', $data->fb_memory_usage->total);
-                    $this->pageData['memused'] = (string) $this->stripText(' MiB', $data->fb_memory_usage->used);
-                    $this->pageData['memutil'] = round($this->pageData['memused'] / $this->pageData['memtotal'] * 100) . "%";
+                if ($this->settings['DISPMEMUTIL']) {
+                    if (isset($data->fb_memory_usage->used, $data->fb_memory_usage->total)) {
+                        $this->pageData['memtotal'] = (string) $this->stripText(' MiB', $data->fb_memory_usage->total);
+                        $this->pageData['memused'] = (string) $this->stripText(' MiB', $data->fb_memory_usage->used);
+                        $this->pageData['memutil'] = round($this->pageData['memused'] / $this->pageData['memtotal'] * 100) . "%";
+                    }
                 }
-                if (isset($data->utilization->encoder_util)) {
-                    $this->pageData['encutil'] = (string) $this->stripSpaces($data->utilization->encoder_util);
-                }
-                if (isset($data->utilization->decoder_util)) {
-                    $this->pageData['decutil'] = (string) $this->stripSpaces($data->utilization->decoder_util);
-                }
-            }
-            if (isset($data->temperature)) {
-                if (isset($data->temperature->gpu_temp)) {
-                    $this->pageData['temp'] = (string) str_replace('C', '°C', $data->temperature->gpu_temp);
-                }
-                if (isset($data->temperature->gpu_temp_max_threshold)) {
-                    $this->pageData['tempmax'] = (string) str_replace('C', '°C', $data->temperature->gpu_temp_max_threshold);
-                }
-                if ($this->settings['TEMPFORMAT'] == 'F') {
-                    foreach (['temp', 'tempmax'] AS $key) {
-                        $this->pageData[$key] = $this->convertCelsius((int) $this->stripText('C', $this->pageData[$key])) . 'F';
+                if ($this->settings['DISPENCDEC']) {
+                    if (isset($data->utilization->encoder_util)) {
+                        $this->pageData['encutil'] = (string)$this->stripSpaces($data->utilization->encoder_util);
+                    }
+                    if (isset($data->utilization->decoder_util)) {
+                        $this->pageData['decutil'] = (string)$this->stripSpaces($data->utilization->decoder_util);
                     }
                 }
             }
-            if (isset($data->fan_speed)) {
-                $this->pageData['fan'] = (string) $this->stripSpaces($data->fan_speed);
-            }
-            if (isset($data->performance_state)) {
-                $this->pageData['perfstate'] = (string) $this->stripSpaces($data->performance_state);
-            }
-            if (isset($data->clocks_throttle_reasons)) {
-                $this->pageData['throttled'] = 'No';
-                foreach ($data->clocks_throttle_reasons->children() AS $reason => $throttle) {
-                    if ($throttle == 'Active') {
-                        $this->pageData['throttled'] = 'Yes';
-                        $this->pageData['thrtlrsn'] = ' (' . $this->stripText('clocks_throttle_reason_', $reason) . ')';
-                        break;
+            if ($this->settings['DISPTEMP']) {
+                if (isset($data->temperature)) {
+                    if (isset($data->temperature->gpu_temp)) {
+                        $this->pageData['temp'] = (string)str_replace('C', '°C', $data->temperature->gpu_temp);
+                    }
+                    if (isset($data->temperature->gpu_temp_max_threshold)) {
+                        $this->pageData['tempmax'] = (string)str_replace('C', '°C', $data->temperature->gpu_temp_max_threshold);
+                    }
+                    if ($this->settings['TEMPFORMAT'] == 'F') {
+                        foreach (['temp', 'tempmax'] as $key) {
+                            $this->pageData[$key] = $this->convertCelsius((int)$this->stripText('C', $this->pageData[$key])) . 'F';
+                        }
                     }
                 }
             }
-            if (isset($data->power_readings)) {
-                if (isset($data->power_readings->power_draw)) {
-                    $this->pageData['power'] = (float) $this->stripText(' W', $data->power_readings->power_draw);
-                    $this->pageData['power'] = (string) $this->roundFloat($this->pageData['power']) . 'W';
-                }
-                if (isset($data->power_readings->power_limit)) {
-                    $this->pageData['powermax'] = (string) $this->stripText('.00 W', $data->power_readings->power_limit);
+            if ($this->settings['DISPFAN']) {
+                if (isset($data->fan_speed)) {
+                    $this->pageData['fan'] = (string)$this->stripSpaces($data->fan_speed);
                 }
             }
-            if (isset($data->clocks, $data->max_clocks)) {
-                if (isset($data->clocks->graphics_clock, $data->max_clocks->graphics_clock)) {
-                    $this->pageData['clock'] = (string) $this->stripText(' MHz', $data->clocks->graphics_clock);
-                    $this->pageData['clockmax'] = (string) $this->stripText(' MHz', $data->max_clocks->graphics_clock);
+            if ($this->settings['DISPPWRSTATE']) {
+                if (isset($data->performance_state)) {
+                    $this->pageData['perfstate'] = (string)$this->stripSpaces($data->performance_state);
                 }
-                if (isset($data->clocks->mem_clock, $data->max_clocks->mem_clock)) {
-                    $this->pageData['memclock'] = (string) $this->stripText(' MHz', $data->clocks->mem_clock);
-                    $this->pageData['memclockmax'] = (string) $this->stripText(' MHz', $data->max_clocks->mem_clock);
+            }
+            if ($this->settings['DISPTHROTTLE']) {
+                if (isset($data->clocks_throttle_reasons)) {
+                    $this->pageData['throttled'] = 'No';
+                    foreach ($data->clocks_throttle_reasons->children() as $reason => $throttle) {
+                        if ($throttle == 'Active') {
+                            $this->pageData['throttled'] = 'Yes';
+                            $this->pageData['thrtlrsn'] = ' (' . $this->stripText('clocks_throttle_reason_', $reason) . ')';
+                            break;
+                        }
+                    }
+                }
+            }
+            if ($this->settings['DISPPWRDRAW']) {
+                if (isset($data->power_readings)) {
+                    if (isset($data->power_readings->power_draw)) {
+                        $this->pageData['power'] = (float)$this->stripText(' W', $data->power_readings->power_draw);
+                        $this->pageData['power'] = (string)$this->roundFloat($this->pageData['power']) . 'W';
+                    }
+                    if (isset($data->power_readings->power_limit)) {
+                        $this->pageData['powermax'] = (string)$this->stripText('.00 W', $data->power_readings->power_limit);
+                    }
+                }
+            }
+            if ($this->settings['DISPCLOCKS']) {
+                if (isset($data->clocks, $data->max_clocks)) {
+                    if (isset($data->clocks->graphics_clock, $data->max_clocks->graphics_clock)) {
+                        $this->pageData['clock'] = (string)$this->stripText(' MHz', $data->clocks->graphics_clock);
+                        $this->pageData['clockmax'] = (string)$this->stripText(' MHz', $data->max_clocks->graphics_clock);
+                    }
+                    if (isset($data->clocks->mem_clock, $data->max_clocks->mem_clock)) {
+                        $this->pageData['memclock'] = (string)$this->stripText(' MHz', $data->clocks->mem_clock);
+                        $this->pageData['memclockmax'] = (string)$this->stripText(' MHz', $data->max_clocks->mem_clock);
+                    }
                 }
             }
             // For some reason, encoder_sessions->session_count is not reliable on my install, better to count processes
-            if (isset($data->processes->process_info)) {
-                $this->pageData['sessions'] = (int) count($data->processes->process_info);
-                if ($this->pageData['sessions'] > 0) {
-                    foreach ($data->processes->children() AS $process) {
-                        foreach (self::SUPPORTED_APPS AS $id => $app) {
-                            if (isset($process->process_name)) {
-                                if (strpos($process->process_name, $app) !== false) {
-                                    $this->pageData[$id . "using"] = true;
-                                    $this->pageData[$id . "mem"] += (int) $this->stripText(' MiB', $process->used_memory);
-                                    $this->pageData[$id . "count"]++;
+            if ($this->settings['DISPSESSIONS']) {
+                if (isset($data->processes->process_info)) {
+                    $this->pageData['sessions'] = (int)count($data->processes->process_info);
+                    if ($this->pageData['sessions'] > 0) {
+                        foreach ($data->processes->children() as $process) {
+                            foreach (self::SUPPORTED_APPS as $id => $app) {
+                                if (isset($process->process_name)) {
+                                    if (strpos($process->process_name, $app) !== false) {
+                                        $this->pageData[$id . "using"] = true;
+                                        $this->pageData[$id . "mem"] += (int)$this->stripText(' MiB', $process->used_memory);
+                                        $this->pageData[$id . "count"]++;
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
-            if (isset($data->pci)) {
-                if (isset($data->pci->rx_util, $data->pci->tx_util)) {
-                    // Not all cards support PCI RX/TX Measurements
-                    if ($data->pci->rx_util !== 'N/A') {
-                        $this->pageData['rxutil'] = (string) $this->roundFloat($this->stripText(' KB/s', $data->pci->rx_util) / 1000);
+            if ($this->settings['DISPPCIUTIL']) {
+                if (isset($data->pci)) {
+                    if (isset($data->pci->rx_util, $data->pci->tx_util)) {
+                        // Not all cards support PCI RX/TX Measurements
+                        if ($data->pci->rx_util !== 'N/A') {
+                            $this->pageData['rxutil'] = (string)$this->roundFloat($this->stripText(' KB/s', $data->pci->rx_util) / 1000);
+                        }
+                        if ($data->pci->tx_util !== 'N/A') {
+                            $this->pageData['txutil'] = (string)$this->roundFloat($this->stripText(' KB/s', $data->pci->tx_util) / 1000);
+                        }
                     }
-                    if ($data->pci->tx_util !== 'N/A') {
-                        $this->pageData['txutil'] = (string) $this->roundFloat($this->stripText(' KB/s', $data->pci->tx_util) / 1000);
-                    }
-                }
-                if (
+                    if (
                     isset(
                         $data->pci->pci_gpu_link_info->pcie_gen->current_link_gen,
                         $data->pci->pci_gpu_link_info->pcie_gen->max_link_gen,
                         $data->pci->pci_gpu_link_info->link_widths->current_link_width,
                         $data->pci->pci_gpu_link_info->link_widths->max_link_width
                     )
-                )   {
-                    $this->pageData['pciegen'] = $generation = (int) $data->pci->pci_gpu_link_info->pcie_gen->current_link_gen;
-                    $this->pageData['pciewidth'] = $width = (int) $this->stripText('x', $data->pci->pci_gpu_link_info->link_widths->current_link_width);
-                    // @ 16x Lanes: Gen 1 = 4000, 2 = 8000, 3 = 16000 MB/s -- Slider bars won't be that active with most workloads
-                    $this->pageData['pciemax'] = pow(2, $generation - 1) * 250 * $width;
-                    $this->pageData['pciegenmax'] = (int) $data->pci->pci_gpu_link_info->pcie_gen->max_link_gen;
-                    $this->pageData['pciewidthmax'] = (int) $this->stripText('x', $data->pci->pci_gpu_link_info->link_widths->max_link_width);
+                    ) {
+                        $this->pageData['pciegen'] = $generation = (int)$data->pci->pci_gpu_link_info->pcie_gen->current_link_gen;
+                        $this->pageData['pciewidth'] = $width = (int)$this->stripText('x', $data->pci->pci_gpu_link_info->link_widths->current_link_width);
+                        // @ 16x Lanes: Gen 1 = 4000, 2 = 8000, 3 = 16000 MB/s -- Slider bars won't be that active with most workloads
+                        $this->pageData['pciemax'] = pow(2, $generation - 1) * 250 * $width;
+                        $this->pageData['pciegenmax'] = (int)$data->pci->pci_gpu_link_info->pcie_gen->max_link_gen;
+                        $this->pageData['pciewidthmax'] = (int)$this->stripText('x', $data->pci->pci_gpu_link_info->link_widths->max_link_width);
+                    }
                 }
             }
         } else {

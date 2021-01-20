@@ -94,6 +94,12 @@ Power Draw:
 
 <h4><b>Nvidia Specific</b></h4>
 
+Temperature:
+: <select id="DISPTEMP" name="DISPTEMP" size="1">
+    <?=mk_option($gpustat_cfg['DISPTEMP'], "0", "No");?>
+    <?=mk_option($gpustat_cfg['DISPTEMP'], "1", "Yes");?>
+  </select>
+
 Memory Utilization:
 : <select id="DISPMEMUTIL" name="DISPMEMUTIL" size="1">
     <?=mk_option($gpustat_cfg['DISPMEMUTIL'], "0", "No");?>
