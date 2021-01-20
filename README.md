@@ -1,19 +1,19 @@
 # gpustat-unraid
 An UnRAID plugin for displaying GPU status
 
-## Pre-Requisites
+## Prerequisites
 
 #### NVIDIA:
-- UnRAID 6.9.0 Beta 34 and below needs one of the following
-    * UNRAID-Nvidia Plugin with Nvidia Kernel Installed
-    * Custom Kernel build with Nvidia drivers (e.g. end of the original post in this [thread](https://forums.unraid.net/topic/92865-support-ich777-nvidiadvbzfsiscsimft-kernel-helperbuilder-docker/))
-- UnRAID 6.9.0 Beta 35 and newer needs one of the following
-    * Nvidia Plugin by @ich777 from Community Apps
-    * Custom Kernel build with Nvidia drivers (e.g. end of the original post in this [thread](https://forums.unraid.net/topic/92865-support-ich777-nvidiadvbzfsiscsimft-kernel-helperbuilder-docker/))
+    - UnRAID 6.9.0 Beta 34 and below needs one of the following:
+      * UNRAID-Nvidia Plugin with Nvidia Kernel Installed
+      * Custom Kernel build with Nvidia drivers (e.g. end of the original post in this [thread](https://forums.unraid.net/topic/92865-support-ich777-nvidiadvbzfsiscsimft-kernel-helperbuilder-docker/))
+    - UnRAID 6.9.0 Beta 35 and newer needs one of the following:
+      * Nvidia Plugin by @ich777 from Community Apps
+      * Custom Kernel build with Nvidia drivers (e.g. end of the original post in this [thread](https://forums.unraid.net/topic/92865-support-ich777-nvidiadvbzfsiscsimft-kernel-helperbuilder-docker/))
 
 #### INTEL:
-- UnRAID (All Versions)
-    * Intel GPU TOP plugin by @ich777 from Community Apps
+    - UnRAID (All Versions)
+      * Intel GPU TOP plugin by @ich777 from Community Apps
 
 Note: From an UnRAID console if `nvidia-smi` (NVIDIA) or `intel_gpu_top` (Intel) cannot be found or run for any reason,
 the plugin will fail for that vendor.  If neither command exists, the plugin install will fail.
@@ -32,31 +32,31 @@ If any issues occur, visit the support thread [here](https://forums.unraid.net/t
 
 ## Current Support
 
-    NVIDIA:
-        - GPU/Memory Utilization
-        - GPU/Memory Clocks
-        - Encoder/Decoder Utilization
-        - PCI Bus Throughput
-        - Temperature
-        - Fan Utilization
-        - Power Draw
-        - Power State
-        - Throttled (Y/N) and Reason for Throttle
-        - Active Process Count
+#### NVIDIA:
+    - GPU/Memory Utilization
+    - GPU/Memory Clocks
+    - Encoder/Decoder Utilization
+    - PCI Bus Utilization
+    - Temperature
+    - Fan Utilization
+    - Power Draw
+    - Power State
+    - Throttled (Y/N) and Reason for Throttle
+    - Active Process Count
 
-    Intel:
-        - 3D Render Engine Utilization
-        - Blitter Engine Utilization
-        - Video Engine Utilization
-        - VideoEnhance Engine Utilization
-        - IMC Bandwidth Throughput
-        - Power Draw and Power Demand (rc6 slider)
-        - GPU Clock
-        - Interrupts per Second
+#### INTEL:
+    - 3D Render Engine Utilization
+    - Blitter Engine Utilization
+    - Video Engine Utilization
+    - VideoEnhance Engine Utilization
+    - IMC Bandwidth Throughput
+    - Power Draw and Power Demand (rc6 slider)
+    - GPU Clock
+    - Interrupts per Second
 
 The bulk of this code was adapted from/inspired by @realies and @CyanLabs corsairpsu-unraid project!
 
 ## Contributor Thanks
 
-    * Thanks to @mlapaglia for his work on UI slider bars!
-    * Thanks to @ich777 for his help with iGPU testing setup!
+    - Thanks to @mlapaglia for his work on UI slider bars!
+    - Thanks to @ich777 for his help with iGPU testing setup!
