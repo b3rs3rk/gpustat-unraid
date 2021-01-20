@@ -56,7 +56,9 @@ Icon="gpustat.png"
 <?php if ($gpu_unknown) : printf("\t\t\t\t<span>" . $unknown_msg . "</span></div>"); else : ?>
                     <span id='load'>Load: <span class='gpu-util'></span></span>
 <?php if ($gpu_nv) : ?>
+<?php if($gpustat_cfg['DISPTEMP']) : ?>
                     <span id='gpu-temp'>Temperature: <span class='gpu-temp'></span></span>
+<?php endif; ?>
 <?php endif; ?>
                 </div>
 <?php endif; ?>

@@ -78,3 +78,29 @@ const gpustat_dash = () => {
     // reload sorting to get the stored data (cookie)
     sortTable($('#db-box1'),$.cookie('db-box1'));
 }
+
+/*
+TODO: Not currently used due to issue with default reset actually working
+function resetDATA(form) {
+    form.VENDOR.value = "nvidia";
+    form.TEMPFORMAT.value = "C";
+    form.GPUID.value = "0";
+    form.DISPCLOCKS.value = "1";
+    form.DISPENCDEC.value = "1";
+    form.DISPTEMP.value = "1";
+    form.DISPFAN.value = "1";
+    form.DISPPCIUTIL.value = "1";
+    form.DISPPWRDRAW.value = "1";
+    form.DISPPWRSTATE.value = "1";
+    form.DISPTHROTTLE.value = "1";
+    form.DISPSESSIONS.value = "1";
+    form.UIREFRESH.value = "1";
+    form.UIREFRESHINT.value = "1000";
+    form.DISPMEMUTIL.value = "1";
+    form.DISP3DRENDER.value = "1";
+    form.DISPBLITTER.value = "1";
+    form.DISPVIDEO.value = "1";
+    form.DISPVIDENH.value = "1";
+    form.DISPINTERRUPT.value = "1";
+}
+*/

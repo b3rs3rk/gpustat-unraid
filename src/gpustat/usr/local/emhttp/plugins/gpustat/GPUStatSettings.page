@@ -174,30 +174,4 @@ Interrupts Per Second:
 
 <br><br><br>
 Note: Where noted, not all metrics are provided by the vendor utilities and this plugin cannot magically make that work.
-
 </form>
-
-<script type="text/javascript">
-    function resetDATA(form) {
-        form.VENDOR.value = "nvidia";
-        form.TEMPFORMAT.value = "C";
-        form.GPUID.value = "0";
-        form.DISPCLOCKS.value = "1";
-        form.DISPENCDEC.value = "1";
-        form.DISPTEMP.value = "1";
-        form.DISPFAN.value = "1";
-        form.DISPPCIUTIL.value = "1";
-        form.DISPPWRDRAW.value = "1";
-        form.DISPPWRSTATE.value = "1";
-        form.DISPTHROTTLE.value = "1";
-        form.DISPSESSIONS.value = "1";
-        form.UIREFRESH.value = "1";
-        form.UIREFRESHINT.value = "1000";
-        form.DISPMEMUTIL.value = "1";
-        form.DISP3DRENDER.value = "1";
-        form.DISPBLITTER.value = "1";
-        form.DISPVIDEO.value = "1";
-        form.DISPVIDENH.value = "1";
-        form.DISPINTERRUPT.value = "1";
-    }
-</script>
