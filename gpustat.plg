@@ -48,6 +48,14 @@
 -->
 
 <CHANGES>
+###2021-01-20
+- [RELEASE] Basic App Support
+ * Fix PCI Util bug with older Nvidia GPUs
+ * Make metric collections settings deterministic
+ * Refactor error methodology
+ * Segmentation of scripts and styles from page code
+ * Refactor dashboard update code (replaced setTimeout recursion)
+
 ###2021-01-17
 - [RELEASE] Various fixes
  * Implement PCI Utilization slider for NVIDIA
