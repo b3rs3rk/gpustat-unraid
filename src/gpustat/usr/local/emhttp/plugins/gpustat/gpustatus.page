@@ -72,8 +72,10 @@ Icon="gpustat.png"
             <td></td>
             <td><span class='gpu-vendor'></span>&nbsp;<span class='gpu-name'></span></td>
 <?php if ($gpu_nv) : ?>
+<?php if($gpustat_cfg['DISPPCIUTIL']) : ?>
             <td>&emsp;&ensp;<span id='gpu-pciegen'>PCIe Gen (Max): <span class='gpu-pciegen'></span>&nbsp;(<span class='gpu-pciegenmax'></span>)</span></td>
             <td>&emsp;&ensp;<span id='gpu-pciewidth'>Lanes (Max): <span class='gpu-pciewidth'></span>&nbsp;(<span class='gpu-pciewidthmax'></span>)</span></td>
+<?php endif; ?>
 <?php endif; ?>
             <td></td>
         </tr>
