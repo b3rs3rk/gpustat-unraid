@@ -137,34 +137,52 @@ class Intel extends Main
                 'videnh'        => 'N/A',
             ];
 
-            if (isset($data['engines']['Render/3D/0']['busy'])) {
-                $this->pageData['util'] = $this->pageData['3drender'] = (string) $this->roundFloat($data['engines']['Render/3D/0']['busy']) . '%';
+            if ($this->settings['DISP3DRENDER']) {
+                if (isset($data['engines']['Render/3D/0']['busy'])) {
+                    $this->pageData['util'] = $this->pageData['3drender'] = (string)$this->roundFloat($data['engines']['Render/3D/0']['busy']) . '%';
+                }
             }
-            if (isset($data['engines']['Blitter/0']['busy'])) {
-                $this->pageData['blitter'] = (string) $this->roundFloat($data['engines']['Blitter/0']['busy']) . '%';
+            if ($this->settings['DISPBLITTER']) {
+                if (isset($data['engines']['Blitter/0']['busy'])) {
+                    $this->pageData['blitter'] = (string)$this->roundFloat($data['engines']['Blitter/0']['busy']) . '%';
+                }
             }
-            if (isset($data['engines']['Video/0']['busy'])) {
-                $this->pageData['video'] = (string) $this->roundFloat($data['engines']['Video/0']['busy']) . '%';
+            if ($this->settings['DISPVIDEO']) {
+                if (isset($data['engines']['Video/0']['busy'])) {
+                    $this->pageData['video'] = (string)$this->roundFloat($data['engines']['Video/0']['busy']) . '%';
+                }
             }
-            if (isset($data['engines']['VideoEnhance/0']['busy'])) {
-                $this->pageData['videnh'] = (string) $this->roundFloat($data['engines']['VideoEnhance/0']['busy']) . '%';
+            if ($this->settings['DISPVIDENH']) {
+                if (isset($data['engines']['VideoEnhance/0']['busy'])) {
+                    $this->pageData['videnh'] = (string)$this->roundFloat($data['engines']['VideoEnhance/0']['busy']) . '%';
+                }
             }
-            if (isset($data['imc-bandwidth']['reads'], $data['imc-bandwidth']['writes'])) {
-                $this->pageData['rxutil'] = $this->roundFloat($data['imc-bandwidth']['reads'], 2) . " MB/s";
-                $this->pageData['txutil'] = $this->roundFloat($data['imc-bandwidth']['writes'], 2) . " MB/s";
+            if ($this->settings['DISPPCIUTIL']) {
+                if (isset($data['imc-bandwidth']['reads'], $data['imc-bandwidth']['writes'])) {
+                    $this->pageData['rxutil'] = $this->roundFloat($data['imc-bandwidth']['reads'], 2) . " MB/s";
+                    $this->pageData['txutil'] = $this->roundFloat($data['imc-bandwidth']['writes'], 2) . " MB/s";
+                }
             }
-            if (isset($data['power']['value'])) {
-                $this->pageData['power'] = (string) $this->roundFloat($data['power']['value']) . $data['power']['unit'];
+            if ($this->settings['DISPPWRDRAW']) {
+                if (isset($data['power']['value'])) {
+                    $this->pageData['power'] = (string)$this->roundFloat($data['power']['value']) . $data['power']['unit'];
+                }
             }
             // According to the sparse documentation, rc6 is a percentage of how little the GPU is requesting power
-            if (isset($data['rc6']['value'])) {
-                $this->pageData['powerutil'] = (string) $this->roundFloat(100 - $data['rc6']['value']);
+            if ($this->settings['DISPPWRSTATE']) {
+                if (isset($data['rc6']['value'])) {
+                    $this->pageData['powerutil'] = (string)$this->roundFloat(100 - $data['rc6']['value']);
+                }
             }
-            if (isset($data['frequency']['actual'])) {
-                $this->pageData['clock'] = (int) $this->roundFloat($data['frequency']['actual']);
+            if ($this->settings['DISPCLOCKS']) {
+                if (isset($data['frequency']['actual'])) {
+                    $this->pageData['clock'] = (int)$this->roundFloat($data['frequency']['actual']);
+                }
             }
-            if (isset($data['interrupts']['count'])) {
-                $this->pageData['interrupts'] = (int) $this->roundFloat($data['interrupts']['count']);
+            if ($this->settings['DISPINTERRUPT']) {
+                if (isset($data['interrupts']['count'])) {
+                    $this->pageData['interrupts'] = (int)$this->roundFloat($data['interrupts']['count']);
+                }
             }
         } else {
             new Error(Error::VENDOR_DATA_BAD_PARSE);

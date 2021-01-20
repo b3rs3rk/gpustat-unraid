@@ -228,10 +228,9 @@ Icon="gpustat.png"
 <?php endif; ?>
 <script type="text/javascript" src="/plugins/gpustat/scripts/gpustat.js"></script>
 <script type="text/javascript">
+    $(gpustat_status);
     if (<?=$gpustat_cfg['UIREFRESH'];?>) {
         setInterval(gpustat_status, <?=max(abs($display['refresh']), $gpustat_cfg['UIREFRESHINT']);?>);
-    } else {
-        $(gpustat_status);
     }
     $(gpustat_dash);
 </script>
