@@ -106,7 +106,7 @@ class Main
         } else {
             // Send the error but don't die because we need to continue for inventory
             if ($error) {
-                new Error(Error::VENDOR_UTILITY_NOT_FOUND, '', false);
+                $this->pageData['error'][] += new Error(Error::VENDOR_UTILITY_NOT_FOUND, '');
             }
         }
     }
@@ -155,12 +155,18 @@ class Main
     {
         // Page file JavaScript expects a JSON encoded string
         if (is_array($this->pageData)) {
-            $json = json_encode($this->pageData);
+            // If errors exist, do not encode anything else for send
+            if (isset($this->pageData['errors'])) {
+                $json = json_encode($this->pageData['errors']);
+            } else {
+                $json = json_encode($this->pageData);
+            }
             header('Content-Type: application/json');
             header('Content-Length:' . ES . strlen($json));
             echo $json;
         } else {
-            new Error(Error::BAD_ARRAY_DATA);
+            // Can't echo JSON for debug, so print_r for array data
+            print_r(new Error(Error::BAD_ARRAY_DATA));
         }
     }
 

@@ -49,16 +49,14 @@ class Error
      *
      * @param array $error
      * @param string $extra_info
-     * @param bool $die
+     * @return array
      */
-    public function __construct(array $error = self::UNKNOWN, string $extra_info = '', bool $die = true)
+    public function __construct(array $error = self::UNKNOWN, string $extra_info = '')
     {
-        $error = sprintf("\nError %0d: %1s %2s\n\n", $error['code'], $error['message'], $extra_info);
-
-        if ($die) {
-            die($error);
-        } else {
-            echo $error . "\n\n";
-        }
+        return [
+            'code'      => $error['code'],
+            'message'   => $error['message'],
+            'extra'     => $extra_info,
+        ];
     }
 }

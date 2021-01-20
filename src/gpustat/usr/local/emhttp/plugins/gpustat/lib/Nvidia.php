@@ -87,10 +87,10 @@ class Nvidia extends Main
             if (!empty($this->stdout) && strlen($this->stdout) > 0) {
                 $this->parseStatistics();
             } else {
-                new Error(Error::VENDOR_DATA_NOT_RETURNED);
+                $this->pageData['error'][] += new Error(Error::VENDOR_DATA_NOT_RETURNED);
             }
         } else {
-            new Error(Error::VENDOR_UTILITY_NOT_FOUND);
+            $this->pageData['error'][] += new Error(Error::VENDOR_UTILITY_NOT_FOUND);
         }
     }
 
@@ -258,12 +258,12 @@ class Nvidia extends Main
                         }
                     }
                     if (
-                    isset(
-                        $data->pci->pci_gpu_link_info->pcie_gen->current_link_gen,
-                        $data->pci->pci_gpu_link_info->pcie_gen->max_link_gen,
-                        $data->pci->pci_gpu_link_info->link_widths->current_link_width,
-                        $data->pci->pci_gpu_link_info->link_widths->max_link_width
-                    )
+                        isset(
+                            $data->pci->pci_gpu_link_info->pcie_gen->current_link_gen,
+                            $data->pci->pci_gpu_link_info->pcie_gen->max_link_gen,
+                            $data->pci->pci_gpu_link_info->link_widths->current_link_width,
+                            $data->pci->pci_gpu_link_info->link_widths->max_link_width
+                        )
                     ) {
                         $this->pageData['pciegen'] = $generation = (int)$data->pci->pci_gpu_link_info->pcie_gen->current_link_gen;
                         $this->pageData['pciewidth'] = $width = (int)$this->stripText('x', $data->pci->pci_gpu_link_info->link_widths->current_link_width);
@@ -275,7 +275,7 @@ class Nvidia extends Main
                 }
             }
         } else {
-            new Error(Error::VENDOR_DATA_BAD_PARSE);
+            $this->pageData['error'][] += new Error(Error::VENDOR_DATA_BAD_PARSE);
         }
         $this->echoJson();
     }
