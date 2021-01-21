@@ -100,29 +100,33 @@
 </CHANGES>
 
  <!-- The 'pre-install' script. -->
- <FILE Run="/usr/bin/php">
-  <INLINE>
-   <![CDATA[
-    <?php
+<FILE Run="/bin/bash">
+<INLINE>
 
-    $banner_out = "\n********************************************************************\n" .
-        "\n%s\n\n********************************************************************\n";
+if [ "$(which nvidia-smi 2>/dev/null)" ] || [ -d /boot/config/plugins/nvidia-driver ]; then
+	echo "********************************************************************"
+	echo
+	echo "NVIDIA vendor utility found. Continuing install."
+	echo
+	echo "********************************************************************"
+elif [ "$(which intel_gpu_top 2>/dev/null)" ] || [ -d /boot/config/plugins/intel-gpu-top ]; then
+	echo "********************************************************************"
+	echo
+	echo "Intel vendor utility found. Continuing install."
+	echo
+	echo "********************************************************************"
+else
+	echo "********************************************************************"
+	echo
+	echo "No vendor utilities found.  Plugin install terminated due to failed prerequisites."
+	echo
+	echo "********************************************************************"
+    rm -rf /boot/config/plugins/&name;
+	exit 1
+fi
 
-    if (`which nvidia-smi` || file_exists('/boot/config/plugins/nvidia-driver')) {
-        echo(sprintf($banner_out, "NVIDIA vendor utility found. Continuing install."));
-    }
-    elseif (`which intel_gpu_top` || file_exists('/boot/config/plugins/intel-gpu-top')) {
-        echo(sprintf($banner_out, "Intel vendor utility found. Continuing install."));
-    }
-    else {
-        echo(sprintf($banner_out, "No vendor utilities found.  Plugin install terminated due to failed prerequisites."));
-        exit(1);
-    }
-
-    ?>
-   ]]>
-  </INLINE>
- </FILE>
+</INLINE>
+</FILE>
 
  <!-- The 'source' file. -->
  <FILE Name="&plgPATH;/&plgNAME;.txz" Min="6.4" Run="upgradepkg --install-new">
