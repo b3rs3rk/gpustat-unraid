@@ -48,6 +48,10 @@
 -->
 
 <CHANGES>
+###2021-01-21
+- Fix plugin errors on boot
+ * Switch pre-install script from php to bash
+
 ###2021-01-20
 - [RELEASE] Basic App Support
  * Fix PCI Util bug with older Nvidia GPUs
