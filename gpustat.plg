@@ -107,23 +107,29 @@
 <INLINE>
 
 if [ "$(which nvidia-smi 2>/dev/null)" ] || [ -d /boot/config/plugins/nvidia-driver ]; then
+	echo
 	echo "********************************************************************"
 	echo
 	echo "NVIDIA vendor utility found. Continuing install."
 	echo
 	echo "********************************************************************"
+	echo
 elif [ "$(which intel_gpu_top 2>/dev/null)" ] || [ -d /boot/config/plugins/intel-gpu-top ]; then
+	echo
 	echo "********************************************************************"
 	echo
 	echo "Intel vendor utility found. Continuing install."
 	echo
 	echo "********************************************************************"
+	echo
 else
+	echo
 	echo "********************************************************************"
 	echo
 	echo "No vendor utilities found.  Plugin install terminated due to failed prerequisites."
 	echo
 	echo "********************************************************************"
+	echo
     rm -rf /boot/config/plugins/&name;
 	exit 1
 fi
