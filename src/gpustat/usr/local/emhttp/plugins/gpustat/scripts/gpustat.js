@@ -44,21 +44,16 @@ const gpustat_status = () => {
             $('.gpu-videnhbar').removeAttr('style').css('width', data["videnh"]);
             $('.gpu-powerutilbar').removeAttr('style').css('width', data["powerutil"]);
 
-            // App Using Hardware
-            if (data["plexusing"]) {
-                $('.gpu-img-span-plex').css('display', "inline");
-            } else {
-                $('.gpu-img-span-plex').css('display', "none");
-            }
-            if (data["jellyusing"]) {
-                $('.gpu-img-span-jelly').css('display', "inline");
-            } else {
-                $('.gpu-img-span-jelly').css('display', "none");
-            }
-            if (data["embyusing"]) {
-                $('.gpu-img-span-emby').css('display', "inline");
-            } else {
-                $('.gpu-img-span-emby').css('display', "none");
+            if (data["appssupp"]) {
+                data["appssupp"].forEach(function (app) {
+                    if (data[app + "using"]) {
+                        $('.gpu-img-span-'+app).css('display', "inline");
+                        $('#gpu-'+app).attr('title', "Count: " + data[app+"count"] + " Memory: " + data[app+"mem"] + "MB");
+                    } else {
+                        $('.gpu-img-span-'+app).css('display', "none");
+                        $('#gpu-'+app).attr('title', "");
+                    }
+                });
             }
 
             $.each(data, function (key, data) {
@@ -76,7 +71,7 @@ const gpustat_dash = () => {
     toggleView('dash_gpustat_toggle', true);
 
     // reload sorting to get the stored data (cookie)
-    sortTable($('#db-box1'),$.cookie('db-box1'));
+    sortTable($('#db-box1'), $.cookie('db-box1'));
 }
 
 /*

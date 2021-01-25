@@ -136,9 +136,9 @@ class Nvidia extends Main
                 'plexusing'     => false,
                 'plexmem'       => 0,
                 'plexcount'     => 0,
-                'jellyusing'     => false,
-                'jellymem'       => 0,
-                'jellycount'     => 0,
+                'jellyusing'    => false,
+                'jellymem'      => 0,
+                'jellycount'    => 0,
                 'embyusing'     => false,
                 'embymem'       => 0,
                 'embycount'     => 0,
@@ -229,15 +229,16 @@ class Nvidia extends Main
             }
             // For some reason, encoder_sessions->session_count is not reliable on my install, better to count processes
             if ($this->settings['DISPSESSIONS']) {
+                $this->pageData['appssupp'] = array_keys(self::SUPPORTED_APPS);
                 if (isset($data->processes->process_info)) {
-                    $this->pageData['sessions'] = (int)count($data->processes->process_info);
+                    $this->pageData['sessions'] = (int) count($data->processes->process_info);
                     if ($this->pageData['sessions'] > 0) {
                         foreach ($data->processes->children() as $process) {
                             foreach (self::SUPPORTED_APPS as $id => $app) {
                                 if (isset($process->process_name)) {
                                     if (strpos($process->process_name, $app) !== false) {
                                         $this->pageData[$id . "using"] = true;
-                                        $this->pageData[$id . "mem"] += (int)$this->stripText(' MiB', $process->used_memory);
+                                        $this->pageData[$id . "mem"] += (int) $this->stripText(' MiB', $process->used_memory);
                                         $this->pageData[$id . "count"]++;
                                     }
                                 }
