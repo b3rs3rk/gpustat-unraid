@@ -152,9 +152,9 @@ Icon="gpustat.png"
             <td>Session Total - Apps</td>
             <td colspan="2">
                 <span class='gpu-sessions load'></span>
-                <span class='gpu-img-span gpu-img-span-plex'><img class='gpu-image' src="/plugins/gpustat/images/plex.png"></span>
-                <span class='gpu-img-span gpu-img-span-jelly'><img class='gpu-image' src="/plugins/gpustat/images/jellyfin.png"></span>
-                <span class='gpu-img-span gpu-img-span-emby'><img class='gpu-image' src="/plugins/gpustat/images/emby.png"></span>
+                <span id="gpu-img-span-plex" class='gpu-img-span gpu-img-span-plex'><img id='gpu-plex' class='gpu-image' src="/plugins/gpustat/images/plex.png"></span>
+                <span id="gpu-img-span-jelly" class='gpu-img-span gpu-img-span-jelly'><img id='gpu-jelly' class='gpu-image' src="/plugins/gpustat/images/jellyfin.png"></span>
+                <span id="gpu-img-span-emby" class='gpu-img-span gpu-img-span-emby'><img id='gpu-emby' class='gpu-image' src="/plugins/gpustat/images/emby.png"></span>
             </td>
             <td></td>
         </tr>
