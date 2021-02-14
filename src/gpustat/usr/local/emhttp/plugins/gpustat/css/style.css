@@ -37,6 +37,6 @@ span.gpu-img-span {
 
 .gpu-image {
     padding-left: 8px;
-    height: 6%;
+    height: auto;
     width: 6%;
 }
