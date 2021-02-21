@@ -48,6 +48,13 @@
 -->
 
 <CHANGES>
+###2021-02-21
+- [RELEASE] Various fixes and slight improvements
+ * Fix for Chrome showing active application icons stretched vertically (NVIDIA) - #17
+ * Fix for dashboard render issues relating to cards that don't support PCI utilization metrics (NVIDIA)
+ * Move total sessions display to dashboard header to avoid confusion
+ * Add hover (alt) to application icons so that individual app processes count and memory usage will be displayed
+
 ###2021-01-21
 - Fix plugin errors on boot
  * Switch pre-install script from php to bash
