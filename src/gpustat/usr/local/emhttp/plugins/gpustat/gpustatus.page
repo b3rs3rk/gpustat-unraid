@@ -57,7 +57,10 @@ Icon="gpustat.png"
                     <span id='load'>Load: <span class='gpu-util'></span></span>
 <?php if ($gpu_nv) : ?>
 <?php if($gpustat_cfg['DISPTEMP']) : ?>
-                    <span id='gpu-temp'>Temperature: <span class='gpu-temp'></span></span>
+                    <span>Temperature: <span class='gpu-temp'></span></span>
+<?php endif; ?>
+<?php if ($gpustat_cfg['DISPSESSIONS']) : ?>
+                    &emsp;&ensp;<span>Processes: <span class='gpu-sessions'></span></span>
 <?php endif; ?>
 <?php endif; ?>
                 </div>
@@ -130,28 +133,24 @@ Icon="gpustat.png"
             <td></td>
         </tr>
 <?php endif; ?>
-<?php if($gpustat_cfg['DISPTHROTTLE']) : ?>
+<?php if($gpustat_cfg['DISPTHROTTLE'] || $gpustat_cfg['DISPPWRSTATE']): ?>
         <tr class="dash_gpustat_toggle gpu-enviro">
             <td></td>
-            <td>Throttled</td>
-            <td colspan="2"><span class='gpu-throttled load'></span>&nbsp;<span class='gpu-thrtlrsn load'></span></td>
-            <td></td>
-        </tr>
-<?php endif; ?>
+            <td>Power State - Throttling</td>
 <?php if($gpustat_cfg['DISPPWRSTATE']) : ?>
-        <tr class="dash_gpustat_toggle gpu-enviro">
-            <td></td>
-            <td>Power State</td>
-            <td colspan="2"><span class='gpu-perfstate load'></span></td>
+            <td><span class='gpu-perfstate load'></span></td>
+<?php endif; ?>
+<?php if($gpustat_cfg['DISPTHROTTLE']): ?>
+            <td><span class='gpu-throttled load'></span>&nbsp;<span class='gpu-thrtlrsn load'></span></td>
+<?php endif; ?>
             <td></td>
         </tr>
 <?php endif; ?>
 <?php if($gpustat_cfg['DISPSESSIONS']) : ?>
         <tr class="dash_gpustat_toggle gpu-enviro">
             <td></td>
-            <td>Session Total - Apps</td>
+            <td>Active Apps</td>
             <td colspan="2">
-                <span class='gpu-sessions load'></span>
                 <span id="gpu-img-span-plex" class='gpu-img-span gpu-img-span-plex'><img id='gpu-plex' class='gpu-image' src="/plugins/gpustat/images/plex.png"></span>
                 <span id="gpu-img-span-jelly" class='gpu-img-span gpu-img-span-jelly'><img id='gpu-jelly' class='gpu-image' src="/plugins/gpustat/images/jellyfin.png"></span>
                 <span id="gpu-img-span-emby" class='gpu-img-span gpu-img-span-emby'><img id='gpu-emby' class='gpu-image' src="/plugins/gpustat/images/emby.png"></span>
