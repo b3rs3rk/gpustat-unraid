@@ -160,36 +160,36 @@ class Nvidia extends Main
                 }
                 if ($this->settings['DISPENCDEC']) {
                     if (isset($data->utilization->encoder_util)) {
-                        $this->pageData['encutil'] = (string)$this->stripSpaces($data->utilization->encoder_util);
+                        $this->pageData['encutil'] = (string) $this->stripSpaces($data->utilization->encoder_util);
                     }
                     if (isset($data->utilization->decoder_util)) {
-                        $this->pageData['decutil'] = (string)$this->stripSpaces($data->utilization->decoder_util);
+                        $this->pageData['decutil'] = (string) $this->stripSpaces($data->utilization->decoder_util);
                     }
                 }
             }
             if ($this->settings['DISPTEMP']) {
                 if (isset($data->temperature)) {
                     if (isset($data->temperature->gpu_temp)) {
-                        $this->pageData['temp'] = (string)str_replace('C', '°C', $data->temperature->gpu_temp);
+                        $this->pageData['temp'] = (string) str_replace('C', '°C', $data->temperature->gpu_temp);
                     }
                     if (isset($data->temperature->gpu_temp_max_threshold)) {
-                        $this->pageData['tempmax'] = (string)str_replace('C', '°C', $data->temperature->gpu_temp_max_threshold);
+                        $this->pageData['tempmax'] = (string) str_replace('C', '°C', $data->temperature->gpu_temp_max_threshold);
                     }
                     if ($this->settings['TEMPFORMAT'] == 'F') {
                         foreach (['temp', 'tempmax'] as $key) {
-                            $this->pageData[$key] = $this->convertCelsius((int)$this->stripText('C', $this->pageData[$key])) . 'F';
+                            $this->pageData[$key] = $this->convertCelsius((int) $this->stripText('C', $this->pageData[$key])) . 'F';
                         }
                     }
                 }
             }
             if ($this->settings['DISPFAN']) {
                 if (isset($data->fan_speed)) {
-                    $this->pageData['fan'] = (string)$this->stripSpaces($data->fan_speed);
+                    $this->pageData['fan'] = (string) $this->stripSpaces($data->fan_speed);
                 }
             }
             if ($this->settings['DISPPWRSTATE']) {
                 if (isset($data->performance_state)) {
-                    $this->pageData['perfstate'] = (string)$this->stripSpaces($data->performance_state);
+                    $this->pageData['perfstate'] = (string) $this->stripSpaces($data->performance_state);
                 }
             }
             if ($this->settings['DISPTHROTTLE']) {
@@ -207,23 +207,23 @@ class Nvidia extends Main
             if ($this->settings['DISPPWRDRAW']) {
                 if (isset($data->power_readings)) {
                     if (isset($data->power_readings->power_draw)) {
-                        $this->pageData['power'] = (float)$this->stripText(' W', $data->power_readings->power_draw);
-                        $this->pageData['power'] = (string)$this->roundFloat($this->pageData['power']) . 'W';
+                        $this->pageData['power'] = (float) $this->stripText(' W', $data->power_readings->power_draw);
+                        $this->pageData['power'] = (string) $this->roundFloat($this->pageData['power']) . 'W';
                     }
                     if (isset($data->power_readings->power_limit)) {
-                        $this->pageData['powermax'] = (string)$this->stripText('.00 W', $data->power_readings->power_limit);
+                        $this->pageData['powermax'] = (string) $this->stripText('.00 W', $data->power_readings->power_limit);
                     }
                 }
             }
             if ($this->settings['DISPCLOCKS']) {
                 if (isset($data->clocks, $data->max_clocks)) {
                     if (isset($data->clocks->graphics_clock, $data->max_clocks->graphics_clock)) {
-                        $this->pageData['clock'] = (string)$this->stripText(' MHz', $data->clocks->graphics_clock);
-                        $this->pageData['clockmax'] = (string)$this->stripText(' MHz', $data->max_clocks->graphics_clock);
+                        $this->pageData['clock'] = (string) $this->stripText(' MHz', $data->clocks->graphics_clock);
+                        $this->pageData['clockmax'] = (string) $this->stripText(' MHz', $data->max_clocks->graphics_clock);
                     }
                     if (isset($data->clocks->mem_clock, $data->max_clocks->mem_clock)) {
-                        $this->pageData['memclock'] = (string)$this->stripText(' MHz', $data->clocks->mem_clock);
-                        $this->pageData['memclockmax'] = (string)$this->stripText(' MHz', $data->max_clocks->mem_clock);
+                        $this->pageData['memclock'] = (string) $this->stripText(' MHz', $data->clocks->mem_clock);
+                        $this->pageData['memclockmax'] = (string) $this->stripText(' MHz', $data->max_clocks->mem_clock);
                     }
                 }
             }
@@ -251,11 +251,11 @@ class Nvidia extends Main
                 if (isset($data->pci)) {
                     if (isset($data->pci->rx_util, $data->pci->tx_util)) {
                         // Not all cards support PCI RX/TX Measurements
-                        if ($data->pci->rx_util !== 'N/A') {
-                            $this->pageData['rxutil'] = (string)$this->roundFloat($this->stripText(' KB/s', $data->pci->rx_util) / 1000);
+                        if ((string) $data->pci->rx_util !== 'N/A') {
+                            $this->pageData['rxutil'] = (string) $this->roundFloat($this->stripText(' KB/s', $data->pci->rx_util) / 1000);
                         }
-                        if ($data->pci->tx_util !== 'N/A') {
-                            $this->pageData['txutil'] = (string)$this->roundFloat($this->stripText(' KB/s', $data->pci->tx_util) / 1000);
+                        if ((string) $data->pci->tx_util !== 'N/A') {
+                            $this->pageData['txutil'] = (string) $this->roundFloat($this->stripText(' KB/s', $data->pci->tx_util) / 1000);
                         }
                     }
                     if (
@@ -266,12 +266,12 @@ class Nvidia extends Main
                             $data->pci->pci_gpu_link_info->link_widths->max_link_width
                         )
                     ) {
-                        $this->pageData['pciegen'] = $generation = (int)$data->pci->pci_gpu_link_info->pcie_gen->current_link_gen;
-                        $this->pageData['pciewidth'] = $width = (int)$this->stripText('x', $data->pci->pci_gpu_link_info->link_widths->current_link_width);
+                        $this->pageData['pciegen'] = $generation = (int) $data->pci->pci_gpu_link_info->pcie_gen->current_link_gen;
+                        $this->pageData['pciewidth'] = $width = (int) $this->stripText('x', $data->pci->pci_gpu_link_info->link_widths->current_link_width);
                         // @ 16x Lanes: Gen 1 = 4000, 2 = 8000, 3 = 16000 MB/s -- Slider bars won't be that active with most workloads
                         $this->pageData['pciemax'] = pow(2, $generation - 1) * 250 * $width;
-                        $this->pageData['pciegenmax'] = (int)$data->pci->pci_gpu_link_info->pcie_gen->max_link_gen;
-                        $this->pageData['pciewidthmax'] = (int)$this->stripText('x', $data->pci->pci_gpu_link_info->link_widths->max_link_width);
+                        $this->pageData['pciegenmax'] = (int) $data->pci->pci_gpu_link_info->pcie_gen->max_link_gen;
+                        $this->pageData['pciewidthmax'] = (int) $this->stripText('x', $data->pci->pci_gpu_link_info->link_widths->max_link_width);
                     }
                 }
             }
