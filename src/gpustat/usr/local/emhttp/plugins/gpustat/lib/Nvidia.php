@@ -39,9 +39,9 @@ class Nvidia extends Main
     const INVENTORY_REGEX = '/GPU\s(?P<id>\d):\s(?P<model>.*)\s\(UUID:\s(?P<guid>GPU-[0-9a-f-]+)\)/i';
     const STATISTICS_PARAM = '-q -x -g %s 2>&1';
     const SUPPORTED_APPS = [
-        'plex'  => 'Plex Transcoder',
-        'jelly' => 'jellyfin-ffmpeg',
-        'emby'  => '/bin/ffmpeg',
+        'plex'      => 'Plex Transcoder',
+        'jelly'     => 'jellyfin-ffmpeg',
+        'emby'      => '/bin/ffmpeg',
     ];
 
     /**
@@ -128,7 +128,8 @@ class Nvidia extends Main
                 'pciewidth'     => 'N/A',
                 'pciewidthmax'  => 'N/A',
                 'powermax'      => 'N/A',
-                'sessions'      =>  0,
+                'sessions'      => 0,
+                'uuid'          => 'N/A',
             ];
 
             // App HW Usage
@@ -146,6 +147,9 @@ class Nvidia extends Main
 
             if (isset($data->product_name)) {
                 $this->pageData['name'] = (string) $data->product_name;
+            }
+            if (isset($data->uuid)) {
+                $this->pageData['uuid'] = (string) $data->uuid;
             }
             if (isset($data->utilization)) {
                 if (isset($data->utilization->gpu_util)) {
