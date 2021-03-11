@@ -150,7 +150,14 @@ class Nvidia extends Main
             ];
 
             if (isset($data->product_name)) {
-                $this->pageData['name'] = (string) $data->product_name;
+                $product_name = (string) $data->product_name;
+                if (strlen($product_name) > 20 && str_word_count($product_name > 2)) {
+                    $words = explode(" ", $product_name);
+                    $this->pageData['name'] = sprintf("%0s %1s", $words[0], $words[1]);
+                } else {
+                    $this->pageData['name'] = $product_name;
+                }
+                unset($product_name);
             }
             if (isset($data->uuid)) {
                 $this->pageData['uuid'] = (string) $data->uuid;
