@@ -42,6 +42,7 @@ class Nvidia extends Main
         'plex'      => 'Plex Transcoder',
         'jelly'     => 'jellyfin-ffmpeg',
         'emby'      => '/bin/ffmpeg',
+        'handbrake' => '/usr/bin/HandBrakeCLI',
     ];
 
     /**
@@ -134,15 +135,18 @@ class Nvidia extends Main
 
             // App HW Usage
             $this->pageData += [
-                'plexusing'     => false,
-                'plexmem'       => 0,
-                'plexcount'     => 0,
-                'jellyusing'    => false,
-                'jellymem'      => 0,
-                'jellycount'    => 0,
-                'embyusing'     => false,
-                'embymem'       => 0,
-                'embycount'     => 0,
+                'embyusing'         => false,
+                'embymem'           => 0,
+                'embycount'         => 0,
+                'handbrakeusing'    => false,
+                'handbrakemem'      => 0,
+                'handbrakecount'    => 0,
+                'jellyusing'        => false,
+                'jellymem'          => 0,
+                'jellycount'        => 0,
+                'plexusing'         => false,
+                'plexmem'           => 0,
+                'plexcount'         => 0,
             ];
 
             if (isset($data->product_name)) {

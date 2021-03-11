@@ -151,9 +151,18 @@ Icon="gpustat.png"
             <td></td>
             <td>Active Apps</td>
             <td colspan="2">
-                <span id="gpu-img-span-plex" class='gpu-img-span gpu-img-span-plex'><img id='gpu-plex' class='gpu-image' src="/plugins/gpustat/images/plex.png"></span>
-                <span id="gpu-img-span-jelly" class='gpu-img-span gpu-img-span-jelly'><img id='gpu-jelly' class='gpu-image' src="/plugins/gpustat/images/jellyfin.png"></span>
-                <span id="gpu-img-span-emby" class='gpu-img-span gpu-img-span-emby'><img id='gpu-emby' class='gpu-image' src="/plugins/gpustat/images/emby.png"></span>
+                <span id="gpu-img-span-plex" class='gpu-img-span gpu-img-span-plex'>
+                    <img id='gpu-plex' class='gpu-image' src="/plugins/gpustat/images/plex.png">
+                </span>
+                <span id="gpu-img-span-jelly" class='gpu-img-span gpu-img-span-jelly'>
+                    <img id='gpu-jelly' class='gpu-image' src="/plugins/gpustat/images/jellyfin.png">
+                </span>
+                <span id="gpu-img-span-emby" class='gpu-img-span gpu-img-span-emby'>
+                    <img id='gpu-emby' class='gpu-image' src="/plugins/gpustat/images/emby.png">
+                </span>
+                <span id="gpu-img-span-handbrake" class='gpu-img-span gpu-img-span-handbrake'>
+                    <img id='gpu-handbrake' class='gpu-image' src="/plugins/gpustat/images/handbrake.png">
+                </span>
             </td>
             <td></td>
         </tr>
