@@ -74,28 +74,34 @@ UI Automatic Refresh / Interval (Milliseconds):
 
 <h4><b>Multiple Vendors</b></h4>
 
-GPU and Memory Clocks:
+GPU and Memory Clocks (Nvidia/Intel/AMD):
 : <select id="DISPCLOCKS" name="DISPCLOCKS" size="1">
     <?=mk_option($gpustat_cfg['DISPCLOCKS'], "0", "No");?>
     <?=mk_option($gpustat_cfg['DISPCLOCKS'], "1", "Yes");?>
   </select>
 
-PCI/IMC Utilization:
+PCI/IMC Utilization (Nvidia/Intel):
 : <select id="DISPPCIUTIL" name="DISPPCIUTIL" size="1">
     <?=mk_option($gpustat_cfg['DISPPCIUTIL'], "0", "No");?>
     <?=mk_option($gpustat_cfg['DISPPCIUTIL'], "1", "Yes");?>
   </select>
 
-Power Draw:
+Power Draw (Nvidia/Intel):
 : <select id="DISPPWRDRAW" name="DISPPWRDRAW" size="1">
     <?=mk_option($gpustat_cfg['DISPPWRDRAW'], "0", "No");?>
     <?=mk_option($gpustat_cfg['DISPPWRDRAW'], "1", "Yes");?>
   </select>
 
-Power State:
+Power State (Nvidia/Intel):
 : <select id="DISPPWRSTATE" name="DISPPWRSTATE" size="1">
     <?=mk_option($gpustat_cfg['DISPPWRSTATE'], "0", "No");?>
     <?=mk_option($gpustat_cfg['DISPPWRSTATE'], "1", "Yes");?>
+  </select>
+
+Memory Utilization (Nvidia/AMD):
+: <select id="DISPMEMUTIL" name="DISPMEMUTIL" size="1">
+    <?=mk_option($gpustat_cfg['DISPMEMUTIL'], "0", "No");?>
+    <?=mk_option($gpustat_cfg['DISPMEMUTIL'], "1", "Yes");?>
   </select>
 
 <h4><b>Nvidia Specific</b></h4>
@@ -104,12 +110,6 @@ Temperature:
 : <select id="DISPTEMP" name="DISPTEMP" size="1">
     <?=mk_option($gpustat_cfg['DISPTEMP'], "0", "No");?>
     <?=mk_option($gpustat_cfg['DISPTEMP'], "1", "Yes");?>
-  </select>
-
-Memory Utilization:
-: <select id="DISPMEMUTIL" name="DISPMEMUTIL" size="1">
-    <?=mk_option($gpustat_cfg['DISPMEMUTIL'], "0", "No");?>
-    <?=mk_option($gpustat_cfg['DISPMEMUTIL'], "1", "Yes");?>
   </select>
 
 Encoder / Decoder Utilization:
@@ -166,6 +166,68 @@ Interrupts Per Second:
 : <select id="DISPINTERRUPT" name="DISPINTERRUPT" size="1">
     <?=mk_option($gpustat_cfg['DISPINTERRUPT'], "0", "No");?>
     <?=mk_option($gpustat_cfg['DISPINTERRUPT'], "1", "Yes");?>
+  </select>
+
+<h4><b>AMD Specific</b></h4>
+
+Event Engine Usage:
+: <select id="DISPEVENT" name="DISPEVENT" size="1">
+    <?=mk_option($gpustat_cfg['DISPEVENT'], "0", "No");?>
+    <?=mk_option($gpustat_cfg['DISPEVENT'], "1", "Yes");?>
+  </select>
+
+Vertex Tesselator Usage:
+: <select id="DISPVERTEX" name="DISPVERTEX" size="1">
+    <?=mk_option($gpustat_cfg['DISPVERTEX'], "0", "No");?>
+    <?=mk_option($gpustat_cfg['DISPVERTEX'], "1", "Yes");?>
+  </select>
+
+Texture Addresser Usage:
+: <select id="DISPTEXTURE" name="DISPTEXTURE" size="1">
+    <?=mk_option($gpustat_cfg['DISPTEXTURE'], "0", "No");?>
+    <?=mk_option($gpustat_cfg['DISPTEXTURE'], "1", "Yes");?>
+  </select>
+
+Shader Export Usage:
+: <select id="DISPSHADEREXP" name="DISPSHADEREXP" size="1">
+    <?=mk_option($gpustat_cfg['DISPSHADEREXP'], "0", "No");?>
+    <?=mk_option($gpustat_cfg['DISPSHADEREXP'], "1", "Yes");?>
+  </select>
+
+Sequencer Cache Usage:
+: <select id="DISPSEQUENCER" name="DISPSEQUENCER" size="1">
+    <?=mk_option($gpustat_cfg['DISPSEQUENCER'], "0", "No");?>
+    <?=mk_option($gpustat_cfg['DISPSEQUENCER'], "1", "Yes");?>
+  </select>
+
+Shader Interpolator Usage:
+: <select id="DISPSHADERINTER" name="DISPSHADERINTER" size="1">
+    <?=mk_option($gpustat_cfg['DISPSHADERINTER'], "0", "No");?>
+    <?=mk_option($gpustat_cfg['DISPSHADERINTER'], "1", "Yes");?>
+  </select>
+
+Scan Converter Usage:
+: <select id="DISPSCANCON" name="DISPSCANCON" size="1">
+    <?=mk_option($gpustat_cfg['DISPSCANCON'], "0", "No");?>
+    <?=mk_option($gpustat_cfg['DISPSCANCON'], "1", "Yes");?>
+  </select>
+
+Primitive Assembly Usage:
+: <select id="DISPPRIMASSEM" name="DISPPRIMASSEM" size="1">
+    <?=mk_option($gpustat_cfg['DISPPRIMASSEM'], "0", "No");?>
+    <?=mk_option($gpustat_cfg['DISPPRIMASSEM'], "1", "Yes");?>
+  </select>
+
+Depth Block Usage:
+: <select id="DISPDEPTHBLK" name="DISPDEPTHBLK" size="1">
+    <?=mk_option($gpustat_cfg['DISPDEPTHBLK'], "0", "No");?>
+    <?=mk_option($gpustat_cfg['DISPDEPTHBLK'], "1", "Yes");?>
+  </select>
+
+Color Block Usage:
+: <select id="DISPCOLORBLK" name="DISPCOLORBLK" size="1">
+    <?=mk_option($gpustat_cfg['DISPCOLORBLK'], "0", "No");?>
+    <?=mk_option($gpustat_cfg['DISPCOLORBLK'], "1", "Yes");?>
   </select>
 
 <br><br><br>
