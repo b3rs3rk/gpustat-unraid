@@ -115,25 +115,31 @@
 <INLINE>
 
 if [ "$(which nvidia-smi 2>/dev/null)" ] || [ -d /boot/config/plugins/nvidia-driver ]; then
-	echo "********************************************************************"
-	echo
-	echo "NVIDIA vendor utility found. Continuing install."
-	echo
-	echo "********************************************************************"
+    echo "********************************************************************"
+    echo
+    echo "NVIDIA vendor utility found. Continuing install."
+    echo
+    echo "********************************************************************"
 elif [ "$(which intel_gpu_top 2>/dev/null)" ] || [ -d /boot/config/plugins/intel-gpu-top ]; then
-	echo "********************************************************************"
-	echo
-	echo "Intel vendor utility found. Continuing install."
-	echo
-	echo "********************************************************************"
+    echo "********************************************************************"
+    echo
+    echo "Intel vendor utility found. Continuing install."
+    echo
+    echo "********************************************************************"
+elif [ "$(which radeontop 2>/dev/null)" ] || [ -d /boot/config/plugins/radeontop ]; then
+    echo "********************************************************************"
+    echo
+    echo "AMD vendor utility found. Continuing install."
+    echo
+    echo "********************************************************************"
 else
-	echo "********************************************************************"
-	echo
-	echo "No vendor utilities found.  Plugin install terminated due to failed prerequisites."
-	echo
-	echo "********************************************************************"
-	rm -rf /boot/config/plugins/&name;
-	exit 1
+    echo "********************************************************************"
+    echo
+    echo "No vendor utilities found.  Plugin install terminated due to failed prerequisites."
+    echo
+    echo "********************************************************************"
+    rm -rf /boot/config/plugins/&name;
+    exit 1
 fi
 
 </INLINE>
