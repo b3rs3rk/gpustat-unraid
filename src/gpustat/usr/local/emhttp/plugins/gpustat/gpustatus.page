@@ -325,8 +325,8 @@ Icon="gpustat.png"
         <tr class="dash_gpustat_toggle gpu-enviro">
             <td></td>
             <td>Clocks: Shader - Mem (GHz)</td>
-            <td><span class='gpu-clock load'></span><div class='usage-disk sys'><span class='gpu-clockbar'></span><span></span></div></td>
-            <td><span class='gpu-memclock load'></span><div class='usage-disk sys'><span class='gpu-memclockbar'></span><span></span></div></td>
+            <td><span class='gpu-clock load'></span><div class='usage-disk sys'><span class='gpu-clockutilbar'></span><span></span></div></td>
+            <td><span class='gpu-memclock load'></span><div class='usage-disk sys'><span class='gpu-memclockutilbar'></span><span></span></div></td>
             <td></td>
         </tr>
 <?php endif; ?>
