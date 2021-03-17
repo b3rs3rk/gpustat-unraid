@@ -177,6 +177,7 @@ fi
     DISPPRIMASSEM="1"
     DISPDEPTHBLK="1"
     DISPCOLORBLK="1"
+    DISPGFXTRANS="1"
    ]]>
   </INLINE>
  </FILE>
