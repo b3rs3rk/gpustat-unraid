@@ -120,7 +120,7 @@ class AMD extends Main
             'gpu'   => ['util'],
             'ee'    => ['event'],
             'vgt'   => ['vertex'],
-            'ta'    => ['ta'],
+            'ta'    => ['texture'],
             'sx'    => ['shaderexp'],
             'sh'    => ['sequencer'],
             'spi'   => ['shaderinter'],
@@ -141,17 +141,26 @@ class AMD extends Main
             foreach ($data AS $raw) {
                 $metric = explode(" ", $raw);
                 if (isset($keyMap[$metric[0]])) {
-                    $this->pageData[$keyMap[$metric[0]][0]] = $metric[1];
-                    if (isset($metric[2]) && !empty($metric[2])) {
-                        $this->pageData[$keyMap[$metric[0]][1]] = $this->roundFloat(trim(str_replace(['mb','ghz'], '', $metric[2])), 2);
+                    $value = $keyMap[$metric[0]];
+                    if ($this->settings['DISP' . strtoupper($value)[0]]) {
+                        $this->pageData[$value[0]] = $metric[1];
+                        if (isset($metric[2])) {
+                            $this->pageData[$value[1]] = $this->roundFloat(
+                                trim(
+                                    $this->stripText(
+                                        ['mb','ghz'],
+                                        $metric[2]
+                                    )
+                                ), 2
+                            );
+                        }
                     }
                 }
             }
             unset($data, $this->stdout);
-
-            $this->echoJson();
         } else {
             $this->pageData['error'][] += new Error(Error::VENDOR_DATA_NOT_ENOUGH, "Count: $count");
         }
+        $this->echoJson();
     }
 }

@@ -215,11 +215,11 @@ class Main
     /**
      * Replaces a string within a string with an empty string
      *
-     * @param string $strip
+     * @param string|string[] $strip
      * @param string $string
      * @return string|string[]
      */
-    protected static function stripText(string $strip, string $string)
+    protected static function stripText($strip, string $string)
     {
         return str_replace($strip, '', $string);
     }
