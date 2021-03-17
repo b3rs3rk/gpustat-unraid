@@ -231,6 +231,12 @@ Color Block Usage:
     <?=mk_option($gpustat_cfg['DISPCOLORBLK'], "1", "Yes");?>
   </select>
 
+Graphics Translation Usage:
+: <select id="DISPGFXTRANS" name="DISPGFXTRANS" size="1">
+    <?=mk_option($gpustat_cfg['DISPGFXTRANS'], "0", "No");?>
+    <?=mk_option($gpustat_cfg['DISPGFXTRANS'], "1", "Yes");?>
+  </select>
+
 <br><br><br>
 
 : <input id="btnApply" type="submit" value="Apply"><input type="button" value="Done" onClick="done()">
