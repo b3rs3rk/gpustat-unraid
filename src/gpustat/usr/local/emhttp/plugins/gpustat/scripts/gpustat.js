@@ -34,7 +34,7 @@ const gpustat_status = () => {
                     $('.gpu-rxutilbar').removeAttr('style').css('width', parseInt(data["rxutil"] / data["pciemax"] * 100) + "%");
                     $('.gpu-txutilbar').removeAttr('style').css('width', parseInt(data["txutil"] / data["pciemax"] * 100) + "%");
 
-                    let nvidiabars = ["util", "memutil", "encutil", "decutil", "fan"];
+                    let nvidiabars = ['util', 'memutil', 'encutil', 'decutil', 'fan'];
                     nvidiabars.forEach(function (metric) {
                         $('.gpu-'+metric+'bar').removeAttr('style').css('width', data[metric]);
                     });
@@ -53,7 +53,7 @@ const gpustat_status = () => {
                     break;
                 case 'Intel':
                     // Intel Slider Bars
-                    let intelbars = ["3drender", "blitter", "video", "videnh", "powerutil"];
+                    let intelbars = ['3drender', 'blitter', 'video', 'videnh', 'powerutil'];
                     intelbars.forEach(function (metric) {
                         $('.gpu-'+metric+'bar').removeAttr('style').css('width', data[metric]);
                     });
