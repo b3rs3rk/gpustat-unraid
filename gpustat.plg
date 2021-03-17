@@ -149,7 +149,7 @@ fi
    <![CDATA[
     VENDOR=""
     GPUID=""
-    TEMPFORMAT=C
+    TEMPFORMAT="C"
     DISPCLOCKS="1"
     DISPENCDEC="1"
     DISPPCIUTIL="1"
