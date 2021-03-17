@@ -32,6 +32,13 @@ namespace gpustat\lib;
  */
 class AMD extends Main
 {
+    const CMD_UTILITY = 'radeontop';
+    const INVENTORY_UTILITY = 'lspci';
+    const INVENTORY_PARAM = '| grep VGA';
+    const INVENTORY_REGEX =
+        '/(?P<busid>\d{2}).*?\[AMD\/AIT\].*\s+(?P<model>.*)\s+\[/iU';
+    const STATISTICS_PARAM = '-d - -i .5 -l 1';
+
     /**
      * AMD constructor.
      * @param array $settings
@@ -39,5 +46,112 @@ class AMD extends Main
     public function __construct(array $settings = [])
     {
         parent::__construct($settings);
+    }
+
+    /**
+     * Retrieves AMD inventory using lspci and returns an array
+     *
+     * @return array
+     */
+    public function getInventory(): array
+    {
+        $result = [];
+
+        if ($this->cmdexists) {
+            $this->checkCommand(self::INVENTORY_UTILITY, false);
+            if ($this->cmdexists) {
+                $this->runCommand(self::INVENTORY_UTILITY, self::INVENTORY_PARAM, false);
+                if (!empty($this->stdout) && strlen($this->stdout) > 0) {
+                    $this->parseInventory(self::INVENTORY_REGEX);
+                }
+                if (!empty($this->inventory)) {
+                    foreach ($this->inventory AS $gpu) {
+                        $result += [
+                            'id'    => $gpu['busid'],
+                            'model' => $gpu['model'],
+                            'guid'  => '0000-00-000-000000',
+                        ];
+                    }
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Retrieves AMD APU/GPU statistics
+     */
+    public function getStatistics()
+    {
+        if ($this->cmdexists) {
+            //Command invokes radeontop in STDOUT mode with an update limit of half a second @ 120 samples per second
+            $command = sprintf("%0s -b %1s", self::CMD_UTILITY, $this->settings['GPUID']);
+            $this->runCommand($command, self::STATISTICS_PARAM, false);
+            if (!empty($this->stdout) && strlen($this->stdout) > 0) {
+                $this->parseStatistics();
+            } else {
+                $this->pageData['error'][] += new Error(Error::VENDOR_DATA_NOT_RETURNED);
+            }
+        }
+    }
+
+    /**
+     * Loads radeontop STDOUT and parses into an associative array for mapping to plugin variables
+     */
+    private function parseStatistics()
+    {
+        $this->pageData += [
+            'vendor'        => 'AMD',
+            'name'          => 'APU/GPU',
+            'event'         => 'N/A',
+            'vertex'        => 'N/A',
+            'texture'       => 'N/A',
+            'shaderexp'     => 'N/A',
+            'sequencer'     => 'N/A',
+            'shaderinter'   => 'N/A',
+            'scancon'       => 'N/A',
+            'primassem'     => 'N/A',
+            'depthblk'      => 'N/A',
+            'colorblk'      => 'N/A',
+        ];
+
+        $keyMap = [
+            'gpu'   => ['util'],
+            'ee'    => ['event'],
+            'vgt'   => ['vertex'],
+            'ta'    => ['ta'],
+            'sx'    => ['shaderexp'],
+            'sh'    => ['sequencer'],
+            'spi'   => ['shaderinter'],
+            'sc'    => ['scancon'],
+            'pa'    => ['primassem'],
+            'db'    => ['depthblk'],
+            'cb'    => ['colorblk'],
+            'vram'  => ['memutil', 'memused'],
+            'gtt'   => ['gfxtrans', 'transused'],
+            'mclk'  => ['memclockutil', 'memclock'],
+            'sclk'  => ['clockutil', 'clock'],
+        ];
+
+        // radeontop data doesn't follow a standard object format -- need to parse CSV and then explode by spaces
+        $data = explode(", ", substr($this->stdout, strpos($this->stdout, 'gpu')));
+
+        if ($count = count($data) > 0) {
+            foreach ($data AS $raw) {
+                $metric = explode(" ", $raw);
+                if (isset($keyMap[$metric[0]])) {
+                    $this->pageData[$keyMap[$metric[0]][0]] = $metric[1];
+                    if (isset($metric[2]) && !empty($metric[2])) {
+                        $this->pageData[$keyMap[$metric[0]][1]] = $this->roundFloat(trim(str_replace(['mb','ghz'], '', $metric[2])), 2);
+                    }
+                }
+            }
+            unset($data, $this->stdout);
+
+            $this->echoJson();
+        } else {
+            $this->pageData['error'][] += new Error(Error::VENDOR_DATA_NOT_ENOUGH, "Count: $count");
+        }
     }
 }
