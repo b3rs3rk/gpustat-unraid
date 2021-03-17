@@ -69,6 +69,7 @@ const gpustat_status = () => {
                     amdbars.forEach(function (metric) {
                         $('.gpu-'+metric+'bar').removeAttr('style').css('width', data[metric]);
                     });
+                    break;
             }
 
             $.each(data, function (key, data) {
