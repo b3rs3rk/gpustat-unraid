@@ -28,16 +28,22 @@ Icon="gpustat.png"
 
     $gpustat_cfg = parse_plugin_cfg('gpustat', true);
 
-    $gpu_nv = $gpu_intel = false;
+    $gpu_nv = $gpu_intel = $gpu_amd = $gpu_unknown = false;
 
-    if ($gpustat_cfg['VENDOR'] == "nvidia") {
-        $gpu_nv = true;
-    } elseif ($gpustat_cfg['VENDOR'] == "intel") {
-        $gpu_intel = true;
-    } else {
-        // If vendor isn't set the config hasn't been saved, don't render the plugin
-        $gpu_unknown = true;
-        $unknown_msg = "Default vendor set - Change vendor in GPUStat settings page and apply.";
+    switch ($gpustat_cfg['VENDOR']) {
+        case "nvidia":
+            $gpu_nv = true;
+            break;
+        case "intel":
+            $gpu_intel = true;
+            break;
+        case "amd":
+            $gpu_amd = true;
+            break;
+        default:
+            // If vendor isn't set the config hasn't been saved, don't render the plugin
+            $gpu_unknown = true;
+            $unknown_msg = "Default vendor set - Change vendor in GPUStat settings page and apply.";
     }
 ?>
 
@@ -230,6 +236,97 @@ Icon="gpustat.png"
             <td></td>
             <td>Interrupts/Sec</td>
             <td colspan="2"><span class='gpu-interrupts load'></span></td>
+            <td></td>
+        </tr>
+<?php endif; ?>
+<?php endif; ?>
+<?php if ($gpu_amd) : ?>
+        <tr class="dash_gpustat_toggle gpu-enviro">
+            <td></td>
+            <td>GPU Load - Memory (MB)</td>
+            <td><span class='gpu-util load'></span><div class='usage-disk sys'><span class='gpu-utilbar'></span><span></span></div></td>
+<?php if($gpustat_cfg['DISPMEMUTIL']) : ?>
+            <td><span class='gpu-memused load'></span><div class='usage-disk sys'><span class='gpu-memutilbar'></span><span></span></div></td>
+<?php endif; ?>
+<?php if($gpustat_cfg['DISPEVENT'] || $gpustat_cfg['DISPVERTEX']) : ?>
+        <tr class="dash_gpustat_toggle gpu-enviro">
+            <td></td>
+            <td>Event - Vertex</td>
+<?php if($gpustat_cfg['DISPEVENT'] : ?>
+            <td><span class='gpu-event load'></span><div class='usage-disk sys'><span class='gpu-eventbar'></span><span></span></div></td>
+<?php endif; ?>
+<?php if($gpustat_cfg['DISPVERTEX'] : ?>
+            <td><span class='gpu-vertex load'></span><div class='usage-disk sys'><span class='gpu-vertexbar'></span><span></span></div></td>
+<?php endif; ?>
+            <td></td>
+        </tr>
+<?php endif; ?>
+<?php if($gpustat_cfg['DISPTEXTURE'] || $gpustat_cfg['DISPSEQUENCER']) : ?>
+        <tr class="dash_gpustat_toggle gpu-enviro">
+            <td></td>
+            <td>Texture - Sequencer</td>
+<?php if($gpustat_cfg['DISPTEXTURE'] : ?>
+            <td><span class='gpu-texture load'></span><div class='usage-disk sys'><span class='gpu-texturebar'></span><span></span></div></td>
+<?php endif; ?>
+<?php if($gpustat_cfg['DISPSEQUENCER'] : ?>
+            <td><span class='gpu-sequencer load'></span><div class='usage-disk sys'><span class='gpu-sequencerbar'></span><span></span></div></td>
+<?php endif; ?>
+            <td></td>
+        </tr>
+<?php endif; ?>
+<?php if($gpustat_cfg['DISPSHADEREXP'] || $gpustat_cfg['DISPSHADERINTER']) : ?>
+        <tr class="dash_gpustat_toggle gpu-enviro">
+            <td></td>
+            <td>Shader Export - Interpol</td>
+<?php if($gpustat_cfg['DISPSHADEREXP'] : ?>
+            <td><span class='gpu-shaderexp load'></span><div class='usage-disk sys'><span class='gpu-shaderexpbar'></span><span></span></div></td>
+<?php endif; ?>
+<?php if($gpustat_cfg['DISPSHADERINTER'] : ?>
+            <td><span class='gpu-shaderinter load'></span><div class='usage-disk sys'><span class='gpu-shaderinterbar'></span><span></span></div></td>
+<?php endif; ?>
+            <td></td>
+        </tr>
+<?php endif; ?>
+<?php if($gpustat_cfg['DISPSCANCON'] || $gpustat_cfg['DISPPRIMASSEM']) : ?>
+        <tr class="dash_gpustat_toggle gpu-enviro">
+            <td></td>
+            <td>Scan Conv - Prim Assem</td>
+<?php if($gpustat_cfg['DISPSCANCON'] : ?>
+            <td><span class='gpu-scancon load'></span><div class='usage-disk sys'><span class='gpu-scanconbar'></span><span></span></div></td>
+<?php endif; ?>
+<?php if($gpustat_cfg['DISPPRIMASSEM'] : ?>
+            <td><span class='gpu-primassem load'></span><div class='usage-disk sys'><span class='gpu-primassembar'></span><span></span></div></td>
+<?php endif; ?>
+            <td></td>
+        </tr>
+<?php endif; ?>
+<?php if($gpustat_cfg['DISPDEPTHBLK'] || $gpustat_cfg['DISPCOLORBLK']) : ?>
+        <tr class="dash_gpustat_toggle gpu-enviro">
+            <td></td>
+            <td>Blocks: Depth - Color</td>
+<?php if($gpustat_cfg['DISPDEPTHBLK'] : ?>
+            <td><span class='gpu-depthblk load'></span><div class='usage-disk sys'><span class='gpu-depthblkbar'></span><span></span></div></td>
+<?php endif; ?>
+<?php if($gpustat_cfg['DISPCOLORBLK'] : ?>
+            <td><span class='gpu-colorblk load'></span><div class='usage-disk sys'><span class='gpu-colorblkbar'></span><span></span></div></td>
+<?php endif; ?>
+            <td></td>
+        </tr>
+<?php endif; ?>
+<?php if($gpustat_cfg['DISPGFXTRANS']) : ?>
+        <tr class="dash_gpustat_toggle gpu-enviro">
+            <td></td>
+            <td>Graphics Translation</td>
+            <td colspan="2"><span class='gpu-gfxtrans load'></span><div class='usage-disk sys'><span class='gpu-gfxtransbar'></span><span></span></div></td>
+            <td></td>
+        </tr>
+<?php endif; ?>
+<?php if($gpustat_cfg['DISPCLOCKS']) : ?>
+        <tr class="dash_gpustat_toggle gpu-enviro">
+            <td></td>
+            <td>Clocks: Shader - Mem (GHz)</td>
+            <td><span class='gpu-clock load'></span><div class='usage-disk sys'><span class='gpu-clockbar'></span><span></span></div></td>
+            <td><span class='gpu-memclock load'></span><div class='usage-disk sys'><span class='gpu-memclockbar'></span><span></span></div></td>
             <td></td>
         </tr>
 <?php endif; ?>
