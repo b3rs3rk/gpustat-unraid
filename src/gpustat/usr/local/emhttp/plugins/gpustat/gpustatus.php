@@ -29,8 +29,10 @@ define('ES', ' ');
 include 'lib/Main.php';
 include 'lib/Nvidia.php';
 include 'lib/Intel.php';
+include 'lib/AMD.php';
 include 'lib/Error.php';
 
+use gpustat\lib\AMD;
 use \gpustat\lib\Main;
 use \gpustat\lib\Nvidia;
 use \gpustat\lib\Intel;
@@ -46,15 +48,19 @@ if (isset($gpustat_inventory) && $gpustat_inventory) {
     // Settings page looks for $gpustat_data specifically -- inventory all supported GPU types
     $gpustat_data = (new Nvidia($gpustat_cfg))->getInventory();
     $gpustat_data += (new Intel($gpustat_cfg))->getInventory();
+    $gpustat_data += (new AMD($gpustat_cfg))->getInventory();
 
 } else {
 
     switch ($gpustat_cfg['VENDOR']) {
-        case 'nvidia':
-            (new Nvidia($gpustat_cfg))->getStatistics();
+        case 'amd':
+            (new AMD($gpustat_cfg))->getStatistics();
             break;
         case 'intel':
             (new Intel($gpustat_cfg))->getStatistics();
+            break;
+        case 'nvidia':
+            (new Nvidia($gpustat_cfg))->getStatistics();
             break;
         default:
             print_r(new Error(Error::CONFIG_SETTINGS_NOT_VALID, ''));
