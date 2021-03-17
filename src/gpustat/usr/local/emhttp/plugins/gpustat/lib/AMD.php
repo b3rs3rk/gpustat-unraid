@@ -138,18 +138,19 @@ class AMD extends Main
         $data = explode(", ", substr($this->stdout, strpos($this->stdout, 'gpu')));
 
         if ($count = count($data) > 0) {
-            foreach ($data AS $raw) {
-                $metric = explode(" ", $raw);
-                if (isset($keyMap[$metric[0]])) {
-                    $values = $keyMap[$metric[0]];
+            foreach ($data AS $metric) {
+                // metric util% value
+                $fields = explode(" ", $metric);
+                if (isset($keyMap[$fields[0]])) {
+                    $values = $keyMap[$fields[0]];
                     if ($this->settings['DISP' . strtoupper($values[0])]) {
-                        $this->pageData[$values[0]] = $metric[1];
-                        if (isset($metric[2])) {
+                        $this->pageData[$values[0]] = $fields[1];
+                        if (isset($fields[2])) {
                             $this->pageData[$values[1]] = $this->roundFloat(
                                 trim(
                                     $this->stripText(
                                         ['mb','ghz'],
-                                        $metric[2]
+                                        $fields[2]
                                     )
                                 ), 2
                             );
