@@ -141,11 +141,11 @@ class AMD extends Main
             foreach ($data AS $raw) {
                 $metric = explode(" ", $raw);
                 if (isset($keyMap[$metric[0]])) {
-                    $value = $keyMap[$metric[0]];
-                    if ($this->settings['DISP' . strtoupper($value)[0]]) {
-                        $this->pageData[$value[0]] = $metric[1];
+                    $values = $keyMap[$metric[0]];
+                    if ($this->settings['DISP' . strtoupper($values[0])]) {
+                        $this->pageData[$values[0]] = $metric[1];
                         if (isset($metric[2])) {
-                            $this->pageData[$value[1]] = $this->roundFloat(
+                            $this->pageData[$values[1]] = $this->roundFloat(
                                 trim(
                                     $this->stripText(
                                         ['mb','ghz'],
