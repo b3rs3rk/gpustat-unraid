@@ -252,10 +252,10 @@ Icon="gpustat.png"
         <tr class="dash_gpustat_toggle gpu-enviro">
             <td></td>
             <td>Event - Vertex</td>
-<?php if($gpustat_cfg['DISPEVENT'] : ?>
+<?php if($gpustat_cfg['DISPEVENT']) : ?>
             <td><span class='gpu-event load'></span><div class='usage-disk sys'><span class='gpu-eventbar'></span><span></span></div></td>
 <?php endif; ?>
-<?php if($gpustat_cfg['DISPVERTEX'] : ?>
+<?php if($gpustat_cfg['DISPVERTEX']) : ?>
             <td><span class='gpu-vertex load'></span><div class='usage-disk sys'><span class='gpu-vertexbar'></span><span></span></div></td>
 <?php endif; ?>
             <td></td>
@@ -265,10 +265,10 @@ Icon="gpustat.png"
         <tr class="dash_gpustat_toggle gpu-enviro">
             <td></td>
             <td>Texture - Sequencer</td>
-<?php if($gpustat_cfg['DISPTEXTURE'] : ?>
+<?php if($gpustat_cfg['DISPTEXTURE']) : ?>
             <td><span class='gpu-texture load'></span><div class='usage-disk sys'><span class='gpu-texturebar'></span><span></span></div></td>
 <?php endif; ?>
-<?php if($gpustat_cfg['DISPSEQUENCER'] : ?>
+<?php if($gpustat_cfg['DISPSEQUENCER']) : ?>
             <td><span class='gpu-sequencer load'></span><div class='usage-disk sys'><span class='gpu-sequencerbar'></span><span></span></div></td>
 <?php endif; ?>
             <td></td>
@@ -278,10 +278,10 @@ Icon="gpustat.png"
         <tr class="dash_gpustat_toggle gpu-enviro">
             <td></td>
             <td>Shader Export - Interpol</td>
-<?php if($gpustat_cfg['DISPSHADEREXP'] : ?>
+<?php if($gpustat_cfg['DISPSHADEREXP']) : ?>
             <td><span class='gpu-shaderexp load'></span><div class='usage-disk sys'><span class='gpu-shaderexpbar'></span><span></span></div></td>
 <?php endif; ?>
-<?php if($gpustat_cfg['DISPSHADERINTER'] : ?>
+<?php if($gpustat_cfg['DISPSHADERINTER']) : ?>
             <td><span class='gpu-shaderinter load'></span><div class='usage-disk sys'><span class='gpu-shaderinterbar'></span><span></span></div></td>
 <?php endif; ?>
             <td></td>
@@ -291,10 +291,10 @@ Icon="gpustat.png"
         <tr class="dash_gpustat_toggle gpu-enviro">
             <td></td>
             <td>Scan Conv - Prim Assem</td>
-<?php if($gpustat_cfg['DISPSCANCON'] : ?>
+<?php if($gpustat_cfg['DISPSCANCON']) : ?>
             <td><span class='gpu-scancon load'></span><div class='usage-disk sys'><span class='gpu-scanconbar'></span><span></span></div></td>
 <?php endif; ?>
-<?php if($gpustat_cfg['DISPPRIMASSEM'] : ?>
+<?php if($gpustat_cfg['DISPPRIMASSEM']) : ?>
             <td><span class='gpu-primassem load'></span><div class='usage-disk sys'><span class='gpu-primassembar'></span><span></span></div></td>
 <?php endif; ?>
             <td></td>
@@ -304,10 +304,10 @@ Icon="gpustat.png"
         <tr class="dash_gpustat_toggle gpu-enviro">
             <td></td>
             <td>Blocks: Depth - Color</td>
-<?php if($gpustat_cfg['DISPDEPTHBLK'] : ?>
+<?php if($gpustat_cfg['DISPDEPTHBLK']) : ?>
             <td><span class='gpu-depthblk load'></span><div class='usage-disk sys'><span class='gpu-depthblkbar'></span><span></span></div></td>
 <?php endif; ?>
-<?php if($gpustat_cfg['DISPCOLORBLK'] : ?>
+<?php if($gpustat_cfg['DISPCOLORBLK']) : ?>
             <td><span class='gpu-colorblk load'></span><div class='usage-disk sys'><span class='gpu-colorblkbar'></span><span></span></div></td>
 <?php endif; ?>
             <td></td>
