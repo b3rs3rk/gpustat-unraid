@@ -17,18 +17,15 @@ For custom kernel builds, see the original post of the UnRAID-Kernel-Build-Helpe
 - UnRAID (All Versions)
   * Intel GPU TOP plugin by @ich777 from Community Apps
 
-Note: From an UnRAID console if `nvidia-smi` (NVIDIA) or `intel_gpu_top` (Intel) cannot be found or run for any reason,
+#### AMD:
+- UnRAID (6.9+)
+  * RadeonTop plugin by @ich777 from Community Apps
+
+Note: From an UnRAID console if `nvidia-smi` (NVIDIA), `intel_gpu_top` (Intel) or `radeontop` (AMD) cannot be found or run for any reason,
 the plugin will fail for that vendor. If neither command exists, the plugin install will fail.
 
 ## Manual Installation
-    - Make sure all pre-requisites are installed and configured as needed
-    - Verify you have Unraid-Nvidia Build 6.7.1+ Installed
-    - Within UnRAID Web UI navigate to Plugins -> Install Plugin
-    - Enter https://raw.githubusercontent.com/b3rs3rk/gpustat-unraid/master/gpustat.plg
-    - Select Install
-    - Navigate to Settings -> GPU Statistics and select vendor (only choice is NVIDIA at this time)
-    - Select Done
-    - Navigate to Dashboard and look at the top of the leftmost panel for the GPU widget
+    - No longer supported, install from Community Apps unless beta testing
 
 If any issues occur, visit the support thread [here](https://forums.unraid.net/topic/89453-plugin-gpu-statistics/ "[PLUGIN] GPU Statistics").
 
@@ -55,6 +52,19 @@ If any issues occur, visit the support thread [here](https://forums.unraid.net/t
     - Power Draw and Power Demand (rc6 slider)
     - GPU Clock
     - Interrupts per Second
+
+#### AMD:
+    - GPU/Memory Utilization
+    - Event Engine Utilization
+    - Vertex Grouper and Tesselator Utilization
+    - Texture Addresser Utilization
+    - Shader Export/Interpolator Utilization
+    - Sequencer Instruction Cache Utilization
+    - Scan Converter Utilization
+    - Primitive Assembly Utilization
+    - Depth/Color Block Utilization
+    - Graphics Translation Table Utilization
+    - Memory/Shader Clocks
 
 The bulk of this code was adapted from/inspired by @realies and @CyanLabs corsairpsu-unraid project!
 
