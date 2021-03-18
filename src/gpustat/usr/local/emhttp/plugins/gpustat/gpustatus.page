@@ -313,20 +313,20 @@ Icon="gpustat.png"
             <td></td>
         </tr>
 <?php endif; ?>
-<?php if($gpustat_cfg['DISPGFXTRANS']) : ?>
-        <tr class="dash_gpustat_toggle gpu-enviro">
-            <td></td>
-            <td>Graphics Translation</td>
-            <td colspan="2"><span class='gpu-gfxtrans load'></span><div class='usage-disk sys'><span class='gpu-gfxtransbar'></span><span></span></div></td>
-            <td></td>
-        </tr>
-<?php endif; ?>
 <?php if($gpustat_cfg['DISPCLOCKS']) : ?>
         <tr class="dash_gpustat_toggle gpu-enviro">
             <td></td>
             <td>Clocks: Shader - Mem (GHz)</td>
             <td><span class='gpu-clock load'></span><div class='usage-disk sys'><span class='gpu-clockutilbar'></span><span></span></div></td>
             <td><span class='gpu-memclock load'></span><div class='usage-disk sys'><span class='gpu-memclockutilbar'></span><span></span></div></td>
+            <td></td>
+        </tr>
+<?php endif; ?>
+<?php if($gpustat_cfg['DISPGFXTRANS']) : ?>
+        <tr class="dash_gpustat_toggle gpu-enviro">
+            <td></td>
+            <td>Graphics Translation</td>
+            <td colspan="2"><span class='gpu-gfxtrans load'></span><div class='usage-disk sys'><span class='gpu-gfxtransbar'></span><span></span></div></td>
             <td></td>
         </tr>
 <?php endif; ?>
