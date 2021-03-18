@@ -25,7 +25,7 @@
 const gpustat_status = () => {
     $.getJSON('/plugins/gpustat/gpustatus.php', (data) => {
         if (data) {
-            switch (data) {
+            switch (data["vendor"]) {
                 case 'NVIDIA':
                     // Nvidia Slider Bars
                     $('.gpu-memclockbar').removeAttr('style').css('width', data["memclock"] / data["memclockmax"] * 100 + "%");
