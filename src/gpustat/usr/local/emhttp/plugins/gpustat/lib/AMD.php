@@ -45,6 +45,7 @@ class AMD extends Main
      */
     public function __construct(array $settings = [])
     {
+        $settings += ['cmd' => self::CMD_UTILITY];
         parent::__construct($settings);
     }
 
