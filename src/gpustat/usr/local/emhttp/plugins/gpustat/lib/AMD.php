@@ -36,7 +36,7 @@ class AMD extends Main
     const INVENTORY_UTILITY = 'lspci';
     const INVENTORY_PARAM = '| grep VGA';
     const INVENTORY_REGEX =
-        '/(?P<busid>\d{2}).*?\[AMD\/AIT\].*\s+(?P<model>.*)\s+\[/iU';
+        '/(?P<busid>\d{2}).*?\[AMD(\/ATI)?\]\s+(?P<model>.*)\s+\[/iU';
     const STATISTICS_PARAM = '-d - -i .5 -l 1';
 
     /**
@@ -68,8 +68,8 @@ class AMD extends Main
                 if (!empty($this->inventory)) {
                     foreach ($this->inventory AS $gpu) {
                         $result += [
-                            'id'    => $gpu['busid'],
-                            'model' => $gpu['model'],
+                            'id'    => (int) $gpu['busid'],
+                            'model' => (string) $gpu['model'],
                             'guid'  => '0000-00-000-000000',
                         ];
                     }
