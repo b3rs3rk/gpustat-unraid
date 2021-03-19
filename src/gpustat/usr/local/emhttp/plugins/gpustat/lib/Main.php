@@ -106,7 +106,7 @@ class Main
         } else {
             // Send the error but don't die because we need to continue for inventory
             if ($error) {
-                $this->pageData['error'][] += new Error(Error::VENDOR_UTILITY_NOT_FOUND, '');
+                $this->pageData['error'][] = new Error(Error::VENDOR_UTILITY_NOT_FOUND, '');
             }
         }
     }
