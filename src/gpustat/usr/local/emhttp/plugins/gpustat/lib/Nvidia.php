@@ -38,11 +38,12 @@ class Nvidia extends Main
     const INVENTORY_PARAM = '-L';
     const INVENTORY_REGEX = '/GPU\s(?P<id>\d):\s(?P<model>.*)\s\(UUID:\s(?P<guid>GPU-[0-9a-f-]+)\)/i';
     const STATISTICS_PARAM = '-q -x -g %s 2>&1';
-    const SUPPORTED_APPS = [
-        'plex'      => 'Plex Transcoder',
-        'jelly'     => 'jellyfin-ffmpeg',
-        'emby'      => '/bin/ffmpeg',
-        'handbrake' => '/usr/bin/HandBrakeCLI',
+    const SUPPORTED_APPS = [ // Order here is important because some apps use the same binaries -- order should be more specific to less
+        'plex'      => ['Plex Transcoder'],
+        'jelly'     => ['jellyfin-ffmpeg'],
+        'emby'      => ['/bin/ffmpeg'],
+        'handbrake' => ['/usr/bin/HandBrakeCLI'],
+        'tdarr'     => ['ffmpeg', 'HandbrakeCLI'],
     ];
 
     /**
@@ -249,12 +250,16 @@ class Nvidia extends Main
                     $this->pageData['sessions'] = (int) count($data->processes->process_info);
                     if ($this->pageData['sessions'] > 0) {
                         foreach ($data->processes->children() as $process) {
-                            foreach (self::SUPPORTED_APPS as $id => $app) {
-                                if (isset($process->process_name)) {
-                                    if (strpos($process->process_name, $app) !== false) {
-                                        $this->pageData[$id . "using"] = true;
-                                        $this->pageData[$id . "mem"] += (int) $this->stripText(' MiB', $process->used_memory);
-                                        $this->pageData[$id . "count"]++;
+                            if (isset($process->process_name)) {
+                                foreach (self::SUPPORTED_APPS as $id => $apps) {
+                                    foreach ($apps as $command) {
+                                        if (strpos($process->process_name, $command) !== false) {
+                                            $this->pageData[$id . "using"] = true;
+                                            $this->pageData[$id . "mem"] += (int)$this->stripText(' MiB', $process->used_memory);
+                                            $this->pageData[$id . "count"]++;
+                                            // If we match a more specific command/app to a process, continue on to the next process
+                                            continue 3;
+                                        }
                                     }
                                 }
                             }
