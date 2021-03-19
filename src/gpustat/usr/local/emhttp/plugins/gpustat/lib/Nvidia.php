@@ -148,6 +148,9 @@ class Nvidia extends Main
                 'plexusing'         => false,
                 'plexmem'           => 0,
                 'plexcount'         => 0,
+                'tdarrusing'        => false,
+                'tdarrmem'          => 0,
+                'tdarrcount'        => 0,
             ];
 
             if (isset($data->product_name)) {
