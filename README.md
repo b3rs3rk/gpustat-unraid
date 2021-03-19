@@ -22,7 +22,7 @@ For custom kernel builds, see the original post of the UnRAID-Kernel-Build-Helpe
   * RadeonTop plugin by @ich777 from Community Apps
 
 Note: From an UnRAID console if `nvidia-smi` (NVIDIA), `intel_gpu_top` (Intel) or `radeontop` (AMD) cannot be found or run for any reason,
-the plugin will fail for that vendor. If neither command exists, the plugin install will fail.
+the plugin will fail for that vendor. If none of these commands exists, the plugin install will fail.
 
 ## Manual Installation
     - No longer supported, install from Community Apps unless beta testing
