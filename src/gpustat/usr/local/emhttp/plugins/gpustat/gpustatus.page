@@ -243,10 +243,22 @@ Icon="gpustat.png"
 <?php if ($gpu_amd) : ?>
         <tr class="dash_gpustat_toggle gpu-enviro">
             <td></td>
-            <td>GPU Load - Memory (MB)</td>
-            <td><span class='gpu-util load'></span><div class='usage-disk sys'><span class='gpu-utilbar'></span><span></span></div></td>
+            <td>GPU Load</td>
+            <td colspan="2"><span class='gpu-util load'></span><div class='usage-disk sys'><span class='gpu-utilbar'></span><span></span></div></td>
+            <td></td>
+        </tr>
+<?php if($gpustat_cfg['DISPGFXTRANS'] || $gpustat_cfg['DISPMEMUTIL']) : ?>
+        <tr class="dash_gpustat_toggle gpu-enviro">
+            <td></td>
+            <td>Translate - Memory (MB)</td>
+<?php if($gpustat_cfg['DISPGFXTRANS']) : ?>
+            <td><span class='gpu-gfxtrans load'></span><div class='usage-disk sys'><span class='gpu-gfxtransbar'></span><span></span></div></td>
+<?php endif; ?>
 <?php if($gpustat_cfg['DISPMEMUTIL']) : ?>
             <td><span class='gpu-memused load'></span><div class='usage-disk sys'><span class='gpu-memutilbar'></span><span></span></div></td>
+<?php endif; ?>
+            <td></td>
+        </tr>
 <?php endif; ?>
 <?php if($gpustat_cfg['DISPEVENT'] || $gpustat_cfg['DISPVERTEX']) : ?>
         <tr class="dash_gpustat_toggle gpu-enviro">
@@ -319,14 +331,6 @@ Icon="gpustat.png"
             <td>Clocks: Shader - Mem (GHz)</td>
             <td><span class='gpu-clock load'></span><div class='usage-disk sys'><span class='gpu-clockutilbar'></span><span></span></div></td>
             <td><span class='gpu-memclock load'></span><div class='usage-disk sys'><span class='gpu-memclockutilbar'></span><span></span></div></td>
-            <td></td>
-        </tr>
-<?php endif; ?>
-<?php if($gpustat_cfg['DISPGFXTRANS']) : ?>
-        <tr class="dash_gpustat_toggle gpu-enviro">
-            <td></td>
-            <td>Graphics Translation</td>
-            <td colspan="2"><span class='gpu-gfxtrans load'></span><div class='usage-disk sys'><span class='gpu-gfxtransbar'></span><span></span></div></td>
             <td></td>
         </tr>
 <?php endif; ?>
