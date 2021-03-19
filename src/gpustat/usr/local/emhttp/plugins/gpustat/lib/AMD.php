@@ -145,7 +145,7 @@ class AMD extends Main
                 if (isset($keyMap[$fields[0]])) {
                     $values = $keyMap[$fields[0]];
                     if ($this->settings['DISP' . strtoupper($values[0])] || $this->settings['DISP' . strtoupper($values[2])]) {
-                        $this->pageData[$values[0]] = $fields[1];
+                        $this->pageData[$values[0]] = $this->roundFloat($this->stripText('%', $fields[1]), 1) . '%';
                         if (isset($fields[2])) {
                             $this->pageData[$values[1]] = $this->roundFloat(
                                 trim(
@@ -157,8 +157,8 @@ class AMD extends Main
                             );
                         }
                     } elseif ($fields[0] == 'gpu') {
-                        // GPU Load doesn't have a setting, for now just oass the check
-                        $this->pageData[$values[0]] = $fields[1];
+                        // GPU Load doesn't have a setting, for now just pass the check
+                        $this->pageData[$values[0]] = $this->roundFloat($this->stripText('%', $fields[1]), 1) . '%';
                     }
                 }
             }
