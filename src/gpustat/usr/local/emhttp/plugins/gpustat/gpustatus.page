@@ -169,6 +169,9 @@ Icon="gpustat.png"
                 <span id="gpu-img-span-handbrake" class='gpu-img-span gpu-img-span-handbrake'>
                     <img id='gpu-handbrake' class='gpu-image' src="/plugins/gpustat/images/handbrake.png">
                 </span>
+                <span id="gpu-img-span-tdarr" class='gpu-img-span gpu-img-span-tdarr'>
+                    <img id='gpu-tdarr' class='gpu-image' src="/plugins/gpustat/images/tdarr.png">
+                </span>
             </td>
             <td></td>
         </tr>
