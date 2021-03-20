@@ -32,7 +32,7 @@ include 'lib/Intel.php';
 include 'lib/AMD.php';
 include 'lib/Error.php';
 
-use gpustat\lib\AMD;
+use \gpustat\lib\AMD;
 use \gpustat\lib\Main;
 use \gpustat\lib\Nvidia;
 use \gpustat\lib\Intel;
