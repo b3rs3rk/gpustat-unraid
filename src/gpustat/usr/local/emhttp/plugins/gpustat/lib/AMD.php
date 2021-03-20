@@ -36,7 +36,7 @@ class AMD extends Main
     const INVENTORY_UTILITY = 'lspci';
     const INVENTORY_PARAM = '| grep VGA';
     const INVENTORY_REGEX =
-        '/^(?P<busid>[0-9a-f]{2}).*?\[AMD(\/ATI)?\]\s+(?P<model>.*)\s+\[/iU';
+        '/^(?P<busid>[0-9a-f]{2}).*?\[AMD(\/ATI)?\]\s+(?P<model>.*)\s+[\[\(]/iU';
     const STATISTICS_PARAM = '-d - -l 1';
 
     /**
