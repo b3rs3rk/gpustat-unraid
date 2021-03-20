@@ -70,7 +70,7 @@ class AMD extends Main
                         $result[] = [
                             'id'    => "Bus ID " . $gpu['busid'],
                             'model' => (string) (isset($gpu['product']) ? $gpu['product'] : $gpu['model']),
-                            'guid'  => (int) $gpu['busid'],
+                            'guid'  => $gpu['busid'],
                         ];
                     }
                 }
