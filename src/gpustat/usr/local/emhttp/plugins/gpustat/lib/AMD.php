@@ -142,9 +142,9 @@ class AMD extends Main
                     if ($this->settings['DISPTEMP']) {
                         if (isset($data['edge']['temp1_input'])) {
                             $sensors['tempunit'] = $this->settings['TEMPFORMAT'];
-                            $sensors['temp'] = $this->roundFloat($data['edge']['temp1_unit']) . ' °' . $sensors['tempunit'];
+                            $sensors['temp'] = $this->roundFloat($data['edge']['temp1_input']) . ' °' . $sensors['tempunit'];
                             if (isset($data['edge']['temp1_crit'])) {
-                                $sensors['tempmax'] = $this->roundFloat($data['edge']['temp1_unit']);
+                                $sensors['tempmax'] = $this->roundFloat($data['edge']['temp1_crit']);
                             }
                         }
                     }
