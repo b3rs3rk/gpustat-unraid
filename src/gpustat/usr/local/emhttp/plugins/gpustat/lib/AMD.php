@@ -227,7 +227,7 @@ class AMD extends Main
         } else {
             $this->pageData['error'][] = new Error(Error::VENDOR_DATA_NOT_ENOUGH, "Count: $count");
         }
-        $this->pageData += $this->getSensorData();
+        $this->pageData = array_merge($this->pageData, $this->getSensorData());
 
         $this->echoJson();
     }
