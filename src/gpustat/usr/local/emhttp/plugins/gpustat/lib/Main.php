@@ -82,10 +82,17 @@ class Main
 
         $this->pageData = [
             'clock'         => 'N/A',
-            'util'          => 'N/A',
+            'fan'           => 'N/A',
+            'memclock'      => 'N/A',
+            'memutil'       => 'N/A',
+            'memused'       => 'N/A',
             'power'         => 'N/A',
+            'powermax'      => 'N/A',
             'rxutil'        => 'N/A',
             'txutil'        => 'N/A',
+            'temp'          => 'N/A',
+            'tempmax'       => 'N/A',
+            'util'          => 'N/A',
         ];
     }
 
