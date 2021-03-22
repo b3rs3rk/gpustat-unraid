@@ -87,7 +87,7 @@ PCI/IMC Utilization (Nvidia/Intel):
     <?=mk_option($gpustat_cfg['DISPPCIUTIL'], "1", "Yes");?>
   </select>
 
-Power Draw (Nvidia/Intel):
+Power Draw (Nvidia/Intel/AMD**):
 : <select id="DISPPWRDRAW" name="DISPPWRDRAW" size="1">
     <?=mk_option($gpustat_cfg['DISPPWRDRAW'], "0", "No");?>
     <?=mk_option($gpustat_cfg['DISPPWRDRAW'], "1", "Yes");?>
@@ -105,24 +105,24 @@ Memory Utilization (Nvidia/AMD):
     <?=mk_option($gpustat_cfg['DISPMEMUTIL'], "1", "Yes");?>
   </select>
 
-<h4><b>Nvidia Specific</b></h4>
-
-Temperature:
+Temperature (Nvidia/AMD):
 : <select id="DISPTEMP" name="DISPTEMP" size="1">
     <?=mk_option($gpustat_cfg['DISPTEMP'], "0", "No");?>
     <?=mk_option($gpustat_cfg['DISPTEMP'], "1", "Yes");?>
   </select>
 
+Fan Usage (Nvidia/AMD**):
+: <select id="DISPFAN" name="DISPFAN" size="1">
+    <?=mk_option($gpustat_cfg['DISPFAN'], "0", "No");?>
+    <?=mk_option($gpustat_cfg['DISPFAN'], "1", "Yes");?>
+  </select>
+
+<h4><b>Nvidia Specific</b></h4>
+
 Encoder / Decoder Utilization:
 : <select id="DISPENCDEC" name="DISPENCDEC" size="1">
     <?=mk_option($gpustat_cfg['DISPENCDEC'], "0", "No");?>
     <?=mk_option($gpustat_cfg['DISPENCDEC'], "1", "Yes");?>
-  </select>
-
-Fan Usage:
-: <select id="DISPFAN" name="DISPFAN" size="1">
-    <?=mk_option($gpustat_cfg['DISPFAN'], "0", "No");?>
-    <?=mk_option($gpustat_cfg['DISPFAN'], "1", "Yes");?>
   </select>
 
 Throttle Status:
@@ -243,4 +243,6 @@ Graphics Translation Usage:
 
 <br><br><br>
 Note: Where noted, not all metrics are provided by the vendor utilities and this plugin cannot magically make that work.
+<br><br><br>
+**Metric is available for discrete AMD GPUs and not APUs
 </form>

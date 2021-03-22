@@ -37,7 +37,28 @@ class AMD extends Main
     const INVENTORY_PARAM = '| grep VGA';
     const INVENTORY_REGEX =
         '/^(?P<busid>[0-9a-f]{2}).*\[AMD(\/ATI)?\]\s+(?P<model>.+)\s+(\[(?P<product>.+)\]|\()/imU';
+
     const STATISTICS_PARAM = '-d - -l 1';
+    const STATISTICS_KEYMAP = [
+        'gpu'   => ['util'],
+        'ee'    => ['event'],
+        'vgt'   => ['vertex'],
+        'ta'    => ['texture'],
+        'sx'    => ['shaderexp'],
+        'sh'    => ['sequencer'],
+        'spi'   => ['shaderinter'],
+        'sc'    => ['scancon'],
+        'pa'    => ['primassem'],
+        'db'    => ['depthblk'],
+        'cb'    => ['colorblk'],
+        'vram'  => ['memutil', 'memused'],
+        'gtt'   => ['gfxtrans', 'transused'],
+        'mclk'  => ['memclockutil', 'memclock', 'clocks'],
+        'sclk'  => ['clockutil', 'clock', 'clocks'],
+    ];
+
+    const TEMP_UTILITY = 'sensors';
+    const TEMP_PARAM = '-j 2>errors';
 
     /**
      * AMD constructor.
@@ -98,6 +119,64 @@ class AMD extends Main
     }
 
     /**
+     * Retrieves AMD APU/GPU Temperature/Fan/Power/Voltage readings from lm-sensors
+     * @returns array
+     */
+    private function getSensorData(): array
+    {
+        $sensors = [];
+
+        $this->checkCommand(self::TEMP_UTILITY, false);
+        if ($this->cmdexists) {
+            $tempFormat = '';
+            if ($this->settings['TEMPFORMAT'] == 'F') {
+                $tempFormat = '-f';
+            }
+            $chip = sprintf('amdgpu-pci-%1s00', $this->settings['GPUID']);
+            $command = sprintf('%0s %1s %2s', self::TEMP_UTILITY, $chip, $tempFormat);
+            $this->runCommand($command, self::TEMP_PARAM, false);
+            if (!empty($this->stdout) && strlen($this->stdout) > 0) {
+                $data = json_decode($this->stdout, true);
+                if(isset($data[$chip])) {
+                    $data = $data[$chip];
+                    if ($this->settings['DISPTEMP']) {
+                        if (isset($data['edge']['temp1_input'])) {
+                            $sensors['tempunit'] = $this->settings['TEMPFORMAT'];
+                            $sensors['temp'] = $this->roundFloat($data['edge']['temp1_unit']) . ' °' . $sensors['tempunit'];
+                            if (isset($data['edge']['temp1_crit'])) {
+                                $sensors['tempmax'] = $this->roundFloat($data['edge']['temp1_unit']);
+                            }
+                        }
+                    }
+                    if ($this->settings['DISPFAN']) {
+                        if (isset($data['fan1']['fan1_input'])) {
+                            $sensors['fan'] = $this->roundFloat($data['fan1']['fan1_input']);
+                            if (isset($data['fan1']['fan1_max'])) {
+                                $sensors['fanmax'] = $this->roundFloat($data['fan1']['fan1_max']);
+                            }
+                        }
+                    }
+                    if ($this->settings['DISPPWRDRAW']) {
+                        if (isset($data['power1']['power1_average'])) {
+                            $sensors['power'] = $this->roundFloat($data['power1']['power1_average'], 1);
+                            $sensors['powerunit'] = 'W';
+                            if (isset($data['power1']['power1_cap'])) {
+                                $sensors['powermax'] = $this->roundFloat($data['power1']['power1_cap'], 1);
+                            }
+                        }
+                        if (isset($data['vddgfx']['in0_input'])) {
+                            $sensors['voltage'] = $this->roundFloat($data['vddgfx']['in0_input'], 2);
+                            $sensors['voltageunit'] = 'V';
+                        }
+                    }
+                }
+            }
+        }
+
+        return $sensors;
+    }
+
+    /**
      * Loads radeontop STDOUT and parses into an associative array for mapping to plugin variables
      */
     private function parseStatistics()
@@ -117,24 +196,6 @@ class AMD extends Main
             'colorblk'      => 'N/A',
         ];
 
-        $keyMap = [
-            'gpu'   => ['util'],
-            'ee'    => ['event'],
-            'vgt'   => ['vertex'],
-            'ta'    => ['texture'],
-            'sx'    => ['shaderexp'],
-            'sh'    => ['sequencer'],
-            'spi'   => ['shaderinter'],
-            'sc'    => ['scancon'],
-            'pa'    => ['primassem'],
-            'db'    => ['depthblk'],
-            'cb'    => ['colorblk'],
-            'vram'  => ['memutil', 'memused'],
-            'gtt'   => ['gfxtrans', 'transused'],
-            'mclk'  => ['memclockutil', 'memclock', 'clocks'],
-            'sclk'  => ['clockutil', 'clock', 'clocks'],
-        ];
-
         // radeontop data doesn't follow a standard object format -- need to parse CSV and then explode by spaces
         $data = explode(", ", substr($this->stdout, strpos($this->stdout, 'gpu')));
 
@@ -142,8 +203,8 @@ class AMD extends Main
             foreach ($data AS $metric) {
                 // metric util% value
                 $fields = explode(" ", $metric);
-                if (isset($keyMap[$fields[0]])) {
-                    $values = $keyMap[$fields[0]];
+                if (isset(self::STATISTICS_KEYMAP[$fields[0]])) {
+                    $values = self::STATISTICS_KEYMAP[$fields[0]];
                     if ($this->settings['DISP' . strtoupper($values[0])] || $this->settings['DISP' . strtoupper($values[2])]) {
                         $this->pageData[$values[0]] = $this->roundFloat($this->stripText('%', $fields[1]), 1) . '%';
                         if (isset($fields[2])) {
@@ -166,6 +227,8 @@ class AMD extends Main
         } else {
             $this->pageData['error'][] = new Error(Error::VENDOR_DATA_NOT_ENOUGH, "Count: $count");
         }
+        $this->pageData += $this->getSensorData();
+
         $this->echoJson();
     }
 }
