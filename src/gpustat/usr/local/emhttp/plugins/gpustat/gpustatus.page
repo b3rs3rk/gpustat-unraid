@@ -61,10 +61,12 @@ Icon="gpustat.png"
                 <div class='section'>GPU<br>
 <?php if ($gpu_unknown) : printf("\t\t\t\t<span>" . $unknown_msg . "</span></div>"); else : ?>
                     <span id='load'>Load: <span class='gpu-util'></span></span>
-<?php if ($gpu_nv) : ?>
+<?php if ($gpu_nv || $gpu_amd) : ?>
 <?php if($gpustat_cfg['DISPTEMP']) : ?>
                     <span>Temperature: <span class='gpu-temp'></span></span>
 <?php endif; ?>
+<?php endif; ?>
+<?php if ($gpu_nv) : ?>
 <?php if ($gpustat_cfg['DISPSESSIONS']) : ?>
                     &emsp;&ensp;<span>Processes: <span class='gpu-sessions'></span></span>
 <?php endif; ?>
@@ -324,6 +326,19 @@ Icon="gpustat.png"
 <?php endif; ?>
 <?php if($gpustat_cfg['DISPCOLORBLK']) : ?>
             <td><span class='gpu-colorblk load'></span><div class='usage-disk sys'><span class='gpu-colorblkbar'></span><span></span></div></td>
+<?php endif; ?>
+            <td></td>
+        </tr>
+<?php endif; ?>
+<?php if($gpustat_cfg['DISPFAN'] || $gpustat_cfg['DISPPWRDRAW']) : ?>
+        <tr class="dash_gpustat_toggle gpu-enviro">
+            <td></td>
+            <td>Fan - Power</td>
+<?php if($gpustat_cfg['DISPFAN']) : ?>
+            <td><span class='gpu-fan load'></span><div class='usage-disk sys'><span class='gpu-fanbar'></span><span></span></div></td>
+<?php endif; ?>
+<?php if($gpustat_cfg['DISPPWRDRAW']) : ?>
+            <td><span class='gpu-power load'><span class='gpu-powerunit'></span></span><div class='usage-disk sys'><span class='gpu-powerbar'></span><span></span></div></td>
 <?php endif; ?>
             <td></td>
         </tr>

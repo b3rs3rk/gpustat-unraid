@@ -59,6 +59,8 @@ const gpustat_status = () => {
                     });
                     break;
                 case 'AMD':
+                    $('.gpu-powerbar').removeAttr('style').css('width', parseInt(data["power"] / data["powermax"] * 100) + "%");
+                    $('.gpu-fanbar').removeAttr('style').css('width', parseInt(data["fan"] / data["fanmax"] * 100) + "%");
                     let amdbars = [
                         'util', 'event', 'vertex',
                         'texture', 'shaderexp', 'sequencer',
