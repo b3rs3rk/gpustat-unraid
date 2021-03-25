@@ -54,6 +54,7 @@ If any issues occur, visit the support thread [here](https://forums.unraid.net/t
     - Interrupts per Second
 
 #### AMD:
+    APU/GPU
     - GPU/Memory Utilization
     - Event Engine Utilization
     - Vertex Grouper and Tesselator Utilization
@@ -65,10 +66,16 @@ If any issues occur, visit the support thread [here](https://forums.unraid.net/t
     - Depth/Color Block Utilization
     - Graphics Translation Table Utilization
     - Memory/Shader Clocks
+    - Temperature
+
+    GPU Only
+    - Power Draw
+    - Fan Current/Max RPM
 
 The bulk of this code was adapted from/inspired by @realies and @CyanLabs corsairpsu-unraid project!
 
 ## Contributor Thanks
 
-    - Thanks to @mlapaglia for his work on UI slider bars!
-    - Thanks to @ich777 for his help with iGPU testing setup!
+    - @mlapaglia for his work on UI slider bars!
+    - @ich777 for his help with Intel iGPU testing!
+    - John_M for his help with AMD APU testing!
