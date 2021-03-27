@@ -164,8 +164,12 @@ class Intel extends Main
                 }
             }
             if ($this->settings['DISPPWRDRAW']) {
+                // Older versions of intel_gpu_top in case people haven't updated
                 if (isset($data['power']['value'])) {
                     $this->pageData['power'] = (string) $this->roundFloat($data['power']['value'], 2) . $data['power']['unit'];
+                // Newer version of intel_gpu_top includes GPU and package power readings, just scrape GPU for now
+                } elseif (isset($data['power']['GPU'])) {
+                    $this->pageData['power'] = (string) $this->roundFloat($data['power']['GPU'], 2) . $data['power']['unit'];
                 }
             }
             // According to the sparse documentation, rc6 is a percentage of how little the GPU is requesting power
