@@ -95,7 +95,7 @@ class Intel extends Main
             if (!empty($this->stdout) && strlen($this->stdout) > 0) {
                 $this->parseStatistics();
             } else {
-                $this->pageData['error'][] = new Error(Error::VENDOR_DATA_NOT_RETURNED);
+                $this->pageData['error'][] = Error::get(Error::VENDOR_DATA_NOT_RETURNED);
             }
         }
     }
@@ -112,12 +112,12 @@ class Intel extends Main
             $data = json_decode($stdout, true, 512, JSON_THROW_ON_ERROR);
         } catch (JsonException $e) {
             $data = [];
-            $this->pageData['error'][] = new Error(Error::VENDOR_DATA_BAD_PARSE, $e->getMessage());
+            $this->pageData['error'][] = Error::get(Error::VENDOR_DATA_BAD_PARSE, $e->getMessage());
         }
 
         // Need to make sure we have at least two array indexes to take the second one
         if ($count = count($data) < 2) {
-            $this->pageData['error'][] = new Error(Error::VENDOR_DATA_NOT_ENOUGH, "Count: $count");
+            $this->pageData['error'][] = Error::get(Error::VENDOR_DATA_NOT_ENOUGH, "Count: $count");
         }
 
         // intel_gpu_top will never show utilization counters on the first sample so we need the second position
@@ -185,7 +185,7 @@ class Intel extends Main
                 }
             }
         } else {
-            $this->pageData['error'][] = new Error(Error::VENDOR_DATA_BAD_PARSE);
+            $this->pageData['error'][] = Error::get(Error::VENDOR_DATA_BAD_PARSE);
         }
         $this->echoJson();
     }

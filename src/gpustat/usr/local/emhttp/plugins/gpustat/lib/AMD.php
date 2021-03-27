@@ -113,7 +113,7 @@ class AMD extends Main
             if (!empty($this->stdout) && strlen($this->stdout) > 0) {
                 $this->parseStatistics();
             } else {
-                $this->pageData['error'][] += new Error(Error::VENDOR_DATA_NOT_RETURNED);
+                $this->pageData['error'][] += Error::get(Error::VENDOR_DATA_NOT_RETURNED);
             }
         }
     }
@@ -225,7 +225,7 @@ class AMD extends Main
             }
             unset($data, $this->stdout);
         } else {
-            $this->pageData['error'][] = new Error(Error::VENDOR_DATA_NOT_ENOUGH, "Count: $count");
+            $this->pageData['error'][] = Error::get(Error::VENDOR_DATA_NOT_ENOUGH, "Count: $count");
         }
         $this->pageData = array_merge($this->pageData, $this->getSensorData());
 

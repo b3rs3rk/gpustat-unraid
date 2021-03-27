@@ -63,6 +63,6 @@ if (isset($gpustat_inventory) && $gpustat_inventory) {
             (new Nvidia($gpustat_cfg))->getStatistics();
             break;
         default:
-            print_r(new Error(Error::CONFIG_SETTINGS_NOT_VALID, ''));
+            print_r(Error::get(Error::CONFIG_SETTINGS_NOT_VALID, ''));
     }
 }

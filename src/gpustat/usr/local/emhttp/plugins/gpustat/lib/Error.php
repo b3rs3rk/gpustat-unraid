@@ -45,18 +45,18 @@ class Error
     const BAD_ARRAY_DATA            = ['code' => 500, 'message' => 'Bad array data received.'];
 
     /**
-     * Error constructor.
+     * Returns the error message
      *
      * @param array $error
-     * @param string $extra_info
+     * @param string $extra
      * @return array
      */
-    public function __construct(array $error = self::UNKNOWN, string $extra_info = '')
+    public static function get(array $error = self::UNKNOWN, string $extra = ''): array
     {
         return [
             'code'      => $error['code'],
             'message'   => $error['message'],
-            'extra'     => $extra_info,
+            'extra'     => $extra,
         ];
     }
 }

@@ -89,10 +89,10 @@ class Nvidia extends Main
             if (!empty($this->stdout) && strlen($this->stdout) > 0) {
                 $this->parseStatistics();
             } else {
-                $this->pageData['error'][] = new Error(Error::VENDOR_DATA_NOT_RETURNED);
+                $this->pageData['error'][] = Error::get(Error::VENDOR_DATA_NOT_RETURNED);
             }
         } else {
-            $this->pageData['error'][] = new Error(Error::VENDOR_UTILITY_NOT_FOUND);
+            $this->pageData['error'][] = Error::get(Error::VENDOR_UTILITY_NOT_FOUND);
         }
     }
 
@@ -292,7 +292,7 @@ class Nvidia extends Main
                 }
             }
         } else {
-            $this->pageData['error'][] = new Error(Error::VENDOR_DATA_BAD_PARSE);
+            $this->pageData['error'][] = Error::get(Error::VENDOR_DATA_BAD_PARSE);
         }
         $this->echoJson();
     }

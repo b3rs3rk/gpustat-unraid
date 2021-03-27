@@ -113,7 +113,7 @@ class Main
         } else {
             // Send the error but don't die because we need to continue for inventory
             if ($error) {
-                $this->pageData['error'][] = new Error(Error::VENDOR_UTILITY_NOT_FOUND, '');
+                $this->pageData['error'][] = Error::get(Error::VENDOR_UTILITY_NOT_FOUND, '');
             }
         }
     }
@@ -173,7 +173,7 @@ class Main
             echo $json;
         } else {
             // Can't echo JSON for debug, so print_r for array data
-            print_r(new Error(Error::BAD_ARRAY_DATA));
+            print_r(Error::get(Error::BAD_ARRAY_DATA));
         }
     }
 
