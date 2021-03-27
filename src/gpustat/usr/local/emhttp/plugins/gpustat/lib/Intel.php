@@ -106,7 +106,7 @@ class Intel extends Main
     private function parseStatistics()
     {
         // JSON output from intel_gpu_top with multiple array indexes isn't properly formatted
-        $stdout = "[" . str_replace(["\n","\t"], '', $this->stdout) . "]";
+        $stdout = "[" . str_replace('}{', '},{', str_replace(["\n","\t"], '', $this->stdout)) . "]";
 
         try {
             $data = json_decode($stdout, true, 512, JSON_THROW_ON_ERROR);
@@ -175,7 +175,7 @@ class Intel extends Main
             // According to the sparse documentation, rc6 is a percentage of how little the GPU is requesting power
             if ($this->settings['DISPPWRSTATE']) {
                 if (isset($data['rc6']['value'])) {
-                    $this->pageData['powerutil'] = (string) $this->roundFloat(100 - $data['rc6']['value']);
+                    $this->pageData['powerutil'] = (string) $this->roundFloat(100 - $data['rc6']['value'], 2) . "%";
                 }
             }
             if ($this->settings['DISPCLOCKS']) {
