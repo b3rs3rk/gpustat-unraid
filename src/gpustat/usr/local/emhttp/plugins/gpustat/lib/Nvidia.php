@@ -58,6 +58,38 @@ class Nvidia extends Main
     }
 
     /**
+     * Iterates supported applications and their respective commands to match against processes using GPU hardware
+     *
+     * @param SimpleXMLElement $process
+     */
+    private function detectApplication (SimpleXMLElement $process)
+    {
+        foreach (self::SUPPORTED_APPS as $app => $commands) {
+            foreach ($commands as $command) {
+                if (strpos($process->process_name, $command) !== false) {
+                    // For Handbrake/ffmpeg: arguments tell us which application called it
+                    if (in_array($command, ['ffmpeg', 'HandbrakeCLI'])) {
+                        if (isset($process->pid)) {
+                            $pid_info = $this->getFullCommand((int) $process->pid);
+                            if (!empty($pid_info) && strlen($pid_info) > 0) {
+                                if (strpos($pid_info, $app) === false) {
+                                    // We didn't match the application name in the arguments, no match
+                                    continue 2;
+                                }
+                            }
+                        }
+                    }
+                    $this->pageData[$app . "using"] = true;
+                    $this->pageData[$app . "mem"] += (int)$this->stripText(' MiB', $process->used_memory);
+                    $this->pageData[$app . "count"]++;
+                    // If we match a more specific command/app to a process, continue on to the next process
+                    break 2;
+                }
+            }
+        }
+    }
+
+    /**
      * Retrieves NVIDIA card inventory and parses into an array
      *
      * @return array
@@ -130,28 +162,17 @@ class Nvidia extends Main
 
             // App HW Usage
             $this->pageData += [
-                'embyusing'         => false,
-                'embymem'           => 0,
-                'embycount'         => 0,
-                'handbrakeusing'    => false,
-                'handbrakemem'      => 0,
-                'handbrakecount'    => 0,
-                'jellyusing'        => false,
-                'jellymem'          => 0,
-                'jellycount'        => 0,
-                'plexusing'         => false,
-                'plexmem'           => 0,
-                'plexcount'         => 0,
-                'tdarrusing'        => false,
-                'tdarrmem'          => 0,
-                'tdarrcount'        => 0,
-                'unmanicusing'      => false,
-                'unmaniccount'      => 0,
-                'unmanicmem'        => 0,
+                'embyusing'         => false, 'embymem'       => 0, 'embycount'       => 0,
+                'handbrakeusing'    => false, 'handbrakemem'  => 0, 'handbrakecount'  => 0,
+                'jellyusing'        => false, 'jellymem'      => 0, 'jellycount'      => 0,
+                'plexusing'         => false, 'plexmem'       => 0, 'plexcount'       => 0,
+                'tdarrusing'        => false, 'tdarrmem'      => 0, 'tdarrcount'      => 0,
+                'unmanicusing'      => false, 'unmaniccount'  => 0, 'unmanicmem'      => 0,
             ];
 
             if (isset($data->product_name)) {
                 $product_name = (string) $data->product_name;
+                // Some product names are too long, like TITAN Xp COLLECTORS EDITION and need to be shortened for fitment
                 if (strlen($product_name) > 20 && str_word_count($product_name) > 2) {
                     $words = explode(" ", $product_name);
                     $this->pageData['name'] = sprintf("%0s %1s", $words[0], $words[1]);
@@ -251,29 +272,7 @@ class Nvidia extends Main
                     if ($this->pageData['sessions'] > 0) {
                         foreach ($data->processes->children() as $process) {
                             if (isset($process->process_name)) {
-                                foreach (self::SUPPORTED_APPS as $app => $commands) {
-                                    foreach ($commands as $command) {
-                                        if (strpos($process->process_name, $command) !== false) {
-                                            // For Handbrake/ffmpeg: arguments tell us which application called it
-                                            if (in_array($command, ['ffmpeg', 'HandbrakeCLI'])) {
-                                                if (isset($process->pid)) {
-                                                    $pid_info = $this->getFullCommand((int) $process->pid);
-                                                    if (!empty($pid_info) && strlen($pid_info) > 0) {
-                                                        if (strpos($pid_info, $app) === false) {
-                                                            // We didn't match the application name in the arguments, no match
-                                                            continue 2;
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                            $this->pageData[$app . "using"] = true;
-                                            $this->pageData[$app . "mem"] += (int)$this->stripText(' MiB', $process->used_memory);
-                                            $this->pageData[$app . "count"]++;
-                                            // If we match a more specific command/app to a process, continue on to the next process
-                                            continue 3;
-                                        }
-                                    }
-                                }
+                                $this->detectApplication($process);
                             }
                         }
                     }
