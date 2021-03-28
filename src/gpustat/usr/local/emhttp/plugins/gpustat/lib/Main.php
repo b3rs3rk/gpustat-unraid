@@ -81,18 +81,18 @@ class Main
         $this->inventory = [];
 
         $this->pageData = [
-            'clock' => 'N/A',
-            'fan' => 'N/A',
-            'memclock' => 'N/A',
-            'memutil' => 'N/A',
-            'memused' => 'N/A',
-            'power' => 'N/A',
-            'powermax' => 'N/A',
-            'rxutil' => 'N/A',
-            'txutil' => 'N/A',
-            'temp' => 'N/A',
-            'tempmax' => 'N/A',
-            'util' => 'N/A',
+            'clock'     => 'N/A',
+            'fan'       => 'N/A',
+            'memclock'  => 'N/A',
+            'memutil'   => 'N/A',
+            'memused'   => 'N/A',
+            'power'     => 'N/A',
+            'powermax'  => 'N/A',
+            'rxutil'    => 'N/A',
+            'txutil'    => 'N/A',
+            'temp'      => 'N/A',
+            'tempmax'   => 'N/A',
+            'util'      => 'N/A',
         ];
     }
 
