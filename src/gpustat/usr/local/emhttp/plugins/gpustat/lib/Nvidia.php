@@ -167,7 +167,7 @@ class Nvidia extends Main
                 'jellyusing'        => false, 'jellymem'      => 0, 'jellycount'      => 0,
                 'plexusing'         => false, 'plexmem'       => 0, 'plexcount'       => 0,
                 'tdarrusing'        => false, 'tdarrmem'      => 0, 'tdarrcount'      => 0,
-                'unmanicusing'      => false, 'unmaniccount'  => 0, 'unmanicmem'      => 0,
+                'unmanicusing'      => false, 'unmanicmem'    => 0, 'unmaniccount'    => 0,
             ];
 
             if (isset($data->product_name)) {
