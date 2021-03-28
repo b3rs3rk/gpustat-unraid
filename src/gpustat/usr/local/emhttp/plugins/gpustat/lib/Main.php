@@ -81,18 +81,18 @@ class Main
         $this->inventory = [];
 
         $this->pageData = [
-            'clock'         => 'N/A',
-            'fan'           => 'N/A',
-            'memclock'      => 'N/A',
-            'memutil'       => 'N/A',
-            'memused'       => 'N/A',
-            'power'         => 'N/A',
-            'powermax'      => 'N/A',
-            'rxutil'        => 'N/A',
-            'txutil'        => 'N/A',
-            'temp'          => 'N/A',
-            'tempmax'       => 'N/A',
-            'util'          => 'N/A',
+            'clock' => 'N/A',
+            'fan' => 'N/A',
+            'memclock' => 'N/A',
+            'memutil' => 'N/A',
+            'memused' => 'N/A',
+            'power' => 'N/A',
+            'powermax' => 'N/A',
+            'rxutil' => 'N/A',
+            'txutil' => 'N/A',
+            'temp' => 'N/A',
+            'tempmax' => 'N/A',
+            'util' => 'N/A',
         ];
     }
 
@@ -132,6 +132,25 @@ class Main
         } else {
             $this->stdout = shell_exec(sprintf("%s %s", $command, $argument));
         }
+    }
+
+    /**
+     * Retrieves the full command with arguments for a given process ID
+     *
+     * @param int $pid
+     * @return string
+     */
+    protected function getFullCommand(int $pid): string
+    {
+        return trim(
+            file_get_contents(
+                sprintf(
+                    '/proc/%0d/cmdline',
+                    $pid
+                )
+            ),
+            "\0"
+        );
     }
 
     /**

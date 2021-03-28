@@ -44,6 +44,7 @@ class Nvidia extends Main
         'emby'      => ['/bin/ffmpeg'],
         'handbrake' => ['/usr/bin/HandBrakeCLI'],
         'tdarr'     => ['ffmpeg', 'HandbrakeCLI'],
+        'unmanic'   => ['ffmpeg'],
     ];
 
     /**
@@ -144,6 +145,9 @@ class Nvidia extends Main
                 'tdarrusing'        => false,
                 'tdarrmem'          => 0,
                 'tdarrcount'        => 0,
+                'unmanicusing'      => false,
+                'unmaniccount'      => 0,
+                'unmanicmem'        => 0,
             ];
 
             if (isset($data->product_name)) {
@@ -247,12 +251,24 @@ class Nvidia extends Main
                     if ($this->pageData['sessions'] > 0) {
                         foreach ($data->processes->children() as $process) {
                             if (isset($process->process_name)) {
-                                foreach (self::SUPPORTED_APPS as $id => $apps) {
-                                    foreach ($apps as $command) {
+                                foreach (self::SUPPORTED_APPS as $app => $commands) {
+                                    foreach ($commands as $command) {
                                         if (strpos($process->process_name, $command) !== false) {
-                                            $this->pageData[$id . "using"] = true;
-                                            $this->pageData[$id . "mem"] += (int)$this->stripText(' MiB', $process->used_memory);
-                                            $this->pageData[$id . "count"]++;
+                                            // For Handbrake/ffmpeg: arguments tell us which application called it
+                                            if (in_array($command, ['ffmpeg', 'HandbrakeCLI'])) {
+                                                if (isset($process->pid)) {
+                                                    $pid_info = $this->getFullCommand((int) $process->pid);
+                                                    if (!empty($pid_info) && strlen($pid_info) > 0) {
+                                                        if (strpos($pid_info, $app) === false) {
+                                                            // We didn't match the application name in the arguments, no match
+                                                            continue 2;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            $this->pageData[$app . "using"] = true;
+                                            $this->pageData[$app . "mem"] += (int)$this->stripText(' MiB', $process->used_memory);
+                                            $this->pageData[$app . "count"]++;
                                             // If we match a more specific command/app to a process, continue on to the next process
                                             continue 3;
                                         }
