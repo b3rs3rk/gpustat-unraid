@@ -142,15 +142,14 @@ class Main
      */
     protected function getFullCommand(int $pid): string
     {
-        return trim(
-            file_get_contents(
-                sprintf(
-                    '/proc/%0d/cmdline',
-                    $pid
-                )
-            ),
-            "\0"
-        );
+        $command = '';
+        $file = sprintf('/proc/%0d/cmdline', $pid);
+
+        if (file_exists($file)) {
+            $command = trim(file_get_contents($file), "\0");
+        }
+
+        return $command;
     }
 
     /**
