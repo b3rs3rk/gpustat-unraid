@@ -90,6 +90,41 @@ class Nvidia extends Main
     }
 
     /**
+     * Parses PCI Bus Utilization data
+     *
+     * @param SimpleXMLElement $pci
+     */
+    private function getBusUtilization(SimpleXMLElement $pci)
+    {
+        if (isset($pci)) {
+            if (isset($pci->rx_util, $pci->tx_util)) {
+                // Not all cards support PCI RX/TX Measurements
+                if ((string) $pci->rx_util !== 'N/A') {
+                    $this->pageData['rxutil'] = (string) $this->roundFloat($this->stripText(' KB/s', $pci->rx_util) / 1000);
+                }
+                if ((string) $pci->tx_util !== 'N/A') {
+                    $this->pageData['txutil'] = (string) $this->roundFloat($this->stripText(' KB/s', $pci->tx_util) / 1000);
+                }
+            }
+            if (
+            isset(
+                $pci->pci_gpu_link_info->pcie_gen->current_link_gen,
+                $pci->pci_gpu_link_info->pcie_gen->max_link_gen,
+                $pci->pci_gpu_link_info->link_widths->current_link_width,
+                $pci->pci_gpu_link_info->link_widths->max_link_width
+            )
+            ) {
+                $this->pageData['pciegen'] = $generation = (int) $pci->pci_gpu_link_info->pcie_gen->current_link_gen;
+                $this->pageData['pciewidth'] = $width = (int) $this->stripText('x', $pci->pci_gpu_link_info->link_widths->current_link_width);
+                // @ 16x Lanes: Gen 1 = 4000, 2 = 8000, 3 = 16000 MB/s -- Slider bars won't be that active with most workloads
+                $this->pageData['pciemax'] = pow(2, $generation - 1) * 250 * $width;
+                $this->pageData['pciegenmax'] = (int) $pci->pci_gpu_link_info->pcie_gen->max_link_gen;
+                $this->pageData['pciewidthmax'] = (int) $this->stripText('x', $pci->pci_gpu_link_info->link_widths->max_link_width);
+            }
+        }
+    }
+
+    /**
      * Retrieves NVIDIA card inventory and parses into an array
      *
      * @return array
@@ -109,6 +144,63 @@ class Nvidia extends Main
         }
 
         return $result;
+    }
+
+    /**
+     * Parses sensor data for environmental metrics
+     *
+     * @param SimpleXMLElement $data
+     */
+    private function getSensorData (SimpleXMLElement $data)
+    {
+        if ($this->settings['DISPTEMP']) {
+            if (isset($data->temperature)) {
+                if (isset($data->temperature->gpu_temp)) {
+                    $this->pageData['temp'] = (string) str_replace('C', '°C', $data->temperature->gpu_temp);
+                }
+                if (isset($data->temperature->gpu_temp_max_threshold)) {
+                    $this->pageData['tempmax'] = (string) str_replace('C', '°C', $data->temperature->gpu_temp_max_threshold);
+                }
+                if ($this->settings['TEMPFORMAT'] == 'F') {
+                    foreach (['temp', 'tempmax'] as $key) {
+                        $this->pageData[$key] = $this->convertCelsius((int) $this->stripText('C', $this->pageData[$key])) . 'F';
+                    }
+                }
+            }
+        }
+        if ($this->settings['DISPFAN']) {
+            if (isset($data->fan_speed)) {
+                $this->pageData['fan'] = (string) $this->stripSpaces($data->fan_speed);
+            }
+        }
+        if ($this->settings['DISPPWRSTATE']) {
+            if (isset($data->performance_state)) {
+                $this->pageData['perfstate'] = (string) $this->stripSpaces($data->performance_state);
+            }
+        }
+        if ($this->settings['DISPTHROTTLE']) {
+            if (isset($data->clocks_throttle_reasons)) {
+                $this->pageData['throttled'] = 'No';
+                foreach ($data->clocks_throttle_reasons->children() as $reason => $throttle) {
+                    if ($throttle == 'Active') {
+                        $this->pageData['throttled'] = 'Yes';
+                        $this->pageData['thrtlrsn'] = ' (' . $this->stripText('clocks_throttle_reason_', $reason) . ')';
+                        break;
+                    }
+                }
+            }
+        }
+        if ($this->settings['DISPPWRDRAW']) {
+            if (isset($data->power_readings)) {
+                if (isset($data->power_readings->power_draw)) {
+                    $this->pageData['power'] = (float) $this->stripText(' W', $data->power_readings->power_draw);
+                    $this->pageData['power'] = (string) $this->roundFloat($this->pageData['power']) . 'W';
+                }
+                if (isset($data->power_readings->power_limit)) {
+                    $this->pageData['powermax'] = (string) $this->stripText('.00 W', $data->power_readings->power_limit);
+                }
+            }
+        }
     }
 
     /**
@@ -172,6 +264,10 @@ class Nvidia extends Main
 
             if (isset($data->product_name)) {
                 $product_name = (string) $data->product_name;
+                // Some product names include NVIDIA and we already set it to be Vendor + Product Name
+                if (stripos($product_name, 'NVIDIA') !== false) {
+                    $product_name = trim($this->stripText('NVIDIA', $product_name));
+                }
                 // Some product names are too long, like TITAN Xp COLLECTORS EDITION and need to be shortened for fitment
                 if (strlen($product_name) > 20 && str_word_count($product_name) > 2) {
                     $words = explode(" ", $product_name);
@@ -204,54 +300,7 @@ class Nvidia extends Main
                     }
                 }
             }
-            if ($this->settings['DISPTEMP']) {
-                if (isset($data->temperature)) {
-                    if (isset($data->temperature->gpu_temp)) {
-                        $this->pageData['temp'] = (string) str_replace('C', '°C', $data->temperature->gpu_temp);
-                    }
-                    if (isset($data->temperature->gpu_temp_max_threshold)) {
-                        $this->pageData['tempmax'] = (string) str_replace('C', '°C', $data->temperature->gpu_temp_max_threshold);
-                    }
-                    if ($this->settings['TEMPFORMAT'] == 'F') {
-                        foreach (['temp', 'tempmax'] as $key) {
-                            $this->pageData[$key] = $this->convertCelsius((int) $this->stripText('C', $this->pageData[$key])) . 'F';
-                        }
-                    }
-                }
-            }
-            if ($this->settings['DISPFAN']) {
-                if (isset($data->fan_speed)) {
-                    $this->pageData['fan'] = (string) $this->stripSpaces($data->fan_speed);
-                }
-            }
-            if ($this->settings['DISPPWRSTATE']) {
-                if (isset($data->performance_state)) {
-                    $this->pageData['perfstate'] = (string) $this->stripSpaces($data->performance_state);
-                }
-            }
-            if ($this->settings['DISPTHROTTLE']) {
-                if (isset($data->clocks_throttle_reasons)) {
-                    $this->pageData['throttled'] = 'No';
-                    foreach ($data->clocks_throttle_reasons->children() as $reason => $throttle) {
-                        if ($throttle == 'Active') {
-                            $this->pageData['throttled'] = 'Yes';
-                            $this->pageData['thrtlrsn'] = ' (' . $this->stripText('clocks_throttle_reason_', $reason) . ')';
-                            break;
-                        }
-                    }
-                }
-            }
-            if ($this->settings['DISPPWRDRAW']) {
-                if (isset($data->power_readings)) {
-                    if (isset($data->power_readings->power_draw)) {
-                        $this->pageData['power'] = (float) $this->stripText(' W', $data->power_readings->power_draw);
-                        $this->pageData['power'] = (string) $this->roundFloat($this->pageData['power']) . 'W';
-                    }
-                    if (isset($data->power_readings->power_limit)) {
-                        $this->pageData['powermax'] = (string) $this->stripText('.00 W', $data->power_readings->power_limit);
-                    }
-                }
-            }
+            $this->getSensorData($data);
             if ($this->settings['DISPCLOCKS']) {
                 if (isset($data->clocks, $data->max_clocks)) {
                     if (isset($data->clocks->graphics_clock, $data->max_clocks->graphics_clock)) {
@@ -279,32 +328,7 @@ class Nvidia extends Main
                 }
             }
             if ($this->settings['DISPPCIUTIL']) {
-                if (isset($data->pci)) {
-                    if (isset($data->pci->rx_util, $data->pci->tx_util)) {
-                        // Not all cards support PCI RX/TX Measurements
-                        if ((string) $data->pci->rx_util !== 'N/A') {
-                            $this->pageData['rxutil'] = (string) $this->roundFloat($this->stripText(' KB/s', $data->pci->rx_util) / 1000);
-                        }
-                        if ((string) $data->pci->tx_util !== 'N/A') {
-                            $this->pageData['txutil'] = (string) $this->roundFloat($this->stripText(' KB/s', $data->pci->tx_util) / 1000);
-                        }
-                    }
-                    if (
-                        isset(
-                            $data->pci->pci_gpu_link_info->pcie_gen->current_link_gen,
-                            $data->pci->pci_gpu_link_info->pcie_gen->max_link_gen,
-                            $data->pci->pci_gpu_link_info->link_widths->current_link_width,
-                            $data->pci->pci_gpu_link_info->link_widths->max_link_width
-                        )
-                    ) {
-                        $this->pageData['pciegen'] = $generation = (int) $data->pci->pci_gpu_link_info->pcie_gen->current_link_gen;
-                        $this->pageData['pciewidth'] = $width = (int) $this->stripText('x', $data->pci->pci_gpu_link_info->link_widths->current_link_width);
-                        // @ 16x Lanes: Gen 1 = 4000, 2 = 8000, 3 = 16000 MB/s -- Slider bars won't be that active with most workloads
-                        $this->pageData['pciemax'] = pow(2, $generation - 1) * 250 * $width;
-                        $this->pageData['pciegenmax'] = (int) $data->pci->pci_gpu_link_info->pcie_gen->max_link_gen;
-                        $this->pageData['pciewidthmax'] = (int) $this->stripText('x', $data->pci->pci_gpu_link_info->link_widths->max_link_width);
-                    }
-                }
+                $this->getBusUtilization($data->pci);
             }
         } else {
             $this->pageData['error'][] = Error::get(Error::VENDOR_DATA_BAD_PARSE);
