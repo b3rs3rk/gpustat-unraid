@@ -139,22 +139,22 @@ class Intel extends Main
 
             if ($this->settings['DISP3DRENDER']) {
                 if (isset($data['engines']['Render/3D/0']['busy'])) {
-                    $this->pageData['util'] = $this->pageData['3drender'] = (string) $this->roundFloat($data['engines']['Render/3D/0']['busy']) . '%';
+                    $this->pageData['util'] = $this->pageData['3drender'] = $this->roundFloat($data['engines']['Render/3D/0']['busy']) . '%';
                 }
             }
             if ($this->settings['DISPBLITTER']) {
                 if (isset($data['engines']['Blitter/0']['busy'])) {
-                    $this->pageData['blitter'] = (string) $this->roundFloat($data['engines']['Blitter/0']['busy']) . '%';
+                    $this->pageData['blitter'] = $this->roundFloat($data['engines']['Blitter/0']['busy']) . '%';
                 }
             }
             if ($this->settings['DISPVIDEO']) {
                 if (isset($data['engines']['Video/0']['busy'])) {
-                    $this->pageData['video'] = (string) $this->roundFloat($data['engines']['Video/0']['busy']) . '%';
+                    $this->pageData['video'] = $this->roundFloat($data['engines']['Video/0']['busy']) . '%';
                 }
             }
             if ($this->settings['DISPVIDENH']) {
                 if (isset($data['engines']['VideoEnhance/0']['busy'])) {
-                    $this->pageData['videnh'] = (string) $this->roundFloat($data['engines']['VideoEnhance/0']['busy']) . '%';
+                    $this->pageData['videnh'] = $this->roundFloat($data['engines']['VideoEnhance/0']['busy']) . '%';
                 }
             }
             if ($this->settings['DISPPCIUTIL']) {
@@ -166,16 +166,16 @@ class Intel extends Main
             if ($this->settings['DISPPWRDRAW']) {
                 // Older versions of intel_gpu_top in case people haven't updated
                 if (isset($data['power']['value'])) {
-                    $this->pageData['power'] = (string) $this->roundFloat($data['power']['value'], 2) . $data['power']['unit'];
+                    $this->pageData['power'] = $this->roundFloat($data['power']['value'], 2) . $data['power']['unit'];
                 // Newer version of intel_gpu_top includes GPU and package power readings, just scrape GPU for now
                 } elseif (isset($data['power']['GPU'])) {
-                    $this->pageData['power'] = (string) $this->roundFloat($data['power']['GPU'], 2) . $data['power']['unit'];
+                    $this->pageData['power'] = $this->roundFloat($data['power']['GPU'], 2) . $data['power']['unit'];
                 }
             }
             // According to the sparse documentation, rc6 is a percentage of how little the GPU is requesting power
             if ($this->settings['DISPPWRSTATE']) {
                 if (isset($data['rc6']['value'])) {
-                    $this->pageData['powerutil'] = (string) $this->roundFloat(100 - $data['rc6']['value'], 2) . "%";
+                    $this->pageData['powerutil'] = $this->roundFloat(100 - $data['rc6']['value'], 2) . "%";
                 }
             }
             if ($this->settings['DISPCLOCKS']) {
