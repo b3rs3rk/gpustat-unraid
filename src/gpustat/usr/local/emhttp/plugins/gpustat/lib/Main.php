@@ -199,9 +199,9 @@ class Main
      * Strips all spaces from a provided string
      *
      * @param string $text
-     * @return string|string[]
+     * @return string
      */
-    protected static function stripSpaces(string $text = '')
+    protected static function stripSpaces(string $text = ''): string
     {
         return str_replace(' ', '', $text);
     }
@@ -210,9 +210,9 @@ class Main
      * Converts Celsius to Fahrenheit
      *
      * @param int $temp
-     * @return false|float
+     * @return float
      */
-    protected static function convertCelsius(int $temp = 0)
+    protected static function convertCelsius(int $temp = 0): float
     {
         $fahrenheit = $temp*(9/5)+32;
         
@@ -224,9 +224,9 @@ class Main
      *
      * @param float $number
      * @param int $precision
-     * @return false|float
+     * @return float
      */
-    protected static function roundFloat(float $number, int $precision = 0)
+    protected static function roundFloat(float $number, int $precision = 0): float
     {
         if ($precision > 0) {
             $result = number_format(round($number, $precision, PHP_ROUND_HALF_UP), $precision, '.','');

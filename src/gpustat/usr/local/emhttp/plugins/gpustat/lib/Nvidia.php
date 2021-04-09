@@ -170,12 +170,12 @@ class Nvidia extends Main
         }
         if ($this->settings['DISPFAN']) {
             if (isset($data->fan_speed)) {
-                $this->pageData['fan'] = (string) $this->stripSpaces($data->fan_speed);
+                $this->pageData['fan'] = $this->stripSpaces($data->fan_speed);
             }
         }
         if ($this->settings['DISPPWRSTATE']) {
             if (isset($data->performance_state)) {
-                $this->pageData['perfstate'] = (string) $this->stripSpaces($data->performance_state);
+                $this->pageData['perfstate'] = $this->stripSpaces($data->performance_state);
             }
         }
         if ($this->settings['DISPTHROTTLE']) {
@@ -194,7 +194,7 @@ class Nvidia extends Main
             if (isset($data->power_readings)) {
                 if (isset($data->power_readings->power_draw)) {
                     $this->pageData['power'] = (float) $this->stripText(' W', $data->power_readings->power_draw);
-                    $this->pageData['power'] = (string) $this->roundFloat($this->pageData['power']) . 'W';
+                    $this->pageData['power'] = $this->roundFloat($this->pageData['power']) . 'W';
                 }
                 if (isset($data->power_readings->power_limit)) {
                     $this->pageData['powermax'] = (string) $this->stripText('.00 W', $data->power_readings->power_limit);
@@ -252,15 +252,12 @@ class Nvidia extends Main
                 'uuid'          => 'N/A',
             ];
 
-            // App HW Usage
-            $this->pageData += [
-                'embyusing'         => false, 'embymem'       => 0, 'embycount'       => 0,
-                'handbrakeusing'    => false, 'handbrakemem'  => 0, 'handbrakecount'  => 0,
-                'jellyusing'        => false, 'jellymem'      => 0, 'jellycount'      => 0,
-                'plexusing'         => false, 'plexmem'       => 0, 'plexcount'       => 0,
-                'tdarrusing'        => false, 'tdarrmem'      => 0, 'tdarrcount'      => 0,
-                'unmanicusing'      => false, 'unmanicmem'    => 0, 'unmaniccount'    => 0,
-            ];
+            // Set App HW Usage Defaults
+            foreach (self::SUPPORTED_APPS AS $app) {
+                $this->pageData[$app . "using"] = false;
+                $this->pageData[$app . "mem"] = 0;
+                $this->pageData[$app . "count"] = 0;
+            }
 
             if (isset($data->product_name)) {
                 $product_name = (string) $data->product_name;
@@ -282,7 +279,7 @@ class Nvidia extends Main
             }
             if (isset($data->utilization)) {
                 if (isset($data->utilization->gpu_util)) {
-                    $this->pageData['util'] = (string) $this->stripSpaces($data->utilization->gpu_util);
+                    $this->pageData['util'] = $this->stripSpaces($data->utilization->gpu_util);
                 }
                 if ($this->settings['DISPMEMUTIL']) {
                     if (isset($data->fb_memory_usage->used, $data->fb_memory_usage->total)) {
@@ -293,10 +290,10 @@ class Nvidia extends Main
                 }
                 if ($this->settings['DISPENCDEC']) {
                     if (isset($data->utilization->encoder_util)) {
-                        $this->pageData['encutil'] = (string) $this->stripSpaces($data->utilization->encoder_util);
+                        $this->pageData['encutil'] = $this->stripSpaces($data->utilization->encoder_util);
                     }
                     if (isset($data->utilization->decoder_util)) {
-                        $this->pageData['decutil'] = (string) $this->stripSpaces($data->utilization->decoder_util);
+                        $this->pageData['decutil'] = $this->stripSpaces($data->utilization->decoder_util);
                     }
                 }
             }
@@ -317,7 +314,7 @@ class Nvidia extends Main
             if ($this->settings['DISPSESSIONS']) {
                 $this->pageData['appssupp'] = array_keys(self::SUPPORTED_APPS);
                 if (isset($data->processes->process_info)) {
-                    $this->pageData['sessions'] = (int) count($data->processes->process_info);
+                    $this->pageData['sessions'] = count($data->processes->process_info);
                     if ($this->pageData['sessions'] > 0) {
                         foreach ($data->processes->children() as $process) {
                             if (isset($process->process_name)) {

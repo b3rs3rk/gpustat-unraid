@@ -90,7 +90,7 @@ class AMD extends Main
                     foreach ($this->inventory AS $gpu) {
                         $result[] = [
                             'id'    => "Bus ID " . $gpu['busid'],
-                            'model' => (string) (isset($gpu['product']) ? $gpu['product'] : $gpu['model']),
+                            'model' => (string) ($gpu['product'] ?? $gpu['model']),
                             'guid'  => $gpu['busid'],
                         ];
                     }
