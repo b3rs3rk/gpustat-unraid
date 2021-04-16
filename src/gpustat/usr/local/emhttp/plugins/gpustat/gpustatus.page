@@ -177,6 +177,9 @@ Icon="gpustat.png"
                 <span id="gpu-img-span-unmanic" class='gpu-img-span gpu-img-span-unmanic'>
                     <img id='gpu-unmanic' class='gpu-image' src="/plugins/gpustat/images/unmanic.png">
                 </span>
+                <span id="gpu-img-span-dizquetv" class='gpu-img-span gpu-img-span-dizquetv'>
+                    <img id='gpu-dizquetv' class='gpu-image' src="/plugins/gpustat/images/dizquetv.png">
+                </span>
             </td>
             <td></td>
         </tr>
