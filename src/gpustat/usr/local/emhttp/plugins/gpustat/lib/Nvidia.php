@@ -42,7 +42,7 @@ class Nvidia extends Main
         'plex'      => ['Plex Transcoder'],
         'jelly'     => ['jellyfin-ffmpeg'],
         'handbrake' => ['/usr/bin/HandBrakeCLI'],
-        'emby'      => ['ffmpeg'],
+        //'emby'      => ['ffmpeg'],
         'tdarr'     => ['ffmpeg', 'HandbrakeCLI'],
         'unmanic'   => ['ffmpeg'],
         'dizquetv'  => ['ffmpeg'],
