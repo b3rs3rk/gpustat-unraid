@@ -41,10 +41,11 @@ class Nvidia extends Main
     const SUPPORTED_APPS = [ // Order here is important because some apps use the same binaries -- order should be more specific to less
         'plex'      => ['Plex Transcoder'],
         'jelly'     => ['jellyfin-ffmpeg'],
-        'emby'      => ['/bin/ffmpeg'],
         'handbrake' => ['/usr/bin/HandBrakeCLI'],
+        'emby'      => ['ffmpeg'],
         'tdarr'     => ['ffmpeg', 'HandbrakeCLI'],
         'unmanic'   => ['ffmpeg'],
+        'dizquetv'  => ['ffmpeg'],
     ];
 
     /**
