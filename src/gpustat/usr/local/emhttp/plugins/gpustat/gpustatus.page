@@ -180,6 +180,9 @@ Icon="gpustat.png"
                 <span id="gpu-img-span-dizquetv" class='gpu-img-span gpu-img-span-dizquetv'>
                     <img id='gpu-dizquetv' class='gpu-image' src="/plugins/gpustat/images/dizquetv.png">
                 </span>
+                <span id="gpu-img-span-deepstack" class='gpu-img-span gpu-img-span-deepstack'>
+                    <img id='gpu-deepstack' class='gpu-image' src="/plugins/gpustat/images/deepstack.png">
+                </span>
             </td>
             <td></td>
         </tr>
