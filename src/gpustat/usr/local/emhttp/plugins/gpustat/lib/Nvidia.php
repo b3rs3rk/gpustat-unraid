@@ -46,6 +46,7 @@ class Nvidia extends Main
         'tdarr'     => ['ffmpeg', 'HandbrakeCLI'],
         'unmanic'   => ['ffmpeg'],
         'dizquetv'  => ['ffmpeg'],
+        'deepstack' => ['python3'],
     ];
 
     /**
@@ -69,20 +70,25 @@ class Nvidia extends Main
             foreach ($commands as $command) {
                 if (strpos($process->process_name, $command) !== false) {
                     // For Handbrake/ffmpeg: arguments tell us which application called it
-                    if (in_array($command, ['ffmpeg', 'HandbrakeCLI'])) {
+                    if (in_array($command, ['ffmpeg', 'HandbrakeCLI', 'python3'])) {
                         if (isset($process->pid)) {
                             $pid_info = $this->getFullCommand((int) $process->pid);
                             if (!empty($pid_info) && strlen($pid_info) > 0) {
-                                if (strpos($pid_info, $app) === false) {
+                                if ($command === 'python3') {
+                                    // Deepstack doesn't have any signifier in the full command output
+                                    if (strpos($pid_info, '/app/intelligencelayer/shared') === false) {
+                                        continue 2;
+                                    }
+                                } elseif (strpos($pid_info, $app) === false) {
                                     // We didn't match the application name in the arguments, no match
                                     continue 2;
                                 }
                             }
                         }
                     }
-                    $this->pageData[$app . "using"] = true;
-                    $this->pageData[$app . "mem"] += (int)$this->stripText(' MiB', $process->used_memory);
-                    $this->pageData[$app . "count"]++;
+                    $this->pageData[$app . 'using'] = true;
+                    $this->pageData[$app . 'mem'] += (int)$this->stripText(' MiB', $process->used_memory);
+                    $this->pageData[$app . 'count']++;
                     // If we match a more specific command/app to a process, continue on to the next process
                     break 2;
                 }
@@ -145,6 +151,26 @@ class Nvidia extends Main
         }
 
         return $result;
+    }
+
+    /**
+     * Parses product name and stores in page data
+     *
+     * @param string $name
+     */
+    private function getProductName (string $name)
+    {
+        // Some product names include NVIDIA and we already set it to be Vendor + Product Name
+        if (stripos($name, 'NVIDIA') !== false) {
+            $name = trim($this->stripText('NVIDIA', $name));
+        }
+        // Some product names are too long, like TITAN Xp COLLECTORS EDITION and need to be shortened for fitment
+        if (strlen($name) > 20 && str_word_count($name) > 2) {
+            $words = explode(" ", $name);
+            $this->pageData['name'] = sprintf("%0s %1s", $words[0], $words[1]);
+        } else {
+            $this->pageData['name'] = $name;
+        }
     }
 
     /**
@@ -223,6 +249,35 @@ class Nvidia extends Main
     }
 
     /**
+     * Parses hardware utilization data
+     *
+     * @param SimpleXMLElement $data
+     */
+    private function getUtilization(SimpleXMLElement $data)
+    {
+        if (isset($data->utilization)) {
+            if (isset($data->utilization->gpu_util)) {
+                $this->pageData['util'] = $this->stripSpaces($data->utilization->gpu_util);
+            }
+            if ($this->settings['DISPENCDEC']) {
+                if (isset($data->utilization->encoder_util)) {
+                    $this->pageData['encutil'] = $this->stripSpaces($data->utilization->encoder_util);
+                }
+                if (isset($data->utilization->decoder_util)) {
+                    $this->pageData['decutil'] = $this->stripSpaces($data->utilization->decoder_util);
+                }
+            }
+        }
+        if ($this->settings['DISPMEMUTIL']) {
+            if (isset($data->fb_memory_usage->used, $data->fb_memory_usage->total)) {
+                $this->pageData['memtotal'] = (string) $this->stripText(' MiB', $data->fb_memory_usage->total);
+                $this->pageData['memused'] = (string) $this->stripText(' MiB', $data->fb_memory_usage->used);
+                $this->pageData['memutil'] = round($this->pageData['memused'] / $this->pageData['memtotal'] * 100) . "%";
+            }
+        }
+    }
+
+    /**
      * Loads stdout into SimpleXMLObject then retrieves and returns specific definitions in an array
      */
     private function parseStatistics()
@@ -259,45 +314,15 @@ class Nvidia extends Main
                 $this->pageData[$app . "mem"] = 0;
                 $this->pageData[$app . "count"] = 0;
             }
-
             if (isset($data->product_name)) {
-                $product_name = (string) $data->product_name;
-                // Some product names include NVIDIA and we already set it to be Vendor + Product Name
-                if (stripos($product_name, 'NVIDIA') !== false) {
-                    $product_name = trim($this->stripText('NVIDIA', $product_name));
-                }
-                // Some product names are too long, like TITAN Xp COLLECTORS EDITION and need to be shortened for fitment
-                if (strlen($product_name) > 20 && str_word_count($product_name) > 2) {
-                    $words = explode(" ", $product_name);
-                    $this->pageData['name'] = sprintf("%0s %1s", $words[0], $words[1]);
-                } else {
-                    $this->pageData['name'] = $product_name;
-                }
-                unset($product_name);
+                $this->getProductName($data->product_name);
             }
             if (isset($data->uuid)) {
                 $this->pageData['uuid'] = (string) $data->uuid;
+            } else {
+                $this->pageData['uuid'] = $this->settings['GPUID'];
             }
-            if (isset($data->utilization)) {
-                if (isset($data->utilization->gpu_util)) {
-                    $this->pageData['util'] = $this->stripSpaces($data->utilization->gpu_util);
-                }
-                if ($this->settings['DISPMEMUTIL']) {
-                    if (isset($data->fb_memory_usage->used, $data->fb_memory_usage->total)) {
-                        $this->pageData['memtotal'] = (string) $this->stripText(' MiB', $data->fb_memory_usage->total);
-                        $this->pageData['memused'] = (string) $this->stripText(' MiB', $data->fb_memory_usage->used);
-                        $this->pageData['memutil'] = round($this->pageData['memused'] / $this->pageData['memtotal'] * 100) . "%";
-                    }
-                }
-                if ($this->settings['DISPENCDEC']) {
-                    if (isset($data->utilization->encoder_util)) {
-                        $this->pageData['encutil'] = $this->stripSpaces($data->utilization->encoder_util);
-                    }
-                    if (isset($data->utilization->decoder_util)) {
-                        $this->pageData['decutil'] = $this->stripSpaces($data->utilization->decoder_util);
-                    }
-                }
-            }
+            $this->getUtilization($data);
             $this->getSensorData($data);
             if ($this->settings['DISPCLOCKS']) {
                 if (isset($data->clocks, $data->max_clocks)) {
