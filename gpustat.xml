@@ -9,15 +9,12 @@
     <Name>GPU Statistics</Name>
     <Description>
         This plugin parses GPU statistic data from vendor specific utilities and displays a subset of them on the dashboard.
-        &#xD;
-        Requires UnRAID-Nvidia plugin (deprecated) and kernel install or Custom Kernel with Nvidia drivers on 6.9.0 Beta34 and below for NVIDIA support.
-        &#xD;
-        For 6.9.0 Beta 35 and up, you either need a custom kernel or the Nvidia Driver plugin from @ich777 on Community Apps.
-        &#xD;
-        Requires Intel GPU TOP plugin from @ich777 on Community Apps for Intel support.
-        &#xD;
-        Requires AMD Driver and RadeonTop plugins from @ich777 on Community Apps for AMD Support
     </Description>
+    <Requires>
+        **Nvidia Driver plugin** (nVidia Support) *or*
+        **Intel GPU TOP plugin** (Intel Support) *or*
+        **AMD Driver** and **RadeonTop plugins** (AMD Support)
+    </Requires>
     <MinVer>6.7.1</MinVer>
     <Project>https://github.com/b3rs3rk/gpustat-unraid</Project>
     <Support>https://forums.unraid.net/topic/89453-plugin-gpu-statistics/</Support>
