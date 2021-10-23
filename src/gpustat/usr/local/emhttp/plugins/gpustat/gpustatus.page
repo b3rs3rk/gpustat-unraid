@@ -183,6 +183,12 @@ Icon="gpustat.png"
                 <span id="gpu-img-span-deepstack" class='gpu-img-span gpu-img-span-deepstack'>
                     <img id='gpu-deepstack' class='gpu-image' src="/plugins/gpustat/images/deepstack.png">
                 </span>
+                <span id="gpu-img-span-nsfminer" class='gpu-img-span gpu-img-span-nsfminer'>
+                    <img id='gpu-nsfminer' class='gpu-image' src="/plugins/gpustat/images/NsfminerOC.png">
+                </span>
+                <span id="gpu-img-span-shinobipro" class='gpu-img-span gpu-img-span-shinobipro'>
+                    <img id='gpu-shinobipro' class='gpu-image' src="/plugins/gpustat/images/shinobipro.png">
+                </span>
             </td>
             <td></td>
         </tr>
