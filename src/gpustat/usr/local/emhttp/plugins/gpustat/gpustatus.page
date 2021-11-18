@@ -184,7 +184,7 @@ Icon="gpustat.png"
                     <img id='gpu-deepstack' class='gpu-image' src="/plugins/gpustat/images/deepstack.png">
                 </span>
                 <span id="gpu-img-span-nsfminer" class='gpu-img-span gpu-img-span-nsfminer'>
-                    <img id='gpu-nsfminer' class='gpu-image' src="/plugins/gpustat/images/nsfmineroc.png">
+                    <img id='gpu-nsfminer' class='gpu-image' src="/plugins/gpustat/images/nsfminer.png">
                 </span>
                 <span id="gpu-img-span-shinobipro" class='gpu-img-span gpu-img-span-shinobipro'>
                     <img id='gpu-shinobipro' class='gpu-image' src="/plugins/gpustat/images/shinobipro.png">
