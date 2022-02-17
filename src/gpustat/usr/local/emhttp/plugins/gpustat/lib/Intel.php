@@ -116,7 +116,8 @@ class Intel extends Main
         }
 
         // Need to make sure we have at least two array indexes to take the second one
-        if ($count = count($data) < 2) {
+        $count = count($data);
+        if ($count < 2) {
             $this->pageData['error'][] = Error::get(Error::VENDOR_DATA_NOT_ENOUGH, "Count: $count");
         }
 

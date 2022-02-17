@@ -198,8 +198,8 @@ class AMD extends Main
 
         // radeontop data doesn't follow a standard object format -- need to parse CSV and then explode by spaces
         $data = explode(", ", substr($this->stdout, strpos($this->stdout, 'gpu')));
-
-        if ($count = count($data) > 0) {
+        $count = count($data);
+        if ($count > 0) {
             foreach ($data AS $metric) {
                 // metric util% value
                 $fields = explode(" ", $metric);

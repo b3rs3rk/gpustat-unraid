@@ -188,7 +188,7 @@ Icon="gpustat.png"
                 </span>
                 <span id="gpu-img-span-shinobipro" class='gpu-img-span gpu-img-span-shinobipro'>
                     <img id='gpu-shinobipro' class='gpu-image' src="/plugins/gpustat/images/shinobipro.png">
-                </span>                
+                </span>
             </td>
             <td></td>
         </tr>

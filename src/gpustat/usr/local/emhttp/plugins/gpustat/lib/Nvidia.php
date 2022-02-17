@@ -42,13 +42,13 @@ class Nvidia extends Main
         'plex'      => ['Plex Transcoder'],
         'jelly'     => ['jellyfin-ffmpeg'],
         'handbrake' => ['/usr/bin/HandBrakeCLI'],
-        'emby'      => ['app/emby/ffmpeg'],
+        'emby'      => ['emby'],
         'tdarr'     => ['ffmpeg', 'HandbrakeCLI'],
         'unmanic'   => ['ffmpeg'],
         'dizquetv'  => ['ffmpeg'],
         'deepstack' => ['python3'],
-        'nsfminer'  => ['/opt/nsfminer/nsfminer'],
-        'shinobipro' => ['/opt/shinobi/plugins/face/shinobi-face.js'],        
+        'nsfminer'  => ['nsfminer'],
+        'shinobipro' => ['shinobi'],
     ];
 
     /**
