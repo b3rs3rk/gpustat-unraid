@@ -42,7 +42,7 @@ class Nvidia extends Main
         'plex'      => ['Plex Transcoder'],
         'jelly'     => ['jellyfin-ffmpeg'],
         'handbrake' => ['/usr/bin/HandBrakeCLI'],
-        //'emby'      => ['ffmpeg'],
+        'emby'      => ['app/emby/ffmpeg'],
         'tdarr'     => ['ffmpeg', 'HandbrakeCLI'],
         'unmanic'   => ['ffmpeg'],
         'dizquetv'  => ['ffmpeg'],
@@ -105,31 +105,29 @@ class Nvidia extends Main
      */
     private function getBusUtilization(SimpleXMLElement $pci)
     {
-        if (isset($pci)) {
-            if (isset($pci->rx_util, $pci->tx_util)) {
-                // Not all cards support PCI RX/TX Measurements
-                if ((string) $pci->rx_util !== 'N/A') {
-                    $this->pageData['rxutil'] = (string) $this->roundFloat($this->stripText(' KB/s', $pci->rx_util) / 1000);
-                }
-                if ((string) $pci->tx_util !== 'N/A') {
-                    $this->pageData['txutil'] = (string) $this->roundFloat($this->stripText(' KB/s', $pci->tx_util) / 1000);
-                }
+        if (isset($pci->rx_util, $pci->tx_util)) {
+            // Not all cards support PCI RX/TX Measurements
+            if ((string) $pci->rx_util !== 'N/A') {
+                $this->pageData['rxutil'] = (string) $this->roundFloat($this->stripText(' KB/s', $pci->rx_util) / 1000);
             }
-            if (
+            if ((string) $pci->tx_util !== 'N/A') {
+                $this->pageData['txutil'] = (string) $this->roundFloat($this->stripText(' KB/s', $pci->tx_util) / 1000);
+            }
+        }
+        if (
             isset(
                 $pci->pci_gpu_link_info->pcie_gen->current_link_gen,
                 $pci->pci_gpu_link_info->pcie_gen->max_link_gen,
                 $pci->pci_gpu_link_info->link_widths->current_link_width,
                 $pci->pci_gpu_link_info->link_widths->max_link_width
             )
-            ) {
-                $this->pageData['pciegen'] = $generation = (int) $pci->pci_gpu_link_info->pcie_gen->current_link_gen;
-                $this->pageData['pciewidth'] = $width = (int) $this->stripText('x', $pci->pci_gpu_link_info->link_widths->current_link_width);
-                // @ 16x Lanes: Gen 1 = 4000, 2 = 8000, 3 = 16000 MB/s -- Slider bars won't be that active with most workloads
-                $this->pageData['pciemax'] = pow(2, $generation - 1) * 250 * $width;
-                $this->pageData['pciegenmax'] = (int) $pci->pci_gpu_link_info->pcie_gen->max_link_gen;
-                $this->pageData['pciewidthmax'] = (int) $this->stripText('x', $pci->pci_gpu_link_info->link_widths->max_link_width);
-            }
+        ) {
+            $this->pageData['pciegen'] = $generation = (int) $pci->pci_gpu_link_info->pcie_gen->current_link_gen;
+            $this->pageData['pciewidth'] = $width = (int) $this->stripText('x', $pci->pci_gpu_link_info->link_widths->current_link_width);
+            // @ 16x Lanes: Gen 1 = 4000, 2 = 8000, 3 = 16000 MB/s -- Slider bars won't be that active with most workloads
+            $this->pageData['pciemax'] = pow(2, $generation - 1) * 250 * $width;
+            $this->pageData['pciegenmax'] = (int) $pci->pci_gpu_link_info->pcie_gen->max_link_gen;
+            $this->pageData['pciewidthmax'] = (int) $this->stripText('x', $pci->pci_gpu_link_info->link_widths->max_link_width);
         }
     }
 
@@ -311,7 +309,7 @@ class Nvidia extends Main
             ];
 
             // Set App HW Usage Defaults
-            foreach (self::SUPPORTED_APPS AS $app) {
+            foreach (self::SUPPORTED_APPS AS $app => $process) {
                 $this->pageData[$app . "using"] = false;
                 $this->pageData[$app . "mem"] = 0;
                 $this->pageData[$app . "count"] = 0;
