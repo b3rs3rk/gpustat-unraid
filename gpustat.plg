@@ -26,7 +26,7 @@
 <!--
   MIT License
 
-  Copyright (c) 2020-2021 b3rs3rk
+  Copyright (c) 2020-2022 b3rs3rk
 
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
@@ -48,6 +48,13 @@
 -->
 
 <CHANGES>
+###2022-02-20
+- PR #30 Add Shinobi Pro app detection for Nvidia (thanks @corgan2222!)
+- PR #30 Add nsfminer app detection for Nvidia (thanks @corgan2222!)
+- #32 Reactivate Emby app detection for Nvidia with specific emby command requirement (may not work for all containers)
+- #33 Add Folding@Home app detection
+- Loop application image display instead of repetitive HTML
+
 ###2021-04-24
 - Add DizqueTV app detection (NVIDIA) #25
 - Add deepstack app detection (NVIDIA) #26
