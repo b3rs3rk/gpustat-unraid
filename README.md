@@ -76,6 +76,7 @@ The bulk of this code was adapted from/inspired by @realies and @CyanLabs corsai
 
 ## Contributor Thanks
 
-    - @mlapaglia for his work on UI slider bars!
-    - @ich777 for his help with Intel iGPU testing!
-    - John_M for his help with AMD APU testing!
+    - @mlapaglia for his work on UI slider bars
+    - @ich777 for his help with Intel iGPU testing
+    - John_M for his help with AMD APU testing
+    - @corgan2222 for adding nsfminer and Shinobi Pro app detections
