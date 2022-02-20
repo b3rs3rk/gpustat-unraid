@@ -39,16 +39,17 @@ class Nvidia extends Main
     const INVENTORY_REGEX = '/GPU\s(?P<id>\d):\s(?P<model>.*)\s\(UUID:\s(?P<guid>GPU-[0-9a-f-]+)\)/i';
     const STATISTICS_PARAM = '-q -x -g %s 2>&1';
     const SUPPORTED_APPS = [ // Order here is important because some apps use the same binaries -- order should be more specific to less
-        'plex'      => ['Plex Transcoder'],
-        'jelly'     => ['jellyfin-ffmpeg'],
-        'handbrake' => ['/usr/bin/HandBrakeCLI'],
-        'emby'      => ['emby'],
-        'tdarr'     => ['ffmpeg', 'HandbrakeCLI'],
-        'unmanic'   => ['ffmpeg'],
-        'dizquetv'  => ['ffmpeg'],
-        'deepstack' => ['python3'],
-        'nsfminer'  => ['nsfminer'],
-        'shinobipro' => ['shinobi'],
+        'plex'        => ['Plex Transcoder'],
+        'jelly'       => ['jellyfin-ffmpeg'],
+        'handbrake'   => ['/usr/bin/HandBrakeCLI'],
+        'emby'        => ['emby'],
+        'tdarr'       => ['ffmpeg', 'HandbrakeCLI'],
+        'unmanic'     => ['ffmpeg'],
+        'dizquetv'    => ['ffmpeg'],
+        'deepstack'   => ['python3'],
+        'nsfminer'    => ['nsfminer'],
+        'shinobipro'  => ['shinobi'],
+        'foldinghome' => ['FahCore'],
     ];
 
     /**

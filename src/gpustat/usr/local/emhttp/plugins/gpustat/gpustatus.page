@@ -30,6 +30,11 @@ Icon="gpustat.png"
 
     $gpu_nv = $gpu_intel = $gpu_amd = $gpu_unknown = false;
 
+    $apps = [
+        'plex', 'jelly', 'handbrake', 'emby', 'tdarr', 'unmanic', 'dizquetv',
+        'deepstack', 'nsfminer', 'shinobipro', 'foldinghome',
+    ];
+
     switch ($gpustat_cfg['VENDOR']) {
         case "nvidia":
             $gpu_nv = true;
@@ -159,36 +164,11 @@ Icon="gpustat.png"
             <td></td>
             <td>Active Apps</td>
             <td colspan="2">
-                <span id="gpu-img-span-plex" class='gpu-img-span gpu-img-span-plex'>
-                    <img id='gpu-plex' class='gpu-image' src="/plugins/gpustat/images/plex.png">
+<?php foreach($apps as $app): ?>
+                <span id="gpu-img-span-<?= $app; ?>" class='gpu-img-span gpu-img-span-<?= $app; ?>'>
+                    <img id='gpu-<?= $app; ?>' class='gpu-image' src="/plugins/gpustat/images/<?= $app; ?>.png">
                 </span>
-                <span id="gpu-img-span-jelly" class='gpu-img-span gpu-img-span-jelly'>
-                    <img id='gpu-jelly' class='gpu-image' src="/plugins/gpustat/images/jellyfin.png">
-                </span>
-                <span id="gpu-img-span-emby" class='gpu-img-span gpu-img-span-emby'>
-                    <img id='gpu-emby' class='gpu-image' src="/plugins/gpustat/images/emby.png">
-                </span>
-                <span id="gpu-img-span-handbrake" class='gpu-img-span gpu-img-span-handbrake'>
-                    <img id='gpu-handbrake' class='gpu-image' src="/plugins/gpustat/images/handbrake.png">
-                </span>
-                <span id="gpu-img-span-tdarr" class='gpu-img-span gpu-img-span-tdarr'>
-                    <img id='gpu-tdarr' class='gpu-image' src="/plugins/gpustat/images/tdarr.png">
-                </span>
-                <span id="gpu-img-span-unmanic" class='gpu-img-span gpu-img-span-unmanic'>
-                    <img id='gpu-unmanic' class='gpu-image' src="/plugins/gpustat/images/unmanic.png">
-                </span>
-                <span id="gpu-img-span-dizquetv" class='gpu-img-span gpu-img-span-dizquetv'>
-                    <img id='gpu-dizquetv' class='gpu-image' src="/plugins/gpustat/images/dizquetv.png">
-                </span>
-                <span id="gpu-img-span-deepstack" class='gpu-img-span gpu-img-span-deepstack'>
-                    <img id='gpu-deepstack' class='gpu-image' src="/plugins/gpustat/images/deepstack.png">
-                </span>
-                <span id="gpu-img-span-nsfminer" class='gpu-img-span gpu-img-span-nsfminer'>
-                    <img id='gpu-nsfminer' class='gpu-image' src="/plugins/gpustat/images/nsfminer.png">
-                </span>
-                <span id="gpu-img-span-shinobipro" class='gpu-img-span gpu-img-span-shinobipro'>
-                    <img id='gpu-shinobipro' class='gpu-image' src="/plugins/gpustat/images/shinobipro.png">
-                </span>
+<?php endforeach; ?>
             </td>
             <td></td>
         </tr>
