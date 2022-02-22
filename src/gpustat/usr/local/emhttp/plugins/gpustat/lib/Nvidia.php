@@ -40,7 +40,7 @@ class Nvidia extends Main
     const STATISTICS_PARAM = '-q -x -g %s 2>&1';
     const SUPPORTED_APPS = [ // Order here is important because some apps use the same binaries -- order should be more specific to less
         'plex'        => ['Plex Transcoder'],
-        'jelly'       => ['jellyfin-ffmpeg'],
+        'jellyfin'       => ['jellyfin-ffmpeg'],
         'handbrake'   => ['/usr/bin/HandBrakeCLI'],
         'emby'        => ['emby'],
         'tdarr'       => ['ffmpeg', 'HandbrakeCLI'],

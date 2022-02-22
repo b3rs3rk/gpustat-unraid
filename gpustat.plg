@@ -48,6 +48,9 @@
 -->
 
 <CHANGES>
+###2022-02-22
+- #35 Fix jellyfin app detection looking for the wrong image path
+
 ###2022-02-20
 - PR #30 Add Shinobi Pro app detection for Nvidia (thanks @corgan2222!)
 - PR #30 Add nsfminer app detection for Nvidia (thanks @corgan2222!)
