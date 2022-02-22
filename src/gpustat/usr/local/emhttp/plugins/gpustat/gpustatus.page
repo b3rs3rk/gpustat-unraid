@@ -31,7 +31,7 @@ Icon="gpustat.png"
     $gpu_nv = $gpu_intel = $gpu_amd = $gpu_unknown = false;
 
     $apps = [
-        'plex', 'jelly', 'handbrake', 'emby', 'tdarr', 'unmanic', 'dizquetv',
+        'plex', 'jellyfin', 'handbrake', 'emby', 'tdarr', 'unmanic', 'dizquetv',
         'deepstack', 'nsfminer', 'shinobipro', 'foldinghome',
     ];
 
