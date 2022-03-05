@@ -38,7 +38,7 @@ class Intel extends Main
     const INVENTORY_UTILITY = 'lspci';
     const INVENTORY_PARAM = "| grep VGA";
     const INVENTORY_REGEX =
-        '/VGA.+\:\s+Intel\s+Corporation\s+(?P<model>.*)\s+(Family|Integrated|Graphics|Controller|Series|\()/iU';
+        '/VGA.+\:\s+Intel\s+Corporation\s+(?P<model>.*)\s+(\[|Family|Integrated|Graphics|Controller|Series|\()/iU';
     const STATISTICS_PARAM = '-J -s 250';
     const STATISTICS_WRAPPER = 'timeout -k .500 .400';
 
@@ -70,7 +70,7 @@ class Intel extends Main
                 }
                 if (!empty($this->inventory)) {
                     // Only one iGPU per system, so mark it ID 99 and pad other results
-                    $inventory[0] = [
+                    $inventory = [
                         'id' => 99,
                         'model' => $this->inventory[0]['model'],
                         'guid' => '0000-00-000-000000',
