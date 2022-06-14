@@ -212,7 +212,7 @@ class Nvidia extends Main
                 foreach ($data->clocks_throttle_reasons->children() as $reason => $throttle) {
                     if ($throttle == 'Active') {
                         $this->pageData['throttled'] = 'Yes';
-                        $this->pageData['thrtlrsn'] = ' (' . $this->stripText('clocks_throttle_reason_', $reason) . ')';
+                        $this->pageData['thrtlrsn'] = ' (' . $this->stripText(['clocks_throttle_reason_','_setting'], $reason) . ')';
                         break;
                     }
                 }
