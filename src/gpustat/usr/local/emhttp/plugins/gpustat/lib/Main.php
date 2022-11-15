@@ -153,6 +153,24 @@ class Main
     }
 
     /**
+     * Retrieves the full command of a parent process with arguments for a given process ID
+     *
+     * @param int $pid
+     * @return string
+     */
+    protected function getParentCommand(int $pid): string
+    {
+        $command = '';
+
+        $ppid = (int)trim(shell_exec(sprintf("ps j %0d | awk 'NR>1' | cut -d ' ' -f 1", $pid)));
+        if ($ppid > 0) {
+            $command = $this->getFullCommand($ppid);
+        }
+
+        return $command;
+    }
+
+    /**
      * Retrieves plugin settings and returns them or defaults if no file
      *
      * @return mixed
