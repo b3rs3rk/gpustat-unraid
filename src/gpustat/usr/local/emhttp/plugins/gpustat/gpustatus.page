@@ -31,8 +31,8 @@ Icon="gpustat.png"
     $gpu_nv = $gpu_intel = $gpu_amd = $gpu_unknown = false;
 
     $apps = [
-        'plex', 'jellyfin', 'handbrake', 'emby', 'tdarr', 'unmanic', 'dizquetv',
-        'ersatztv', 'fileflows', 'deepstack', 'nsfminer', 'shinobipro', 'foldinghome',
+        'plex', 'jellyfin', 'handbrake', 'emby', 'tdarr', 'unmanic', 'dizquetv', 'ersatztv',
+        'fileflows', 'frigate', 'deepstack', 'nsfminer', 'shinobipro', 'foldinghome',
     ];
 
     switch ($gpustat_cfg['VENDOR']) {
