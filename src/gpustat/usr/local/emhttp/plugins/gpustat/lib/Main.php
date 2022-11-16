@@ -102,7 +102,7 @@ class Main
      * @param string $utility
      * @param bool $error
      */
-    protected function checkCommand(string $utility, $error = true)
+    protected function checkCommand(string $utility, bool $error = true)
     {
         $this->cmdexists = false;
         // Check if vendor utility is available
@@ -125,7 +125,7 @@ class Main
      * @param string $argument
      * @param bool $escape
      */
-    protected function runCommand(string $command, string $argument = '', $escape = true)
+    protected function runCommand(string $command, string $argument = '', bool $escape = true)
     {
         if ($escape) {
             $this->stdout = shell_exec(sprintf("%s %s", $command, escapeshellarg($argument)));
@@ -235,7 +235,7 @@ class Main
     {
         $fahrenheit = $temp*(9/5)+32;
         
-        return round($fahrenheit, -1, PHP_ROUND_HALF_UP);
+        return round($fahrenheit, -1);
     }
 
     /**
@@ -248,9 +248,9 @@ class Main
     protected static function roundFloat(float $number, int $precision = 0): float
     {
         if ($precision > 0) {
-            $result = number_format(round($number, $precision, PHP_ROUND_HALF_UP), $precision, '.','');
+            $result = number_format(round($number, $precision), $precision, '.','');
         } else {
-            $result = round($number, $precision, PHP_ROUND_HALF_UP);
+            $result = round($number, $precision);
         }
 
         return $result;

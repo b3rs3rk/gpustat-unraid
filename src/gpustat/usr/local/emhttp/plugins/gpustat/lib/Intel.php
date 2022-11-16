@@ -59,7 +59,7 @@ class Intel extends Main
      */
     public function getInventory(): array
     {
-        $result = $inventory = [];
+        $result = [];
 
         if ($this->cmdexists) {
             $this->checkCommand(self::INVENTORY_UTILITY, false);
