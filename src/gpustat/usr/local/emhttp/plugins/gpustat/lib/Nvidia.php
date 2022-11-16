@@ -47,6 +47,7 @@ class Nvidia extends Main
         'unmanic'     => ['ffmpeg'],
         'dizquetv'    => ['ffmpeg'],
         'ersatztv'    => ['ffmpeg'],
+        'fileflows'   => ['ffmpeg'],
         'deepstack'   => ['python3'],
         'nsfminer'    => ['nsfminer'],
         'shinobipro'  => ['shinobi'],
