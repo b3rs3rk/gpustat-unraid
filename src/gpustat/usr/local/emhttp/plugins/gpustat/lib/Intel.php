@@ -40,7 +40,7 @@ class Intel extends Main
     const INVENTORY_REGEX =
         '/VGA.+:\s+Intel\s+Corporation\s+(?P<model>.*)\s+(\[|Family|Integrated|Graphics|Controller|Series|\()/iU';
     const STATISTICS_PARAM = '-J -s 250';
-    const STATISTICS_WRAPPER = 'timeout -k .500 .400';
+    const STATISTICS_WRAPPER = 'timeout -k .500 .600';
 
     /**
      * Intel constructor.
