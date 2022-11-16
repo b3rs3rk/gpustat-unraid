@@ -46,6 +46,7 @@ class Nvidia extends Main
         'tdarr'       => ['ffmpeg', 'HandbrakeCLI'],
         'unmanic'     => ['ffmpeg'],
         'dizquetv'    => ['ffmpeg'],
+        'ersatztv'    => ['ffmpeg'],
         'deepstack'   => ['python3'],
         'nsfminer'    => ['nsfminer'],
         'shinobipro'  => ['shinobi'],
