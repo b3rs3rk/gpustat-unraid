@@ -146,7 +146,7 @@ class Main
         $file = sprintf('/proc/%0d/cmdline', $pid);
 
         if (file_exists($file)) {
-            $command = trim(file_get_contents($file), "\0");
+            $command = trim(@file_get_contents($file), "\0");
         }
 
         return $command;
@@ -161,8 +161,9 @@ class Main
     protected function getParentCommand(int $pid): string
     {
         $command = '';
+        $pid_command = sprintf("ps j %0d | awk 'NR>1' | cut -d ' ' -f 1", $pid);
 
-        $ppid = (int)trim(shell_exec(sprintf("ps j %0d | awk 'NR>1' | cut -d ' ' -f 1", $pid)));
+        $ppid = (int)trim(shell_exec($pid_command));
         if ($ppid > 0) {
             $command = $this->getFullCommand($ppid);
         }
