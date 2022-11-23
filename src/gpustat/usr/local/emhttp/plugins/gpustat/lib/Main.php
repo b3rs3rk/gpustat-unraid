@@ -102,7 +102,7 @@ class Main
      * @param string $utility
      * @param bool $error
      */
-    protected function checkCommand(string $utility, $error = true)
+    protected function checkCommand(string $utility, bool $error = true)
     {
         $this->cmdexists = false;
         // Check if vendor utility is available
@@ -125,7 +125,7 @@ class Main
      * @param string $argument
      * @param bool $escape
      */
-    protected function runCommand(string $command, string $argument = '', $escape = true)
+    protected function runCommand(string $command, string $argument = '', bool $escape = true)
     {
         if ($escape) {
             $this->stdout = shell_exec(sprintf("%s %s", $command, escapeshellarg($argument)));
@@ -146,7 +146,26 @@ class Main
         $file = sprintf('/proc/%0d/cmdline', $pid);
 
         if (file_exists($file)) {
-            $command = trim(file_get_contents($file), "\0");
+            $command = trim(@file_get_contents($file), "\0");
+        }
+
+        return $command;
+    }
+
+    /**
+     * Retrieves the full command of a parent process with arguments for a given process ID
+     *
+     * @param int $pid
+     * @return string
+     */
+    protected function getParentCommand(int $pid): string
+    {
+        $command = '';
+        $pid_command = sprintf("ps j %0d | awk 'NR>1' | cut -d ' ' -f 1", $pid);
+
+        $ppid = (int)trim(shell_exec($pid_command));
+        if ($ppid > 0) {
+            $command = $this->getFullCommand($ppid);
         }
 
         return $command;
@@ -216,7 +235,7 @@ class Main
     {
         $fahrenheit = $temp*(9/5)+32;
         
-        return round($fahrenheit, -1, PHP_ROUND_HALF_UP);
+        return round($fahrenheit, -1);
     }
 
     /**
@@ -229,9 +248,9 @@ class Main
     protected static function roundFloat(float $number, int $precision = 0): float
     {
         if ($precision > 0) {
-            $result = number_format(round($number, $precision, PHP_ROUND_HALF_UP), $precision, '.','');
+            $result = number_format(round($number, $precision), $precision, '.','');
         } else {
-            $result = round($number, $precision, PHP_ROUND_HALF_UP);
+            $result = round($number, $precision);
         }
 
         return $result;

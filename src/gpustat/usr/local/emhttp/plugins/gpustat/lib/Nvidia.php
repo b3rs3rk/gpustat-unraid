@@ -40,12 +40,15 @@ class Nvidia extends Main
     const STATISTICS_PARAM = '-q -x -g %s 2>&1';
     const SUPPORTED_APPS = [ // Order here is important because some apps use the same binaries -- order should be more specific to less
         'plex'        => ['Plex Transcoder'],
-        'jellyfin'       => ['jellyfin-ffmpeg'],
+        'jellyfin'    => ['jellyfin-ffmpeg'],
         'handbrake'   => ['/usr/bin/HandBrakeCLI'],
         'emby'        => ['emby'],
         'tdarr'       => ['ffmpeg', 'HandbrakeCLI'],
         'unmanic'     => ['ffmpeg'],
         'dizquetv'    => ['ffmpeg'],
+        'ersatztv'    => ['ffmpeg'],
+        'fileflows'   => ['ffmpeg'],
+        'frigate'     => ['ffmpeg'],
         'deepstack'   => ['python3'],
         'nsfminer'    => ['nsfminer'],
         'shinobipro'  => ['shinobi'],
@@ -83,8 +86,12 @@ class Nvidia extends Main
                                         continue 2;
                                     }
                                 } elseif (strpos($pid_info, $app) === false) {
-                                    // We didn't match the application name in the arguments, no match
-                                    continue 2;
+                                    // Try to match the app name in the parent process
+                                    $ppid_info = $this->getParentCommand($pid_info);
+                                    if (strpos($ppid_info, $app) === false) {
+                                        // We didn't match the application name in the arguments, no match
+                                        continue 2;
+                                    }
                                 }
                             }
                         }
@@ -212,7 +219,7 @@ class Nvidia extends Main
                 foreach ($data->clocks_throttle_reasons->children() as $reason => $throttle) {
                     if ($throttle == 'Active') {
                         $this->pageData['throttled'] = 'Yes';
-                        $this->pageData['thrtlrsn'] = ' (' . $this->stripText('clocks_throttle_reason_', $reason) . ')';
+                        $this->pageData['thrtlrsn'] = ' (' . $this->stripText(['clocks_throttle_reason_','_setting'], $reason) . ')';
                         break;
                     }
                 }
