@@ -85,10 +85,10 @@ class Nvidia extends Main
                                     if (strpos($pid_info, '/app/intelligencelayer/shared') === false) {
                                         continue 2;
                                     }
-                                } elseif (strpos($pid_info, $app) === false) {
+                                } elseif (stripos($pid_info, $app) === false) {
                                     // Try to match the app name in the parent process
                                     $ppid_info = $this->getParentCommand((int) $process->pid);
-                                    if (strpos($ppid_info, $app) === false) {
+                                    if (stripos($ppid_info, $app) === false) {
                                         // We didn't match the application name in the arguments, no match
                                         continue 2;
                                     }
