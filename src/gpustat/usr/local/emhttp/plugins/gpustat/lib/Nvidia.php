@@ -87,7 +87,7 @@ class Nvidia extends Main
                                     }
                                 } elseif (strpos($pid_info, $app) === false) {
                                     // Try to match the app name in the parent process
-                                    $ppid_info = $this->getParentCommand($pid_info);
+                                    $ppid_info = $this->getParentCommand((int) $process->pid);
                                     if (strpos($ppid_info, $app) === false) {
                                         // We didn't match the application name in the arguments, no match
                                         continue 2;
