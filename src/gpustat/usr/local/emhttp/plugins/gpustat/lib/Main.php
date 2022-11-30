@@ -161,7 +161,7 @@ class Main
     protected function getParentCommand(int $pid): string
     {
         $command = '';
-        $pid_command = sprintf("ps j %0d | awk 'NR>1' | cut -d ' ' -f 1", $pid);
+        $pid_command = sprintf("ps j %0d | awk 'NR>1' | cut -d ' ' -f 2", $pid);
 
         $ppid = (int)trim(shell_exec($pid_command));
         if ($ppid > 0) {
