@@ -2,7 +2,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "gpustat">
 <!ENTITY author    "b3rs3rk">
-<!ENTITY version   "2022.11.30">
+<!ENTITY version   "2022.11.30a">
 <!ENTITY launch    "Settings/GPUStatSettings">
 <!ENTITY gitURL    "https://raw.githubusercontent.com/b3rs3rk/&name;-unraid/master">
 <!ENTITY pluginURL "&gitURL;/&name;.plg">
@@ -48,9 +48,11 @@
 -->
 
 <CHANGES>
+
 ###2022-11-30
 - Fix case sensitivity in parent app detection preventing matches
 - Fix parent pid command so that it correctly pulls the PPID field
+- Fix string literal issue with parent command awk
 
 ###2022-11-29
 - Fix issue with parent PID causing plugin to fail
