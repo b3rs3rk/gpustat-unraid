@@ -88,7 +88,7 @@ class AMD extends Main
                 }
                 if (!empty($this->inventory)) {
                     foreach ($this->inventory AS $gpu) {
-                        $result[] = [
+                        $result[$gpu['busid']] = [
                             'id'    => "Bus ID " . $gpu['busid'],
                             'model' => (string) ($gpu['product'] ?? $gpu['model']),
                             'guid'  => $gpu['busid'],
