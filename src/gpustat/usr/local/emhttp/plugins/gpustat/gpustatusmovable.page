@@ -252,7 +252,7 @@ function GPUList() {
         "<span class='w44'><span class='gpu-util load'>0%</span><div class='usage-disk sys'><span class='gpu-utilbar' id='gpu-utilbar'></span><span></span></div></span></td></tr>" +
             
         <?php if($gpustat_cfg['DISPGFXTRANS'] || $gpustat_cfg['DISPMEMUTIL']) : ?>
-            "<tr><td ><span class='w72'><i class='ups fa fa-fw icon-ram'></i>_(Translate - Memory (MB))_</span>" +
+            "<tr><td ><span class='w44'><i class='ups fa fa-fw icon-ram'></i>_(Translate - Memory (MB))_</span>" +
             <?php if($gpustat_cfg['DISPGFXTRANS']) : ?>
                 "<span class='gpu-gfxtrans w32 load'></span>" +
             <?php endif; ?>
@@ -263,7 +263,7 @@ function GPUList() {
         <?php endif; ?>
 
         <?php if($gpustat_cfg['DISPEVENT'] || $gpustat_cfg['DISPVERTEX']) : ?>
-            "<tr><td ><span class='w72'><i class='ups fa fa-fw icon-hardware'></i>_(Event - Vertex (MB))_</span>" +
+            "<tr><td ><span class='w44'><i class='ups fa fa-fw icon-hardware'></i>_(Event - Vertex (MB))_</span>" +
             <?php if($gpustat_cfg['DISPEVENT']) : ?>
                 "<span class='gpu-event load'></span>" +
             <?php endif; ?>
@@ -273,7 +273,7 @@ function GPUList() {
         <?php endif; ?>
 
         <?php if($gpustat_cfg['DISPTEXTURE'] || $gpustat_cfg['DISPSEQUENCER']) : ?>
-            "<tr><td ><span class='w72'><i class='ups fa fa-fw icon-hardware'></i>_(Texture - Sequencer)_</span>" +
+            "<tr><td ><span class='w44'><i class='ups fa fa-fw icon-hardware'></i>_(Texture - Sequencer)_</span>" +
             <?php if($gpustat_cfg['DISPTEXTURE']) : ?>
                 "<span class='gpu-texture load'></span>" +
             <?php endif; ?>
@@ -284,7 +284,7 @@ function GPUList() {
         <?php endif; ?>
 
         <?php if($gpustat_cfg['DISPSHADEREXP'] || $gpustat_cfg['DISPSHADERINTER']) : ?>
-            "<tr><td ><span class='w72'><i class='ups fa fa-fw icon-hardware'></i>_(Shader Export - Interpol)_</span>" +
+            "<tr><td ><span class='w44'><i class='ups fa fa-fw icon-hardware'></i>_(Shader Export - Interpol)_</span>" +
             <?php if($gpustat_cfg['DISPSHADEREXP']) : ?>
                 "<span class='gpu-shaderexp load'></span>" +
             <?php endif; ?>
@@ -295,7 +295,7 @@ function GPUList() {
         <?php endif; ?>
 
         <?php if($gpustat_cfg['DISPSCANCON'] || $gpustat_cfg['DISPPRIMASSEM']) : ?>
-            "<tr><td ><span class='w72'><i class='ups fa fa-fw icon-hardware'></i>_(Scan Conv - Prim Assem)_</span>" +
+            "<tr><td ><span class='w44'><i class='ups fa fa-fw icon-hardware'></i>_(Scan Conv - Prim Assem)_</span>" +
             <?php if($gpustat_cfg['DISPSCANCON']) : ?>
                 "<span class='gpu-scancon load'></span>" +
             <?php endif; ?>
@@ -306,7 +306,7 @@ function GPUList() {
         <?php endif; ?>
 
         <?php if($gpustat_cfg['DISPDEPTHBLK'] || $gpustat_cfg['DISPCOLORBLK']) : ?>
-            "<tr><td ><span class='w72'><i class='ups fa fa-fw icon-hardware'></i>_(Blocks: Depth - Color)_</span>" +
+            "<tr><td ><span class='w44'><i class='ups fa fa-fw icon-hardware'></i>_(Blocks: Depth - Color)_</span>" +
             <?php if($gpustat_cfg['DISPDEPTHBLK']) : ?>
                 "<span class='gpu-depthblk load'></span>" +
             <?php endif; ?>
@@ -317,7 +317,7 @@ function GPUList() {
         <?php endif; ?>
 
         <?php if($gpustat_cfg['DISPFAN'] || $gpustat_cfg['DISPPWRDRAW']) : ?>
-            "<tr><td ><span class='w72'><i class='ups fa fa-fw icon-fan'></i>_(Fan - Power)_</span>" +
+            "<tr><td ><span class='w44'><i class='ups fa fa-fw icon-fan'></i>_(Fan - Power)_</span>" +
             <?php if($gpustat_cfg['DISPFAN']) : ?>
                 "<span class='gpu-fan load'></span>" +
             <?php endif; ?>
@@ -329,7 +329,7 @@ function GPUList() {
 
 
         <?php if($gpustat_cfg['DISPCLOCKS']) : ?>
-            "<tr><td><span class='w72'><i class='ups fa fa-fw icon-hardware'></i>_(Clocks: Shader - Mem (GHz))_</span>" +
+            "<tr><td><span class='w44'><i class='ups fa fa-fw icon-hardware'></i>_(Clocks: Shader - Mem (GHz))_</span>" +
             "<span class='gpu-clock load'></span>" +
             "<span class='gpu-memclock load'></span>" +
             "</td></tr>" +

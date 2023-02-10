@@ -133,7 +133,7 @@ class Intel extends Main
 
             $this->pageData += [
                 'vendor'        => 'Intel',
-                'name'          => 'Integrated Graphics',
+                'name'          => 'iGPU/GPU',
                 '3drender'      => 'N/A',
                 'blitter'       => 'N/A',
                 'interrupts'    => 'N/A',
