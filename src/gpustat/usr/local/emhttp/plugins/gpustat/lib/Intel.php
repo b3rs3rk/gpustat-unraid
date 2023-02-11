@@ -141,7 +141,12 @@ class Intel extends Main
                 'video'         => 'N/A',
                 'videnh'        => 'N/A',
             ];
-
+            $gpus = $this->getInventory() ;
+            if ($gpus) {
+                if (isset($gpus[$this->settings['GPUID']])) {
+                    $this->pageData['name'] = $gpus[$this->settings['GPUID']]["model"] ;
+                }
+            }
             if ($this->settings['DISP3DRENDER']) {
                 if (isset($data['engines']['Render/3D/0']['busy'])) {
                     $this->pageData['util'] = $this->pageData['3drender'] = $this->roundFloat($data['engines']['Render/3D/0']['busy']) . '%';
