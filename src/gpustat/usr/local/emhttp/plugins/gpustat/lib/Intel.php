@@ -36,10 +36,10 @@ class Intel extends Main
 {
     const CMD_UTILITY = 'intel_gpu_top';
     const INVENTORY_UTILITY = 'lspci';
-    const INVENTORY_PARAM = "| grep VGA";
+    const INVENTORY_PARAM = " -Dmm | grep VGA";
     const INVENTORY_REGEX =
         '/VGA.+:\s+Intel\s+Corporation\s+(?P<model>.*)\s+(\[|Family|Integrated|Graphics|Controller|Series|\()/iU';
-    const STATISTICS_PARAM = '-J -s 250';
+    const STATISTICS_PARAM = '-J -s 250 -d pci:slot="';
     const STATISTICS_WRAPPER = 'timeout -k .500 .600';
 
     /**
@@ -66,20 +66,23 @@ class Intel extends Main
             if ($this->cmdexists) {
                 $this->runCommand(self::INVENTORY_UTILITY, self::INVENTORY_PARAM, false);
                 if (!empty($this->stdout) && strlen($this->stdout) > 0) {
-                    $this->parseInventory(self::INVENTORY_REGEX);
-                }
-                if (!empty($this->inventory)) {
-                    // Only one iGPU per system, so mark it ID 99 and pad other results
-                    $inventory = [
-                        'id' => 99,
-                        'model' => $this->inventory[0]['model'],
-                        'guid' => '0000-00-000-000000',
-                    ];
-                    $result = $inventory;
-                }
+                    foreach(explode(PHP_EOL,$this->stdout) AS $vga) {
+                        preg_match_all('/"([^"]*)"|(\S+)/', $vga, $matches);
+                        $id = str_replace('"', '', $matches[0][0]) ;
+                        $vendor = str_replace('"', '',$matches[0][2]) ;
+                        $model = str_replace('"', '',$matches[0][3]) ;
+                        if ($vendor != "Intel Corporation") continue ;
+                        $result[$id] = [
+                            'id' => substr($id,5) ,
+                            'model' => $model,
+                            'vendor' => $vendor,
+                            'guid' => $id
+                        ];
+
+                     }
+                 }
             }
         }
-
         return $result;
     }
 
@@ -91,7 +94,8 @@ class Intel extends Main
         if ($this->cmdexists) {
             //Command invokes intel_gpu_top in JSON output mode with an update rate of 5 seconds
             $command = self::STATISTICS_WRAPPER . ES . self::CMD_UTILITY;
-            $this->runCommand($command, self::STATISTICS_PARAM, false);
+                        //Command invokes radeontop in STDOUT mode with an update limit of half a second @ 120 samples per second
+            $this->runCommand($command, self::STATISTICS_PARAM. $this->settings['GPUID'].'"', false);
             if (!empty($this->stdout) && strlen($this->stdout) > 0) {
                 $this->parseStatistics();
             } else {
@@ -129,7 +133,7 @@ class Intel extends Main
 
             $this->pageData += [
                 'vendor'        => 'Intel',
-                'name'          => 'Integrated Graphics',
+                'name'          => 'iGPU/GPU',
                 '3drender'      => 'N/A',
                 'blitter'       => 'N/A',
                 'interrupts'    => 'N/A',
@@ -137,7 +141,12 @@ class Intel extends Main
                 'video'         => 'N/A',
                 'videnh'        => 'N/A',
             ];
-
+            $gpus = $this->getInventory() ;
+            if ($gpus) {
+                if (isset($gpus[$this->settings['GPUID']])) {
+                    $this->pageData['name'] = $gpus[$this->settings['GPUID']]["model"] ;
+                }
+            }
             if ($this->settings['DISP3DRENDER']) {
                 if (isset($data['engines']['Render/3D/0']['busy'])) {
                     $this->pageData['util'] = $this->pageData['3drender'] = $this->roundFloat($data['engines']['Render/3D/0']['busy']) . '%';
