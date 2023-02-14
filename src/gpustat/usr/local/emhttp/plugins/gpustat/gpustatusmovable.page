@@ -150,8 +150,8 @@ function GPUList() {
 
         <?php if($gpustat_cfg['DISPCLOCKS']) : ?>
             "<tr><td><span class='w36'><i class='ups fa fa-fw icon-ram'></i>_(GPU - Memory (MHz))_</span>" +
-            "<span class='w26'><span class='gpu-clock load''>0%</span><div class='usage-disk sys'><span class='gpu-clockbar' id='gpu-clockbar'></span><span></span></div></span>" +
-            "<span class='w26'><span class='gpu-decutil load''>0%</span><div class='usage-disk sys'><span class='gpu-memclockbar' id='gpu-memclockbar'></span><span></span></div></span>" +
+            "<span class='w26'><span class='gpu-clock load''>0%</span><div class='usage-disk sys'><span class='gpu-gpuclockbar' id='gpu-gpuclockbar'></span><span></span></div></span>" +
+            "<span class='w26'><span class='gpu-memclock load''>0%</span><div class='usage-disk sys'><span class='gpu-memclockbar' id='gpu-memclockbar'></span><span></span></div></span>" +
             "</td></tr>" +
         <?php endif; ?>
 
