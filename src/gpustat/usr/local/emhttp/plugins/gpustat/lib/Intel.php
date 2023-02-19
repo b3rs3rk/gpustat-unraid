@@ -75,7 +75,7 @@ class Intel extends Main
                         $result[$id] = [
                             'id' => substr($id,5) ,
                             'model' => $model,
-                            'vendor' => $vendor,
+                            'vendor' => 'intel',
                             'guid' => $id
                         ];
 
@@ -101,6 +101,7 @@ class Intel extends Main
             } else {
                 $this->pageData['error'][] = Error::get(Error::VENDOR_DATA_NOT_RETURNED);
             }
+            return json_encode($this->pageData) ;
         }
     }
 
@@ -202,5 +203,5 @@ class Intel extends Main
             $this->pageData['error'][] = Error::get(Error::VENDOR_DATA_BAD_PARSE);
         }
         $this->echoJson();
-    }
+      }
 }

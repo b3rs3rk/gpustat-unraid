@@ -92,7 +92,7 @@ $mytiles[$pluginname]['column1'] =
 <tbody id="tblGPUDash" title="_(GPU Stats)_">
 <tr><td><i class='icon-hardware f32'></i>
 $stats
-<a href="/Settings/GPUStatSettings" title="_(Go to GPU Statistics settings)_"><i class="fa fa-fw fa-cog control"></i></a></td></tr>
+<a href="Dashboard/Settings/GPUStatSettings" title="_(Go to GPU Statistics settings)_"><i class="fa fa-fw fa-cog control"></i></a></td></tr>
 <tr class="header"><td><span class="w18">_(Vendor)_</span><span class="w44">_(Device)_</span></td></tr>
 </tbody>
 EOT;

@@ -36,6 +36,7 @@ class Nvidia extends Main
 {
     const CMD_UTILITY = 'nvidia-smi';
     const INVENTORY_PARAM = '-L';
+    const INVENTORY_PARM_PCI = "-q -x -g %s 2>&1 | grep 'gpu id'";
     const INVENTORY_REGEX = '/GPU\s(?P<id>\d):\s(?P<model>.*)\s\(UUID:\s(?P<guid>GPU-[0-9a-f-]+)\)/i';
     const STATISTICS_PARAM = '-q -x -g %s 2>&1';
     const SUPPORTED_APPS = [ // Order here is important because some apps use the same binaries -- order should be more specific to less
@@ -54,6 +55,8 @@ class Nvidia extends Main
         'shinobipro'  => ['shinobi'],
         'foldinghome' => ['FahCore'],
     ];
+
+
 
     /**
      * Nvidia constructor.
@@ -161,6 +164,36 @@ class Nvidia extends Main
         return $result;
     }
 
+        /**
+     * Retrieves NVIDIA card inventory and parses into an array
+     *
+     * @return array
+     */
+    public function getInventorym(): array
+    {
+        $result = [];
+
+        if ($this->cmdexists) {
+            $this->runCommand(self::CMD_UTILITY, self::INVENTORY_PARAM, false);
+            if (!empty($this->stdout) && strlen($this->stdout) > 0) {
+                $this->parseInventory(self::INVENTORY_REGEX);
+                if (!empty($this->inventory)) {
+                    $result = $this->inventory;
+                }
+            }
+            foreach($result as $gpu) {
+                $cmd =self::CMD_UTILITY . ES . sprintf(self::INVENTORY_PARM_PCI, $gpu['guid']) ;
+                $cmdres = $this->stdout = shell_exec($cmd); 
+                $pci = substr($cmdres,14,12);
+                $gpu['id'] = substr($pci,5) ;
+                $gpu['vendor'] = 'nvidia' ;
+                $result2[$pci] = $gpu ; 
+            }
+        }
+
+        return $result2;
+    }
+
     /**
      * Parses product name and stores in page data
      *
@@ -254,6 +287,7 @@ class Nvidia extends Main
         } else {
             $this->pageData['error'][] = Error::get(Error::VENDOR_UTILITY_NOT_FOUND);
         }
+        return json_encode($this->pageData) ;
     }
 
     /**

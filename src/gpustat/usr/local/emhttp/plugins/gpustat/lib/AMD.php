@@ -35,6 +35,7 @@ class AMD extends Main
     const CMD_UTILITY = 'radeontop';
     const INVENTORY_UTILITY = 'lspci';
     const INVENTORY_PARAM = '| grep VGA';
+    const INVENTORY_PARAMm = " -Dmm | grep VGA";
     const INVENTORY_REGEX =
         '/^(?P<busid>[0-9a-f]{2}).*\[AMD(\/ATI)?\]\s+(?P<model>.+)\s+(\[(?P<product>.+)\]|\()/imU';
 
@@ -101,6 +102,41 @@ class AMD extends Main
         return $result;
     }
 
+        /**
+     * Retrieves AMD inventory using lspci and returns an array
+     *
+     * @return array
+     */
+    public function getInventorym(): array
+    {
+        $result = [];
+
+        if ($this->cmdexists) {
+            $this->checkCommand(self::INVENTORY_UTILITY, false);
+            if ($this->cmdexists) {
+                $this->runCommand(self::INVENTORY_UTILITY, self::INVENTORY_PARAMm, false);
+                if (!empty($this->stdout) && strlen($this->stdout) > 0) {
+                    foreach(explode(PHP_EOL,$this->stdout) AS $vga) {
+                        preg_match_all('/"([^"]*)"|(\S+)/', $vga, $matches);
+                        $id = str_replace('"', '', $matches[0][0]) ;
+                        $vendor = str_replace('"', '',$matches[0][2]) ;
+                        $model = str_replace('"', '',$matches[0][3]) ;
+                        if ($vendor != "Advanced Micro Devices, Inc. [AMD/ATI]") continue ;
+                        $result[$id] = [
+                            'id' => substr($id,5) ,
+                            'model' => $model,
+                            'vendor' => 'amd',
+                            'guid' => substr($id,5,2)
+                        ];
+
+                     }
+                 }
+            }
+        }
+
+        return $result;
+    }
+
     /**
      * Retrieves AMD APU/GPU statistics
      */
@@ -115,6 +151,7 @@ class AMD extends Main
             } else {
                 $this->pageData['error'][] += Error::get(Error::VENDOR_DATA_NOT_RETURNED);
             }
+            return json_encode($this->pageData) ;
         }
     }
 

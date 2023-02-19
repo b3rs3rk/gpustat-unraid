@@ -207,7 +207,7 @@ class Main
             }
             header('Content-Type: application/json');
             header('Content-Length:' . ES . strlen($json));
-            echo $json;
+            #echo $json;
         } else {
             // Can't echo JSON for debug, so print_r for array data
             print_r(Error::get(Error::BAD_ARRAY_DATA));
