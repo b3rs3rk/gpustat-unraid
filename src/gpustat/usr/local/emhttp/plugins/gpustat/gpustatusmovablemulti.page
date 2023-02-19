@@ -1,0 +1,406 @@
+Menu="Dashboard:0"
+Icon="gpustat.png"
+Cond="version_compare(parse_ini_file('/etc/unraid-version')['version'],'6.12.0-beta5', '>')"
+---
+<?php
+    /*
+      MIT License
+
+      Copyright (c) 2020-2022 b3rs3rk
+
+      Permission is hereby granted, free of charge, to any person obtaining a copy
+      of this software and associated documentation files (the "Software"), to deal
+      in the Software without restriction, including without limitation the rights
+      to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+      copies of the Software, and to permit persons to whom the Software is
+      furnished to do so, subject to the following conditions:
+
+      The above copyright notice and this permission notice shall be included in all
+      copies or substantial portions of the Software.
+
+      THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+      IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+      FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+      AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+      LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+      OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+      SOFTWARE.
+    */
+
+
+/*
+  Create a .page file based on this example file and store the file in your plugin directory
+  Make sure this file has a unique name not used by the GUI or other plugins
+
+  This is an example configuration which is used to add custom tiles to the dashboard
+  Placement of one or more custom tiles is done under column1, column2 or column3
+  A column can have as many new custom tiles as needed, each custom tile is a <tbody> element
+  Each tile must have these two properties set:
+
+  "_(description)_"    - this is the (translated) description shown in the Content Manager window
+  "_(Tile tile)_"      - this is the (translated) title of the tile shown in bold on the screen
+
+  The content of the tile can be any text as required by your plugin, this content is placed inside the <td> element
+  A number of predefined spans are available to make fields of certain widths and maybe used to follow the GUI alignment
+  These are:
+  <span class="w18">
+  <span class="w26">
+  <span class="w36">
+  <span class="w44">
+  <span class="w72">
+*/
+
+$pluginname = "gpustat"; // substitute this entry with the name of your plugin
+
+
+$array = [
+         "03:00.0" => [
+                               'id' => "03:00.0" ,
+                            'model' => "DG2",
+                            'vendor' => "intel",
+                            'guid' => '0000:03:00.0'
+] ,
+    "00:02.0" => [
+                               'id' => "00:02.0" ,
+                            'model' => "igpu",
+                            'vendor' => "intel",
+                            'guid' => '0000:00:02.0'
+],
+    "08:00.0" => [
+                               'id' => "08:00.0" ,
+                            'model' => "K4000",
+                            'vendor' => "nvidia",
+                            'guid' => 'GPU-ef6c0299-f1bc-7b5c-5291-7cd1a012f8bd'
+] ,
+        "0c:00.0" => [
+                               'id' => "0c:00.0" ,
+                            'model' => "6400",
+                            'vendor' => "amd",
+                            'guid' => '0c'
+] 
+];
+
+
+$gpustat_cfg = parse_plugin_cfg('gpustat', true);
+$multi = urldecode($gpustat_cfg["MULTIGPUJSON"]) ;
+$array = json_decode($multi,true) ;
+$gpu_nv = $gpu_intel = $gpu_amd = $gpu_unknown = false;
+
+$apps = [
+    'plex', 'jellyfin', 'handbrake', 'emby', 'tdarr', 'unmanic', 'dizquetv', 'ersatztv',
+    'fileflows', 'frigate', 'deepstack', 'nsfminer', 'shinobipro', 'foldinghome',
+];
+
+$i=$j =$k =1; 
+
+$k =2; 
+
+foreach ($array as $id=>$gpu) {
+switch ($gpu['vendor']) {
+    case "nvidia":
+        $gpu_nv = true;
+        break;
+    case "intel":
+        $gpu_intel = true;
+        break;
+    case "amd":
+        $gpu_amd = true;
+        break;
+    default:
+        // If vendor isn't set the config hasn't been saved, don't render the plugin
+        $gpu_unknown = true;
+        $unknown_msg = "Default vendor set - Change vendor in GPUStat settings page and apply.";
+}
+
+
+$stats = "<div class='section'>_(GPU".$i.")_<br><span><i class='ups fa fa-line-chart'></i><span id='load'>Load: <span class='gpu-util{$i}'></span></span>" ;
+if ($gpu_nv || $gpu_amd) {
+if ($gpustat_cfg['DISPTEMP']) $stats .= "<span > Temperature: <span class='gpu-temp{$i}'></span></span>" ;
+}
+if ($gpu_nv && $gpustat_cfg['DISPSESSIONS']) $stats .="<span> Processes: <span class='gpu-sessions{$i}'></span></span>";
+$stats .= "<br><br></div>" ;
+$layout = GPULayout($i, $gpu["vendor"],$gpustat_cfg) ;
+$mytiles[$pluginname.$k]['column'.$j] =
+<<<EOT
+<tbody id="tblGPUDash$i" title="_(GPU Stats #1)_">
+<tr><td><i class='icon-hardware f32'></i>
+$stats
+<a href="Dashboard/Settings/GPUStatSettings" title="_(Go to GPU Statistics settings)_"><i class="fa fa-fw fa-cog control"></i></a></td></tr>
+<tr class="header"><td><span class="w18">_(Vendor)_</span><span class="w44">_(Device)_</span></td></tr>
+$layout
+</tbody>
+EOT;
+$array[$id]["panel"] = $i ;
+$i++ ;
+$j++ ;
+if ($j >3) { $j=1 ; $k++ ;}
+}
+
+
+function GPULayout($count,$vendor,$gpustat_cfg) {
+    $apps = [
+    'plex', 'jellyfin', 'handbrake', 'emby', 'tdarr', 'unmanic', 'dizquetv', 'ersatztv',
+    'fileflows', 'frigate', 'deepstack', 'nsfminer', 'shinobipro', 'foldinghome',
+];
+$gpu_nv = $gpu_intel = $gpu_amd = $gpu_unknown = false;
+    switch ($vendor) {
+    case "nvidia":
+        $gpu_nv = true;
+        break;
+    case "intel":
+        $gpu_intel = true;
+        break;
+    case "amd":
+        $gpu_amd = true;
+        break;
+    default:
+        // If vendor isn't set the config hasn't been saved, don't render the plugin
+        $gpu_unknown = true;
+        $unknown_msg = "Default vendor set - Change vendor in GPUStat settings page and apply.";
+}
+
+    $page_render = '<tr class="updated"><td>' ;
+    $page_render .= "<span class='gpu-vendor$count w18'></span>&nbsp;<span class='gpu-name$count w18'></span>" ;
+
+    # No GPU Set 
+
+    if ($gpu_unknown)  $page_render .= "<tr><td><span>_(Default vendor set - Change vendor in GPUStat settings page and apply.)_</span></td>/tr>" ; 
+
+    # Nvidia GPUs
+
+    if ($gpu_nv) {
+        if($gpustat_cfg['DISPPCIUTIL']) {
+            $page_render .= "&emsp;&ensp;<span id='gpu-pciegen$count'>PCIe Gen (Max): <span class='gpu-pciegen$count'></span>&nbsp;(<span class='gpu-pciegenmax$count'></span>)</span>" ;
+            $page_render .= "&emsp;&ensp;<span id='gpu-pciewidth$count'>Lanes (Max): <span class='gpu-pciewidth$count'></span>&nbsp;(<span class='gpu-pciewidthmax$count'></span>)</span>" ;
+        }
+
+        if ($gpu_nv) {
+       $page_render .=     "<tr><td><span class='w36'><i class='ups fa fa-fw icon-ram'></i>_(Load - Memory)_</span>" ;
+        $page_render .=    "<span class='w26'><span class='gpu-util$count load''>0%</span><div class='usage-disk sys'><span class='gpu-utilbar$count' id='gpu-utilbar$count'></span><span></span></div></span>" ;
+
+            if($gpustat_cfg['DISPMEMUTIL']) {
+        $page_render .=        "<span class='w26'><span class='gpu-memutil$count load'>0%</span><div class='usage-disk sys'><span class='gpu-memutilbar$count' id='gpu-memutilbar$count'></span><span></span></div></span>" ;
+           }
+        $page_render .=    "</td></tr>" ;
+        }
+
+      if($gpustat_cfg['DISPENCDEC']) {
+          $page_render .=  "<tr><td><span class='w36'><i class='ups fa fa-fw icon-hardware'></i>_(Encoder - Decoder)_</span>" ;
+    $page_render .=        "<span class='w26'><span class='gpu-encutil$count load'>0%</span><div class='usage-disk sys'><span class='gpu-encutilbar$count' id='gpu-encutilbar$count'></span><span></span></div></span>" ;
+    $page_render .=        "<span class='w26'><span class='gpu-decutil$count load'>0%</span><div class='usage-disk sys'><span class='gpu-decutilbar$count' id='gpu-decutilbar$count'></span><span></span></div></span>" ;
+    $page_render .=        "</td></tr>" ;
+        }
+  
+         if($gpustat_cfg['DISPCLOCKS']) {
+   $page_render .=         "<tr><td><span class='w36'><i class='ups fa fa-fw icon-ram'></i>_(GPU - Memory (MHz))_</span>" ;
+   $page_render .=         "<span class='w26'><span class='gpu-clock$count load'>0%</span><div class='usage-disk sys'><span class='gpu-gpuclockbar$count' id='gpu-gpuclockbar$count'></span><span></span></div></span>" ; 
+  $page_render .=          "<span class='w26'><span class='gpu-memclock$count load'>0%</span><div class='usage-disk sys'><span class='gpu-memclockbar$count' id='gpu-memclockbar$count'></span><span></span></div></span>" ;
+   $page_render .=         "</td></tr>" ;
+        }
+
+                 if($gpustat_cfg['DISPFAN'] || $gpustat_cfg['DISPPWRDRAW'])  {
+   $page_render .=         "<tr><td><span class='w36'><i class='ups fa fa-fw icon-fan'></i>_(Fan - Power)_</span>" ;
+            if($gpustat_cfg['DISPFAN']) {
+    $page_render .=            "<span class='w26'><span class='gpu-fan$count load'>0%</span><div class='usage-disk sys'><span class='gpu-fanbar$count' id='gpu-fanbar$count'></span><span></span></div></span>" ;
+            }
+            if($gpustat_cfg['DISPPWRDRAW']) {
+    $page_render .=            "<span class='w26'><span class='gpu-power$count load'>0%</span><div class='usage-disk sys'><span class='gpu-powerbar$count' id='gpu-powerbar$count'></span><span></span></div></span>" ;
+         }
+              $page_render .=       "</td></tr>" ;
+        }
+
+              if($gpustat_cfg['DISPPCIUTIL']) {
+    $page_render .=        "<tr><td><span class='w36'><i class='ups fa fa-fw icon-hardware'></i>_(PCI Bus Rx/Tx (MB/s))_</span>" ;
+    $page_render .=        "<span class='w26'><span class='gpu-rxutil$count load'>0%</span><div class='usage-disk sys'><span class='gpu-rxutilbar$count' id='gpu-rxutilbar$count'></span><span></span></div></span>" ;
+    $page_render .=        "<span class='w26'><span class='gpu-txutil$count load'>0%</span><div class='usage-disk sys'><span class='gpu-rxutilbar$count' id='gpu-txutilbar$count'></span><span></span></div></span>" ;
+    $page_render .=        "</td></tr>" ;
+        }
+
+
+               if($gpustat_cfg['DISPTHROTTLE'] || $gpustat_cfg['DISPPWRSTATE']) {
+    $page_render .=        "<tr><td colspan ='2' ><span class='w36'><i class='ups fa fa-fw icon-hardware'></i>_(Power State - Throttling)_" ;
+             if($gpustat_cfg['DISPPWRSTATE']) {
+    $page_render .=            "<span class='gpu-perfstate$count load'></span>" ;
+            }
+            if($gpustat_cfg['DISPTHROTTLE']) {
+     $page_render .=           "<span class='gpu-throttled$count load'></span>&nbsp;<span class='gpu-thrtlrsn$count load'></span>" ;
+            }
+    $page_render .=        "</td></tr>" ;
+        }
+       
+
+    if($gpustat_cfg['DISPSESSIONS']) {
+        $page_render .=       "<tr><td colspan ='2' ><span class='w36'><i class='ups fa fa-fw icon-hardware'></i>_(Active Apps)_</span>" ;
+            foreach($apps as $app) {
+     $page_render .=           "<span id='gpu-img-span-$app$count' class='gpu-img-span gpu-img-span-$app'>" ;
+     $page_render .=           "<img id='gpu-$app$count' class='gpu-image' src='/plugins/gpustat/images/$app.png'>" ;
+     $page_render .=           "</span>" ;
+            }
+     $page_render .=           "</td></tr>" ;
+    }   
+
+
+    }
+
+
+    if ($gpu_intel) {
+        if($gpustat_cfg['DISP3DRENDER']) {
+            $page_render .= "<tr><td colspan ='2' ><span class='w36'><i class='ups fa fa-fw icon-hardware'></i>_(3D Render Load)_" ;
+             $page_render .= "</span><span class='w44'><span class='gpu-3drender$count load'>0%</span><div class='usage-disk sys'>" ; 
+             $page_render .= "<span class='gpu-3drenderbar$count' id='gpu-3drenderbar$count'></span><span></span></div></span></td></tr>" ;
+        }
+
+        if($gpustat_cfg['DISPBLITTER']) {
+            $page_render .="<tr><td colspan ='2' ><span class='w36'><i class='ups fa fa-fw icon-hardware'></i>_(Blitter Load)_" ;
+            $page_render .="</span><span class='w44'><span class='gpu-blitter$count load'></span><div class='usage-disk sys'>" ;
+            $page_render .="<span class='gpu-blitterbar$count' id='gpu-blitterbar$count'></span><span></span></div></span></td></tr>" ;
+        }
+
+        if($gpustat_cfg['DISPVIDEO']) {
+            $page_render .="<tr><td colspan ='2' ><span class='w36'><i class='ups fa fa-fw icon-hardware'></i>_(Video Load)_" ;
+            $page_render .="</span><span class='w44'><span class='gpu-video$count load'></span><div class='usage-disk sys'>" ;
+            $page_render .="<span class='gpu-videobar$count load' id='gpu-videobar$count load'></span><span></span></div></span></td></tr>" ;
+        }
+
+        if($gpustat_cfg['DISPVIDENH']) {
+           $page_render .=  "<tr><td colspan ='2' ><span class='w36'><i class='ups fa fa-fw icon-hardware'></i>_(Video Enhance Load)_" ;
+             $page_render .="</span><span class='w44'><span class='gpu-videnh$count load'></span><div class='usage-disk sys'>" ;
+             $page_render .="<span class='gpu-videnhbar$count load' id='gpu-videnhbar$count load'></span><span></span></div></span></td></tr>" ;
+        }
+
+        if($gpustat_cfg['DISPPWRDRAW']) { 
+             $page_render .="<tr><td colspan ='2' ><span class='w36'><i class='ups fa fa-fw icon-hardware'></i>_(Power Draw)_" ;
+             $page_render .="</span><span class='w44'><span class='gpu-power$count load'></span><div class='usage-disk sys'>" ;
+             $page_render .="<span class='gpu-powerutilbar$count load' id='gpu-powerutilbar$count load'></span><span></span></div></span></td></tr>" ;
+        }
+
+        if($gpustat_cfg['DISPPCIUTIL']) {
+             $page_render .="<tr><td colspan ='2' ><span class='w36'><i class='ups fa fa-fw icon-hardware'></i>_(IMC Bus Utilization)_" ;
+             $page_render .="</span><span class='w44'>Receive: <span class='gpu-rxutil$count'></span> &emsp; Transmit: <span class='gpu-txutil$count'></span></td></tr>" ;
+        }
+
+        if($gpustat_cfg['DISPCLOCKS']) {
+             $page_render .="<tr><td colspan ='2' ><span class='w36'><i class='ups fa fa-fw icon-hardware'></i>_(GPU Clock (MHz))_" ;
+             $page_render .="</span><span class='w44'><span class='gpu-clock$count load'></span></td></tr>" ;
+        }
+
+        if($gpustat_cfg['DISPINTERRUPT']) {
+             $page_render .="<tr><td colspan ='2' ><span class='w36'><i class='ups fa fa-fw icon-hardware'></i>_(Interrupts/Sec)_" ;
+             $page_render .="</span><span class='w44'><span class='gpu-interrupts$count load'></span></td></tr>" ;
+        }
+        
+    }
+
+      // AMD GPUs 
+
+    if ($gpu_amd) {
+        $page_render .="<tr><td colspan ='2' ><span class='w36'><i class='ups fa fa-fw icon-hardware'></i>_(GPU Load)_</span>" ;
+        $page_render .="<span class='w44'><span class='gpu-util$count load'>0%</span><div class='usage-disk sys'><span class='gpu-utilbar$count' id='gpu-utilbar$count'></span><span></span></div></span></td></tr>" ;
+            
+        if($gpustat_cfg['DISPGFXTRANS'] || $gpustat_cfg['DISPMEMUTIL']) {
+        $page_render .=    "<tr><td ><span class='w44'><i class='ups fa fa-fw icon-ram'></i>_(Translate - Memory (MB))_</span>" ;
+            if($gpustat_cfg['DISPGFXTRANS']) {
+        $page_render .=        "<span class='gpu-gfxtrans$count w32 load'></span>" ;
+            }
+            if($gpustat_cfg['DISPMEMUTIL']) {
+        $page_render .=        "<span class='gpu-memused$count w32 load'></span>" ;
+            }
+        $page_render .=    "</td></tr>" ;
+        }
+
+
+        if($gpustat_cfg['DISPEVENT'] || $gpustat_cfg['DISPVERTEX']) {
+        $page_render .=    "<tr><td ><span class='w44'><i class='ups fa fa-fw icon-hardware'></i>_(Event - Vertex (MB))_</span>" ;
+            if($gpustat_cfg['DISPEVENT']) {
+        $page_render .=        "<span class='gpu-event$count load'></span>" ;
+        }
+        if($gpustat_cfg['DISPVERTEX']) {
+        $page_render .=        "<span class='gpu-vertex$count load'></span>" ;
+            }
+    }
+
+      if($gpustat_cfg['DISPTEXTURE'] || $gpustat_cfg['DISPSEQUENCER']) {
+        $page_render .=    "<tr><td ><span class='w44'><i class='ups fa fa-fw icon-hardware'></i>_(Texture - Sequencer)_</span>" ;
+            if($gpustat_cfg['DISPTEXTURE']) {
+        $page_render .=        "<span class='gpu-texture$count load'></span>" ;
+            }
+            if($gpustat_cfg['DISPSEQUENCER']) {
+        $page_render .=        "<span class='gpu-sequencer$count load'></span>" ;
+            }
+        $page_render .=    "</td></tr>" ;
+        }
+
+       if($gpustat_cfg['DISPSHADEREXP'] || $gpustat_cfg['DISPSHADERINTER']) {
+        $page_render .=    "<tr><td ><span class='w44'><i class='ups fa fa-fw icon-hardware'></i>_(Shader Export - Interpol)_</span>" ;
+            if($gpustat_cfg['DISPSHADEREXP']) {
+         $page_render .=       "<span class='gpu-shaderexp$count load'></span>" ;
+            }
+            if($gpustat_cfg['DISPSHADERINTER']) {
+         $page_render .=      "<span class='gpu-shaderinter$count load'></span>" ;
+            }
+         $page_render .=   "</td></tr>" ;
+        }
+    if($gpustat_cfg['DISPSCANCON'] || $gpustat_cfg['DISPPRIMASSEM']) {
+         $page_render .=   "<tr><td ><span class='w44'><i class='ups fa fa-fw icon-hardware'></i>_(Scan Conv - Prim Assem)_</span>" ;
+            if($gpustat_cfg['DISPSCANCON']) {
+         $page_render .=       "<span class='gpu-scancon$count load'></span>" ;
+            }
+            if($gpustat_cfg['DISPPRIMASSEM']) {
+         $page_render .=       "<span class='gpu-primassem$count load'></span>" ;
+         }
+         $page_render .=   "</td></tr>" ;
+        }
+
+        if($gpustat_cfg['DISPDEPTHBLK'] || $gpustat_cfg['DISPCOLORBLK']) {
+        $page_render .=    "<tr><td ><span class='w44'><i class='ups fa fa-fw icon-hardware'></i>_(Blocks: Depth - Color)_</span>" ;
+            if($gpustat_cfg['DISPDEPTHBLK']) { 
+       $page_render .=         "<span class='gpu-depthblk$count load'></span>" ;
+            }
+            if($gpustat_cfg['DISPCOLORBLK']) {
+         $page_render .=       "<span class='gpu-colorblk$count load'></span>" ;
+            }
+        $page_render .=    "</td></tr>" ;
+        }
+
+
+        if($gpustat_cfg['DISPFAN'] || $gpustat_cfg['DISPPWRDRAW']) {
+         $page_render .=   "<tr><td ><span class='w44'><i class='ups fa fa-fw icon-fan'></i>_(Fan - Power)_</span>" ;
+            if($gpustat_cfg['DISPFAN']) {
+          $page_render .=      "<span class='gpu-fan$count load'></span>" ;
+            }
+          if($gpustat_cfg['DISPPWRDRAW']) {
+         $page_render .=       "<span class='gpu-power$count load'><span class='gpu-powerunit'></span>" ;
+         }
+         $page_render .=       "</td></tr>" ;
+        }
+
+        if($gpustat_cfg['DISPCLOCKS']) {
+        $page_render .=    "<tr><td><span class='w44'><i class='ups fa fa-fw icon-hardware'></i>_(Clocks: Shader - Mem (GHz))_</span>" ;
+        $page_render .=    "<span class='gpu-clock$count load'></span>" ;
+        $page_render .=    "<span class='gpu-memclock$count load'></span>" ;
+        $page_render .=    "</td></tr>" ;
+        }
+
+
+
+    }
+
+    return($page_render) ;    
+
+}
+
+
+?>
+<style type="text/css">
+    @import url("/plugins/gpustat/css/style.css");
+</style>
+
+
+<script type="text/javascript" src="/plugins/gpustat/scripts/gpustatmulti.js"></script>
+<script type="text/javascript">
+    $(gpustat_statusm(<?=json_encode($array);?>));
+    if (<?=$gpustat_cfg['UIREFRESH'];?>) {
+        setInterval(gpustat_statusm(<?=json_encode($array);?>), <?=max(abs($display['refresh']), $gpustat_cfg['UIREFRESHINT']);?>);
+    }
+   
+</script>

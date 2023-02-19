@@ -46,27 +46,45 @@ if (!isset($gpustat_cfg)) {
 if (isset($gpustat_inventory) && $gpustat_inventory) {
     $gpustat_cfg['inventory'] = true;
     // Settings page looks for $gpustat_data specifically -- inventory all supported GPU types
-    $gpustat_data = array_merge((new Nvidia($gpustat_cfg))->getInventory(), (new Intel($gpustat_cfg))->getInventory(), (new AMD($gpustat_cfg))->getInventory());
+    $gpustat_data = array_merge((new Nvidia($gpustat_cfg))->getInventorym(), (new Intel($gpustat_cfg))->getInventory(), (new AMD($gpustat_cfg))->getInventorym());
 } else {
 
-    switch ($gpustat_cfg['VENDOR']) {
+
+$array=json_decode($_GET['gpus'],true) ;
+
+
+    $data = array() ;
+    foreach ($array as $gpu) {
+        $gpustat_cfg["VENDOR"] = $gpu['vendor'] ;
+        $gpustat_cfg["GPUID"] = $gpu['guid'] ;
+
+    switch ($gpu['vendor']) {
         case 'amd':
-            $data = (new AMD($gpustat_cfg))->getStatistics();
+            $return=(new AMD($gpustat_cfg))->getStatistics();
+            $decode = json_decode($return,true);
+            $decode["panel"] = $gpu['panel'] ;
+            $data[$gpu["id"]] = $decode;
             break;
         case 'intel':
-            $data = (new Intel($gpustat_cfg))->getStatistics();
+            $return=(new Intel($gpustat_cfg))->getStatistics();
+            $decode = json_decode($return,true);
+            $decode["panel"] = $gpu['panel'] ;
+            $data[$gpu["id"]] = $decode;
             break;
         case 'nvidia':
-            $data = (new Nvidia($gpustat_cfg))->getStatistics();
+            $return = (new Nvidia($gpustat_cfg))->getStatistics() ;
+            $decode = json_decode($return,true);
+            $decode["panel"] = $gpu['panel'] ;
+            $data[$gpu["id"]] = $decode;
             break;
         default:
             print_r(Error::get(Error::CONFIG_SETTINGS_NOT_VALID));
     }
-    $json = $data ;
-    header('Content-Type: application/json');
-    header('Content-Length:' . ES . strlen($json));
-    echo $json;
-    file_put_contents("/tmp/gpujson2","Time = ".date(DATE_RFC2822)."\n") ;
-    file_put_contents("/tmp/gpujson2",$json."\n",FILE_APPEND) ;
-
+}
+$json=json_encode($data) ;
+header('Content-Type: application/json');
+header('Content-Length:' . ES . strlen($json));
+echo $json;
+file_put_contents("/tmp/gpujson","Time = ".date(DATE_RFC2822)."\n") ;
+file_put_contents("/tmp/gpujson",$json."\n",FILE_APPEND) ;
 }

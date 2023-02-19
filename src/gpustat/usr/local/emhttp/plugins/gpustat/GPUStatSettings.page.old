@@ -28,61 +28,12 @@ Title="GPU Statistics"
       SOFTWARE.
     */
 
-    function save_ini_file($file, $array) {
-       $plugin = "gpustat";
-
-	  $res = array();
-      foreach($array as $key => $val) {
-        if(is_array($val)) {
-          $res[] = PHP_EOL."[$key]";
-          foreach($val as $skey => $sval) $res[] = "$skey = ".(is_numeric($sval) ? $sval : '"'.$sval.'"');
-        } else {
-          $res[] = "$key = ".(is_numeric($val) ? $val : '"'.$val.'"');
-         }
-      }
-
-      /* Write changes to tmp file. */
-      file_put_contents($file, implode(PHP_EOL, $res));
-
-      /* Write changes to flash. */
-      $file_path = pathinfo($file);
-      if ($file_path['extension'] == "cfg") {
-        file_put_contents("/boot/config/plugins/".$plugin."/".basename($file), implode(PHP_EOL, $res));
-      }
-    }
-
-    function save_cfg($val,$gpus) {
-
-      $json_array = array() ;
-      foreach ($val['MULTIGPU'] as $pciid) {
-        $gpupciid = "0000:".$pciid ;
-        $json_array[$pciid]['id'] = $gpus[$gpupciid]['id'] ;
-        $json_array[$pciid]['model'] = $gpus[$gpupciid]['model'] ;
-        $json_array[$pciid]['vendor'] = $gpus[$gpupciid]['vendor'] ;
-        $json_array[$pciid]['guid'] = $gpus[$gpupciid]['guid'] ;
-      }
-      $val["MULTIGPUJSON"] = urlencode(json_encode($json_array)) ;
-      if($val['MULTIGPU'] != "") $val['MULTIGPU'] = implode("," , $val['MULTIGPU']??[]) ;
-      #create JSON
-      
-      save_ini_file("gpustat.cfg", $val) ;
-    }
-
-    $cfg = $gpustat_cfg        = parse_plugin_cfg("gpustat", true);
+    $gpustat_cfg        = parse_plugin_cfg("gpustat", true);
     $gpustat_inventory  = true;
 
-    include_once './plugins/gpustat/gpustatusmulti.php';
-  
+    include_once './plugins/gpustat/gpustatus.php';
     $multi_enable=version_compare(parse_ini_file('/etc/unraid-version')['version'],'6.12.0-beta5', '>') ;
-
-    if (count($_POST)) {
-      if ($_POST['#apply'] == "_(Apply)_") {
-        array_map(function($k, $v) use (&$cfg) { if($k[0] != "#") $cfg[$k] = $v; }, array_keys($_POST), $_POST );
-        save_cfg($cfg,$gpustat_data) ;
-        $gpustat_cfg        = parse_plugin_cfg("gpustat", true);
-      } 
-    }
-var_dump($gpustat_data) ;
+    $multi_enable=false ;
 ?>
 <script>
 $(function() {
@@ -93,10 +44,10 @@ $(function() {
 </script>
 
 <h2><b>Runtime</b></h2>
-<form markdown="1" name="gpustat" method="POST" >
-  <input type="hidden" name="#file" value="gpustat/gpustat2.cfg" />
+<form markdown="1" name="gpustat" method="POST" action="/update.php" target="progressFrame">
+  <input type="hidden" name="#file" value="gpustat/gpustat.cfg" />
 
-Vendor2:
+Vendor:
 : <select id="VENDOR" name="VENDOR" size="1">
     <?=mk_option($gpustat_cfg['VENDOR'], "", "Change Me");?>
     <?=mk_option($gpustat_cfg['VENDOR'], "amd", "AMD");?>
@@ -128,12 +79,10 @@ Unit ID for Dashboard:
       <?php
 	 	
 	    if (isset($gpustat_data)) {
-        ksort($gpustat_data) ;
         foreach ($gpustat_data AS $gpu) {
          $gpudesc = sprintf('%s: %s - %s', $gpu['id'], $gpu['model'], $gpu['guid']);
-         $gpuid = $gpu['id'] ;
-         $checked = in_array($gpuid,explode(',',$gpustat_cfg['MULTIGPU'])) ? " selected" : "";
-      echo "<option value='$gpuid'$checked >$gpudesc</option>";
+         $checked = in_array($gpudesc,explode(',',$gpustat_cfg['MULTIGPU'])) ? " selected" : "";
+      echo "<option value='$gpudesc'$checked >$gpudesc</option>";
 }}
 ?>
 </select>
@@ -320,7 +269,7 @@ Graphics Translation Usage:
 
 <br><br><br>
 
-: <input id="btnApply" type="submit" name="#apply" value="Apply"><input type="button" value="Done" onClick="done()">
+: <input id="btnApply" type="submit" value="Apply"><input type="button" value="Done" onClick="done()">
 
 <br><br><br>
 Note: Where noted, not all metrics are provided by the vendor utilities and this plugin cannot magically make that work.
