@@ -398,9 +398,14 @@ $gpu_nv = $gpu_intel = $gpu_amd = $gpu_unknown = false;
 
 <script type="text/javascript" src="/plugins/gpustat/scripts/gpustatmulti.js"></script>
 <script type="text/javascript">
+
+function refresh() {
     $(gpustat_statusm(<?=json_encode($array);?>));
+}
+
+    $(gpustat_statusm(<?=json_encode($array);?>));
+    var json = <?=json_encode($array);?> ;
     if (<?=$gpustat_cfg['UIREFRESH'];?>) {
-        setInterval(gpustat_statusm(<?=json_encode($array);?>), <?=max(abs($display['refresh']), $gpustat_cfg['UIREFRESHINT']);?>);
+        setInterval(refresh, <?=max(abs($display['refresh']), $gpustat_cfg['UIREFRESHINT']);?>);
     }
-   
 </script>

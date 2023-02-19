@@ -83,16 +83,7 @@ const gpustat_statusm = (input) => {
         }
     });
 };
-const gpustat_dashm = () => {
-    // append data from the table into the correct one
-    //$('#db-box1').append($('.dash_gpustat').html());
 
-    // reload toggle to get the correct state
-    toggleView('dash_gpustat_toggle', true);
-
-    // reload sorting to get the stored data (cookie)
-    sortTable($('#db-box1'), $.cookie('db-box1'));
-}
 
 /*
 TODO: Not currently used due to issue with default reset actually working
