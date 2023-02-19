@@ -171,7 +171,7 @@ class Nvidia extends Main
      */
     public function getInventorym(): array
     {
-        $result = [];
+        $result2 = $result = [];
 
         if ($this->cmdexists) {
             $this->runCommand(self::CMD_UTILITY, self::INVENTORY_PARAM, false);

@@ -52,7 +52,9 @@ Title="GPU Statistics"
     }
 
     function save_cfg($val,$gpus) {
-      if ($multi_enabled) {
+      global $multi_enable;
+
+      if ($multi_enable) {
         $json_array = array() ;
         foreach ($val['MULTIGPU'] as $pciid) {
           $gpupciid = "0000:".$pciid ;
@@ -73,8 +75,8 @@ Title="GPU Statistics"
 
     $multi_enable=version_compare(parse_ini_file('/etc/unraid-version')['version'],'6.12.0-beta5', '>') ;
 
-    if ($multi_enabled) {
-    include_once './plugins/gpustat/gpustatusmulti.php';
+    if ($multi_enable) {
+      include_once './plugins/gpustat/gpustatusmulti.php';
     } else {
       include_once './plugins/gpustat/gpustatus.php';
     }
@@ -129,7 +131,7 @@ Unit ID for Dashboard:
 <?php endif; ?>
 
 <?php if ($multi_enable) : ?>
-Unit ID for Dashboard:
+Unit ID for Dashboard(Multiple):
 :  <select id="MULTIGPU" class="input.description" name="MULTIGPU[]" multiple="multiple" style="display">
    
       <?php
