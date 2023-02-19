@@ -233,12 +233,7 @@ class AMD extends Main
             'colorblk'      => 'N/A',
         ];
 
-        $gpus = $this->getInventory() ;
-        if ($gpus) {
-            if (isset($gpus[$this->settings['GPUID']])) {
-                $this->pageData['name'] = $gpus[$this->settings['GPUID']]["model"] ;
-            }
-        }
+
 
         // radeontop data doesn't follow a standard object format -- need to parse CSV and then explode by spaces
         $data = explode(", ", substr($this->stdout, strpos($this->stdout, 'gpu')));
@@ -272,6 +267,13 @@ class AMD extends Main
             $this->pageData['error'][] = Error::get(Error::VENDOR_DATA_NOT_ENOUGH, "Count: $count");
         }
         $this->pageData = array_merge($this->pageData, $this->getSensorData());
+
+        $gpus = $this->getInventory() ;
+        if ($gpus) {
+            if (isset($gpus[$this->settings['GPUID']])) {
+                $this->pageData['name'] = $gpus[$this->settings['GPUID']]["model"] ;
+            }
+        }
 
         $this->echoJson();
     }
