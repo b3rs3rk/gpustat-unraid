@@ -274,7 +274,5 @@ class AMD extends Main
                 $this->pageData['name'] = $gpus[$this->settings['GPUID']]["model"] ;
             }
         }
-
-        $this->echoJson();
     }
 }

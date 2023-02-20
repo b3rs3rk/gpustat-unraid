@@ -202,6 +202,5 @@ class Intel extends Main
         } else {
             $this->pageData['error'][] = Error::get(Error::VENDOR_DATA_BAD_PARSE);
         }
-        $this->echoJson();
       }
 }
