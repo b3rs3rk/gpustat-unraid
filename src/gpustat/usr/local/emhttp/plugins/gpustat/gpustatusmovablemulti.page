@@ -52,38 +52,9 @@ Cond="version_compare(parse_ini_file('/etc/unraid-version')['version'],'6.12.0-b
 
 $pluginname = "gpustat"; // substitute this entry with the name of your plugin
 
-
-$array = [
-         "03:00.0" => [
-                               'id' => "03:00.0" ,
-                            'model' => "DG2",
-                            'vendor' => "intel",
-                            'guid' => '0000:03:00.0'
-] ,
-    "00:02.0" => [
-                               'id' => "00:02.0" ,
-                            'model' => "igpu",
-                            'vendor' => "intel",
-                            'guid' => '0000:00:02.0'
-],
-    "08:00.0" => [
-                               'id' => "08:00.0" ,
-                            'model' => "K4000",
-                            'vendor' => "nvidia",
-                            'guid' => 'GPU-ef6c0299-f1bc-7b5c-5291-7cd1a012f8bd'
-] ,
-        "0c:00.0" => [
-                               'id' => "0c:00.0" ,
-                            'model' => "6400",
-                            'vendor' => "amd",
-                            'guid' => '0c'
-] 
-];
-
-
 $gpustat_cfg = parse_plugin_cfg('gpustat', true);
 $multi = urldecode($gpustat_cfg["MULTIGPUJSON"]) ;
-$array = json_decode($multi,true) ;
+$multigpus = json_decode($multi,true) ;
 $gpu_nv = $gpu_intel = $gpu_amd = $gpu_unknown = false;
 
 $apps = [
@@ -91,11 +62,10 @@ $apps = [
     'fileflows', 'frigate', 'deepstack', 'nsfminer', 'shinobipro', 'foldinghome',
 ];
 
-$i=$j =$k =1; 
+$i= $j =$k = 1;  
 
-$k =2; 
-
-foreach ($array as $id=>$gpu) {
+foreach ($multigpus as $id=>$gpu) {
+    $gpu_nv = $gpu_intel = $gpu_amd = $gpu_unknown = false;
 switch ($gpu['vendor']) {
     case "nvidia":
         $gpu_nv = true;
@@ -130,10 +100,10 @@ $stats
 $layout
 </tbody>
 EOT;
-$array[$id]["panel"] = $i ;
-$i++ ;
-$j++ ;
-if ($j >3) { $j=1 ; $k++ ;}
+$multigpus[$id]["panel"] = $i ;
+$i++ ; #GPU Number
+$j++ ; #Default Column
+if ($j >3) { $j=1 ; $k++ ;} #Plugin name in array. Only 3 Dashboards per name.
 }
 
 
@@ -175,71 +145,69 @@ $gpu_nv = $gpu_intel = $gpu_amd = $gpu_unknown = false;
         }
 
         if ($gpu_nv) {
-       $page_render .=     "<tr><td><span class='w36'><i class='ups fa fa-fw icon-ram'></i>_(Load - Memory)_</span>" ;
-        $page_render .=    "<span class='w26'><span class='gpu-util$count load''>0%</span><div class='usage-disk sys'><span class='gpu-utilbar$count' id='gpu-utilbar$count'></span><span></span></div></span>" ;
+            $page_render .= "<tr><td><span class='w36'><i class='ups fa fa-fw icon-ram'></i>_(Load - Memory)_</span>" ;
+            $page_render .= "<span class='w26'><span class='gpu-util$count load''>0%</span><div class='usage-disk sys'><span class='gpu-utilbar$count' id='gpu-utilbar$count'></span><span></span></div></span>" ;
 
             if($gpustat_cfg['DISPMEMUTIL']) {
-        $page_render .=        "<span class='w26'><span class='gpu-memutil$count load'>0%</span><div class='usage-disk sys'><span class='gpu-memutilbar$count' id='gpu-memutilbar$count'></span><span></span></div></span>" ;
-           }
-        $page_render .=    "</td></tr>" ;
+                 $page_render .= "<span class='w26'><span class='gpu-memutil$count load'>0%</span><div class='usage-disk sys'><span class='gpu-memutilbar$count' id='gpu-memutilbar$count'></span><span></span></div></span>" ;
+            }
+            $page_render .= "</td></tr>" ;
         }
 
-      if($gpustat_cfg['DISPENCDEC']) {
-          $page_render .=  "<tr><td><span class='w36'><i class='ups fa fa-fw icon-hardware'></i>_(Encoder - Decoder)_</span>" ;
-    $page_render .=        "<span class='w26'><span class='gpu-encutil$count load'>0%</span><div class='usage-disk sys'><span class='gpu-encutilbar$count' id='gpu-encutilbar$count'></span><span></span></div></span>" ;
-    $page_render .=        "<span class='w26'><span class='gpu-decutil$count load'>0%</span><div class='usage-disk sys'><span class='gpu-decutilbar$count' id='gpu-decutilbar$count'></span><span></span></div></span>" ;
-    $page_render .=        "</td></tr>" ;
+        if($gpustat_cfg['DISPENCDEC']) {
+            $page_render .= "<tr><td><span class='w36'><i class='ups fa fa-fw icon-hardware'></i>_(Encoder - Decoder)_</span>" ;
+            $page_render .= "<span class='w26'><span class='gpu-encutil$count load'>0%</span><div class='usage-disk sys'><span class='gpu-encutilbar$count' id='gpu-encutilbar$count'></span><span></span></div></span>" ;
+            $page_render .= "<span class='w26'><span class='gpu-decutil$count load'>0%</span><div class='usage-disk sys'><span class='gpu-decutilbar$count' id='gpu-decutilbar$count'></span><span></span></div></span>" ;
+            $page_render .= "</td></tr>" ;
         }
   
          if($gpustat_cfg['DISPCLOCKS']) {
-   $page_render .=         "<tr><td><span class='w36'><i class='ups fa fa-fw icon-ram'></i>_(GPU - Memory (MHz))_</span>" ;
-   $page_render .=         "<span class='w26'><span class='gpu-clock$count load'>0%</span><div class='usage-disk sys'><span class='gpu-gpuclockbar$count' id='gpu-gpuclockbar$count'></span><span></span></div></span>" ; 
-  $page_render .=          "<span class='w26'><span class='gpu-memclock$count load'>0%</span><div class='usage-disk sys'><span class='gpu-memclockbar$count' id='gpu-memclockbar$count'></span><span></span></div></span>" ;
-   $page_render .=         "</td></tr>" ;
+            $page_render .= "<tr><td><span class='w36'><i class='ups fa fa-fw icon-ram'></i>_(GPU - Memory (MHz))_</span>" ;
+            $page_render .= "<span class='w26'><span class='gpu-clock$count load'>0%</span><div class='usage-disk sys'><span class='gpu-gpuclockbar$count' id='gpu-gpuclockbar$count'></span><span></span></div></span>" ; 
+            $page_render .= "<span class='w26'><span class='gpu-memclock$count load'>0%</span><div class='usage-disk sys'><span class='gpu-memclockbar$count' id='gpu-memclockbar$count'></span><span></span></div></span>" ;
+            $page_render .= "</td></tr>" ;
         }
 
-                 if($gpustat_cfg['DISPFAN'] || $gpustat_cfg['DISPPWRDRAW'])  {
-   $page_render .=         "<tr><td><span class='w36'><i class='ups fa fa-fw icon-fan'></i>_(Fan - Power)_</span>" ;
+        if($gpustat_cfg['DISPFAN'] || $gpustat_cfg['DISPPWRDRAW'])  {
+            $page_render .= "<tr><td><span class='w36'><i class='ups fa fa-fw icon-fan'></i>_(Fan - Power)_</span>" ;
             if($gpustat_cfg['DISPFAN']) {
-    $page_render .=            "<span class='w26'><span class='gpu-fan$count load'>0%</span><div class='usage-disk sys'><span class='gpu-fanbar$count' id='gpu-fanbar$count'></span><span></span></div></span>" ;
+                $page_render .= "<span class='w26'><span class='gpu-fan$count load'>0%</span><div class='usage-disk sys'><span class='gpu-fanbar$count' id='gpu-fanbar$count'></span><span></span></div></span>" ;
             }
             if($gpustat_cfg['DISPPWRDRAW']) {
-    $page_render .=            "<span class='w26'><span class='gpu-power$count load'>0%</span><div class='usage-disk sys'><span class='gpu-powerbar$count' id='gpu-powerbar$count'></span><span></span></div></span>" ;
-         }
-              $page_render .=       "</td></tr>" ;
+                $page_render .= "<span class='w26'><span class='gpu-power$count load'>0%</span><div class='usage-disk sys'><span class='gpu-powerbar$count' id='gpu-powerbar$count'></span><span></span></div></span>" ;
+            }
+            $page_render .= "</td></tr>" ;
         }
 
-              if($gpustat_cfg['DISPPCIUTIL']) {
-    $page_render .=        "<tr><td><span class='w36'><i class='ups fa fa-fw icon-hardware'></i>_(PCI Bus Rx/Tx (MB/s))_</span>" ;
-    $page_render .=        "<span class='w26'><span class='gpu-rxutil$count load'>0%</span><div class='usage-disk sys'><span class='gpu-rxutilbar$count' id='gpu-rxutilbar$count'></span><span></span></div></span>" ;
-    $page_render .=        "<span class='w26'><span class='gpu-txutil$count load'>0%</span><div class='usage-disk sys'><span class='gpu-rxutilbar$count' id='gpu-txutilbar$count'></span><span></span></div></span>" ;
-    $page_render .=        "</td></tr>" ;
+        if($gpustat_cfg['DISPPCIUTIL']) {
+            $page_render .= "<tr><td><span class='w36'><i class='ups fa fa-fw icon-hardware'></i>_(PCI Bus Rx/Tx (MB/s))_</span>" ;
+            $page_render .= "<span class='w26'><span class='gpu-rxutil$count load'>0%</span><div class='usage-disk sys'><span class='gpu-rxutilbar$count' id='gpu-rxutilbar$count'></span><span></span></div></span>" ;
+            $page_render .= "<span class='w26'><span class='gpu-txutil$count load'>0%</span><div class='usage-disk sys'><span class='gpu-rxutilbar$count' id='gpu-txutilbar$count'></span><span></span></div></span>" ;
+            $page_render .= "</td></tr>" ;
         }
 
 
-               if($gpustat_cfg['DISPTHROTTLE'] || $gpustat_cfg['DISPPWRSTATE']) {
-    $page_render .=        "<tr><td colspan ='2' ><span class='w36'><i class='ups fa fa-fw icon-hardware'></i>_(Power State - Throttling)_" ;
-             if($gpustat_cfg['DISPPWRSTATE']) {
-    $page_render .=            "<span class='gpu-perfstate$count load'></span>" ;
+        if($gpustat_cfg['DISPTHROTTLE'] || $gpustat_cfg['DISPPWRSTATE']) {
+            $page_render .= "<tr><td><span class='w36'><i class='ups fa fa-fw icon-hardware'></i>_(Power State - Throttling)_</span>" ;
+            if($gpustat_cfg['DISPPWRSTATE']) {
+                $page_render .= "<span class='w44 gpu-perfstate$count load'></span>" ;
             }
             if($gpustat_cfg['DISPTHROTTLE']) {
-     $page_render .=           "<span class='gpu-throttled$count load'></span>&nbsp;<span class='gpu-thrtlrsn$count load'></span>" ;
+                 $page_render .= "<span class='w44 gpu-throttled$count load'>&nbsp;<span class='gpu-thrtlrsn$count load'></span>" ;
             }
-    $page_render .=        "</td></tr>" ;
+        $page_render .= "</td></tr>" ;
         }
        
 
-    if($gpustat_cfg['DISPSESSIONS']) {
-        $page_render .=       "<tr><td colspan ='2' ><span class='w36'><i class='ups fa fa-fw icon-hardware'></i>_(Active Apps)_</span>" ;
-            foreach($apps as $app) {
-     $page_render .=           "<span id='gpu-img-span-$app$count' class='gpu-img-span gpu-img-span-$app'>" ;
-     $page_render .=           "<img id='gpu-$app$count' class='gpu-image' src='/plugins/gpustat/images/$app.png'>" ;
-     $page_render .=           "</span>" ;
-            }
-     $page_render .=           "</td></tr>" ;
-    }   
-
-
+        if($gpustat_cfg['DISPSESSIONS']) {
+            $page_render .= "<tr><td colspan ='2' ><span class='w36'><i class='ups fa fa-fw icon-hardware'></i>_(Active Apps)_</span>" ;
+                foreach($apps as $app) {
+                    $page_render .= "<span id='w16 gpu-img-span-$app$count' class='gpu-img-span gpu-img-span-$app$count'>" ;
+                    $page_render .= "<img id='gpu-$app$count' class='gpu-image' src='/plugins/gpustat/images/$app.png'>" ;
+                    $page_render .= "</span>" ;
+                }
+            $page_render .= "</td></tr>" ;
+        }   
     }
 
 
@@ -298,95 +266,107 @@ $gpu_nv = $gpu_intel = $gpu_amd = $gpu_unknown = false;
         $page_render .="<span class='w44'><span class='gpu-util$count load'>0%</span><div class='usage-disk sys'><span class='gpu-utilbar$count' id='gpu-utilbar$count'></span><span></span></div></span></td></tr>" ;
             
         if($gpustat_cfg['DISPGFXTRANS'] || $gpustat_cfg['DISPMEMUTIL']) {
-        $page_render .=    "<tr><td ><span class='w44'><i class='ups fa fa-fw icon-ram'></i>_(Translate - Memory (MB))_</span>" ;
+            $page_render .= "<tr><td colspan ='2'><span class='w36'><i class='ups fa fa-fw icon-ram'></i>_(Translate - Memory (MB))_</span>" ;
             if($gpustat_cfg['DISPGFXTRANS']) {
-        $page_render .=        "<span class='gpu-gfxtrans$count w32 load'></span>" ;
+                $page_render .= "<span class='w26'><span class='gpu-gfxtrans$count load'>0%</span><div class='usage-disk sys'>" ;
+                $page_render .= "<span class='gpu-gfxtransbar$count' id='gpu-gfxtransbar$count'></span><span></span></div></span>" ;
             }
             if($gpustat_cfg['DISPMEMUTIL']) {
-        $page_render .=        "<span class='gpu-memused$count w32 load'></span>" ;
+                $page_render .= "<span class='w26'><span class='gpu-memused$count load'>0%</span><div class='usage-disk sys'>" ;
+                $page_render .= "<span class='gpu-memutilbar$count' id='gpu-memutilbar$count'></span><span></span></div></span> ";
             }
-        $page_render .=    "</td></tr>" ;
+            $page_render .= "</td></tr>" ;
         }
-
 
         if($gpustat_cfg['DISPEVENT'] || $gpustat_cfg['DISPVERTEX']) {
-        $page_render .=    "<tr><td ><span class='w44'><i class='ups fa fa-fw icon-hardware'></i>_(Event - Vertex (MB))_</span>" ;
+            $page_render .= "<tr><td ><span class='w36'><i class='ups fa fa-fw icon-hardware'></i>_(Event - Vertex (MB))_</span>" ;
             if($gpustat_cfg['DISPEVENT']) {
-        $page_render .=        "<span class='gpu-event$count load'></span>" ;
-        }
-        if($gpustat_cfg['DISPVERTEX']) {
-        $page_render .=        "<span class='gpu-vertex$count load'></span>" ;
+                $page_render .= "<span class='w26'><span class='gpu-event$count load'></span><div class='usage-disk sys'>" ;
+                $page_render .= "<span class='gpu-eventbar$count' id='gpu-eventbar$count'></span><span></span></div></span>" ;
             }
-    }
+            if($gpustat_cfg['DISPVERTEX']) {
+                $page_render .= "<span class='w26'><span class='gpu-vertex$count load'></span><div class='usage-disk sys'>" ;
+                $page_render .= "<span class='gpu-vertexbar$count' id='gpu-vertexbar$count'></span><span></span></div></span>" ;
+            }
+        }
 
-      if($gpustat_cfg['DISPTEXTURE'] || $gpustat_cfg['DISPSEQUENCER']) {
-        $page_render .=    "<tr><td ><span class='w44'><i class='ups fa fa-fw icon-hardware'></i>_(Texture - Sequencer)_</span>" ;
+        if($gpustat_cfg['DISPTEXTURE'] || $gpustat_cfg['DISPSEQUENCER']) {
+            $page_render .= "<tr><td ><span class='w36'><i class='ups fa fa-fw icon-hardware'></i>_(Texture - Sequencer)_</span>" ;
             if($gpustat_cfg['DISPTEXTURE']) {
-        $page_render .=        "<span class='gpu-texture$count load'></span>" ;
+                $page_render .= "<span class='w26'><span class='gpu-texture$count load'></span><div class='usage-disk sys'>" ;
+                $page_render .= "<span class='gpu-texturebar$count' id='gpu-texturebar$count'></span><span></span></div></span>" ;
             }
             if($gpustat_cfg['DISPSEQUENCER']) {
-        $page_render .=        "<span class='gpu-sequencer$count load'></span>" ;
+                $page_render .= "<span class='w26'><span class='gpu-sequencer$count load'></span><div class='usage-disk sys'>" ;
+                $page_render .= "<span class='gpu-sequencerbar$count' id='gpu-sequencerbar$count'></span><span></span></div></span>" ;
             }
-        $page_render .=    "</td></tr>" ;
+            $page_render .=    "</td></tr>" ;
         }
 
-       if($gpustat_cfg['DISPSHADEREXP'] || $gpustat_cfg['DISPSHADERINTER']) {
-        $page_render .=    "<tr><td ><span class='w44'><i class='ups fa fa-fw icon-hardware'></i>_(Shader Export - Interpol)_</span>" ;
+        if($gpustat_cfg['DISPSHADEREXP'] || $gpustat_cfg['DISPSHADERINTER']) {
+            $page_render .= "<tr><td ><span class='w36'><i class='ups fa fa-fw icon-hardware'></i>_(Shader Export - Interpol)_</span>" ;
             if($gpustat_cfg['DISPSHADEREXP']) {
-         $page_render .=       "<span class='gpu-shaderexp$count load'></span>" ;
+                $page_render .= "<span class='w26'><span class='gpu-shaderexp$count load'></span><div class='usage-disk sys'>" ;
+                $page_render .= "<span class='gpu-shaderexpbar$count' id='gpu-shaderexpbar$count'></span><span></span></div></span>" ;
             }
             if($gpustat_cfg['DISPSHADERINTER']) {
-         $page_render .=      "<span class='gpu-shaderinter$count load'></span>" ;
+                $page_render .= "<span class='w26'><span class='gpu-shaderinter$count load'></span><div class='usage-disk sys'>" ;
+                $page_render .= "<span class='gpu-shaderinterbar$count' id='gpu-shaderinterbar$count'></span><span></span></div></span>" ;
             }
-         $page_render .=   "</td></tr>" ;
+            $page_render .=   "</td></tr>" ;
         }
-    if($gpustat_cfg['DISPSCANCON'] || $gpustat_cfg['DISPPRIMASSEM']) {
-         $page_render .=   "<tr><td ><span class='w44'><i class='ups fa fa-fw icon-hardware'></i>_(Scan Conv - Prim Assem)_</span>" ;
+
+        if($gpustat_cfg['DISPSCANCON'] || $gpustat_cfg['DISPPRIMASSEM']) {
+            $page_render .= "<tr><td ><span class='w36'><i class='ups fa fa-fw icon-hardware'></i>_(Scan Conv - Prim Assem)_</span>" ;
             if($gpustat_cfg['DISPSCANCON']) {
-         $page_render .=       "<span class='gpu-scancon$count load'></span>" ;
+                $page_render .= "<span class='w26'><span class='gpu-scancon$count load'></span><div class='usage-disk sys'>" ;
+                $page_render .= "<span class='gpu-scanconbar$count' id='gpu-scanconbar$count'></span><span></span></div></span>" ;
             }
             if($gpustat_cfg['DISPPRIMASSEM']) {
-         $page_render .=       "<span class='gpu-primassem$count load'></span>" ;
-         }
-         $page_render .=   "</td></tr>" ;
+                $page_render .= "<span class='w26'><span class='gpu-primassem$count load'></span><div class='usage-disk sys'>" ;
+                $page_render .= "<span class='gpu-primassembar'$count' id='gpu-primassembar$count'></span><span></span></div></span>" ;
+            }
+            $page_render .= "</td></tr>" ;
         }
 
         if($gpustat_cfg['DISPDEPTHBLK'] || $gpustat_cfg['DISPCOLORBLK']) {
-        $page_render .=    "<tr><td ><span class='w44'><i class='ups fa fa-fw icon-hardware'></i>_(Blocks: Depth - Color)_</span>" ;
+            $page_render .= "<tr><td ><span class='w36'><i class='ups fa fa-fw icon-hardware'></i>_(Blocks: Depth - Color)_</span>" ;
             if($gpustat_cfg['DISPDEPTHBLK']) { 
-       $page_render .=         "<span class='gpu-depthblk$count load'></span>" ;
+                $page_render .= "<span class='w26'><span class='gpu-depthblk$count load'></span><div class='usage-disk sys'>" ;
+                $page_render .= "<span class='gpu-depthblkbar$count' id='gpu-depthblkbar$count'></span><span></span></div></span>" ;
             }
             if($gpustat_cfg['DISPCOLORBLK']) {
-         $page_render .=       "<span class='gpu-colorblk$count load'></span>" ;
+                $page_render .= "<span class='w26'><span class='gpu-colorblk$count load'></span><div class='usage-disk sys'>" ;
+                $page_render .= "<span class='gpu-colorblkbar$count' id='gpu-colorblkbar$count'></span><span></span></div></span>" ;
             }
-        $page_render .=    "</td></tr>" ;
+            $page_render .= "</td></tr>" ;
         }
 
 
         if($gpustat_cfg['DISPFAN'] || $gpustat_cfg['DISPPWRDRAW']) {
-         $page_render .=   "<tr><td ><span class='w44'><i class='ups fa fa-fw icon-fan'></i>_(Fan - Power)_</span>" ;
+         $page_render .= "<tr><td ><span class='w36'><i class='ups fa fa-fw icon-fan'></i>_(Fan - Power)_</span>" ;
             if($gpustat_cfg['DISPFAN']) {
-          $page_render .=      "<span class='gpu-fan$count load'></span>" ;
+                $page_render .= "<span class='w26'><span class='gpu-fan$count load'></span><div class='usage-disk sys'>" ;
+                $page_render .= "<span class='gpu-fanbar$count' id='gpu-fanbar$count'></span><span></span></div></span>" ;
             }
-          if($gpustat_cfg['DISPPWRDRAW']) {
-         $page_render .=       "<span class='gpu-power$count load'><span class='gpu-powerunit'></span>" ;
-         }
-         $page_render .=       "</td></tr>" ;
+            if($gpustat_cfg['DISPPWRDRAW']) {
+                $page_render .= "<span class='w26'><span class='gpu-power$count load'></span><span class='gpu-powerunit'></span><div class='usage-disk sys'>" ;
+                $page_render .= "<span class='gpu-powerbar$count' id='gpu-powerbar$count'></span><span></span></div></span></td></tr>" ;
+            }
+         
         }
 
         if($gpustat_cfg['DISPCLOCKS']) {
-        $page_render .=    "<tr><td><span class='w44'><i class='ups fa fa-fw icon-hardware'></i>_(Clocks: Shader - Mem (GHz))_</span>" ;
-        $page_render .=    "<span class='gpu-clock$count load'></span>" ;
-        $page_render .=    "<span class='gpu-memclock$count load'></span>" ;
+            $page_render .= "<tr><td><span class='w36'><i class='ups fa fa-fw icon-hardware'></i>_(Clocks: Shader - Mem (GHz))_</span>" ;
+            $page_render .= "<span class='w26'><span class='gpu-clock$count load'></span><div class='usage-disk sys'>" ;
+            $page_render .= "<span class='gpu-clockbar$count' id='gpu-clockbar$count'></span><span></span></div></span>" ;
+            $page_render .= "<span class='w26'><span class='gpu-memclock$count load'></span><div class='usage-disk sys'>" ;
+            $page_render .= "<span class='gpu-memclockbar$count' id='gpu-memclockbar$count'></span><span></span></div></span>" ;
         $page_render .=    "</td></tr>" ;
         }
-
-
-
     }
 
     return($page_render) ;    
-
 }
 
 
@@ -400,11 +380,11 @@ $gpu_nv = $gpu_intel = $gpu_amd = $gpu_unknown = false;
 <script type="text/javascript">
 
 function refresh() {
-    $(gpustat_statusm(<?=json_encode($array);?>));
+    $(gpustat_statusm(<?=json_encode($multigpus);?>));
 }
 
-    $(gpustat_statusm(<?=json_encode($array);?>));
-    var json = <?=json_encode($array);?> ;
+    $(gpustat_statusm(<?=json_encode($multigpus);?>));
+    var json = <?=json_encode($multigpus);?> ;
     if (<?=$gpustat_cfg['UIREFRESH'];?>) {
         setInterval(refresh, <?=max(abs($display['refresh']), $gpustat_cfg['UIREFRESHINT']);?>);
     }
