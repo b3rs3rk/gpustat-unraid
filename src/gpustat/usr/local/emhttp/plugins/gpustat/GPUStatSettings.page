@@ -259,6 +259,13 @@ Interrupts Per Second:
     <?=mk_option($gpustat_cfg['DISPINTERRUPT'], "1", "Yes");?>
   </select>
 
+Power Draw Selection:
+: <select id="DISPPWRDRWSEL" name="DISPPWRDRWSEL" size="1">
+    <?=mk_option($gpustat_cfg['DISPPWRDRWSEL'], "GPU", "GPU");?>
+    <?=mk_option($gpustat_cfg['DISPPWRDRWSEL'], "PACKAGE", "Package");?>
+    <?=mk_option($gpustat_cfg['DISPPWRDRWSEL'], "MAX", "Max of GPU or Package");?>
+  </select>  
+
 <h4><b>AMD Specific</b></h4>
 
 Event Engine Usage:
