@@ -213,47 +213,47 @@ $gpu_nv = $gpu_intel = $gpu_amd = $gpu_unknown = false;
 
     if ($gpu_intel) {
         if($gpustat_cfg['DISP3DRENDER']) {
-            $page_render .= "<tr><td colspan ='2' ><span class='w36'><i class='ups fa fa-fw icon-hardware'></i>_(3D Render Load)_" ;
+            $page_render .= "<tr><td colspan ='2' ><span class='w36'><i class='ups fa fa-fw fa-cubes'></i>_(3D Render Load)_" ;
              $page_render .= "</span><span class='w44'><span class='gpu-3drender$count load'>0%</span><div class='usage-disk sys'>" ; 
              $page_render .= "<span class='gpu-3drenderbar$count' id='gpu-3drenderbar$count'></span><span></span></div></span></td></tr>" ;
         }
 
         if($gpustat_cfg['DISPBLITTER']) {
-            $page_render .="<tr><td colspan ='2' ><span class='w36'><i class='ups fa fa-fw icon-hardware'></i>_(Blitter Load)_" ;
+            $page_render .="<tr><td colspan ='2' ><span class='w36'><i class='ups fa fa-fw fa-files-o'></i>_(Blitter Load)_" ;
             $page_render .="</span><span class='w44'><span class='gpu-blitter$count load'></span><div class='usage-disk sys'>" ;
             $page_render .="<span class='gpu-blitterbar$count' id='gpu-blitterbar$count'></span><span></span></div></span></td></tr>" ;
         }
 
         if($gpustat_cfg['DISPVIDEO']) {
-            $page_render .="<tr><td colspan ='2' ><span class='w36'><i class='ups fa fa-fw icon-hardware'></i>_(Video Load)_" ;
+            $page_render .="<tr><td colspan ='2' ><span class='w36'><i class='ups fa fa-fw fa-film'></i>_(Video Load)_" ;
             $page_render .="</span><span class='w44'><span class='gpu-video$count load'></span><div class='usage-disk sys'>" ;
             $page_render .="<span class='gpu-videobar$count load' id='gpu-videobar$count load'></span><span></span></div></span></td></tr>" ;
         }
 
         if($gpustat_cfg['DISPVIDENH']) {
-           $page_render .=  "<tr><td colspan ='2' ><span class='w36'><i class='ups fa fa-fw icon-hardware'></i>_(Video Enhance Load)_" ;
+           $page_render .=  "<tr><td colspan ='2' ><span class='w36'><i class='ups fa fa-fw fa-video-camera'></i>_(Video Enhance Load)_" ;
              $page_render .="</span><span class='w44'><span class='gpu-videnh$count load'></span><div class='usage-disk sys'>" ;
              $page_render .="<span class='gpu-videnhbar$count load' id='gpu-videnhbar$count load'></span><span></span></div></span></td></tr>" ;
         }
 
         if($gpustat_cfg['DISPPWRDRAW']) { 
-             $page_render .="<tr><td colspan ='2' ><span class='w36'><i class='ups fa fa-fw icon-hardware'></i>_(Power Draw)_" ;
+             $page_render .="<tr><td colspan ='2' ><span class='w36'><i class='ups fa fa-fw  fa-plug'></i>_(Power Draw)_" ;
              $page_render .="</span><span class='w44'><span class='gpu-power$count load'></span><div class='usage-disk sys'>" ;
              $page_render .="<span class='gpu-powerutilbar$count load' id='gpu-powerutilbar$count load'></span><span></span></div></span></td></tr>" ;
         }
 
         if($gpustat_cfg['DISPPCIUTIL']) {
-             $page_render .="<tr><td colspan ='2' ><span class='w36'><i class='ups fa fa-fw icon-hardware'></i>_(IMC Bus Utilization)_" ;
+             $page_render .="<tr><td colspan ='2' ><span class='w36'><i class='ups fa fa-fw fa-bus'></i>_(IMC Bus Utilization)_" ;
              $page_render .="</span><span class='w44'>Receive: <span class='gpu-rxutil$count'></span> &emsp; Transmit: <span class='gpu-txutil$count'></span></td></tr>" ;
         }
 
         if($gpustat_cfg['DISPCLOCKS']) {
-             $page_render .="<tr><td colspan ='2' ><span class='w36'><i class='ups fa fa-fw icon-hardware'></i>_(GPU Clock (MHz))_" ;
+             $page_render .="<tr><td colspan ='2' ><span class='w36'><i class='ups fa fa-fw fa-clock-o'></i>_(GPU Clock (MHz))_" ;
              $page_render .="</span><span class='w44'><span class='gpu-clock$count load'></span></td></tr>" ;
         }
 
         if($gpustat_cfg['DISPINTERRUPT']) {
-             $page_render .="<tr><td colspan ='2' ><span class='w36'><i class='ups fa fa-fw icon-hardware'></i>_(Interrupts/Sec)_" ;
+             $page_render .="<tr><td colspan ='2' ><span class='w36'><i class='ups fa fa-fw fa-pause-circle-o'></i>_(Interrupts/Sec)_" ;
              $page_render .="</span><span class='w44'><span class='gpu-interrupts$count load'></span></td></tr>" ;
         }
         
