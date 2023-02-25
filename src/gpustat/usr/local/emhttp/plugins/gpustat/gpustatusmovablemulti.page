@@ -63,6 +63,7 @@ $apps = [
 ];
 
 $i= $j =$k = 1;  
+$gpus_selected = count($multigpus) ;
 
 foreach ($multigpus as $id=>$gpu) {
     $gpu_nv = $gpu_intel = $gpu_amd = $gpu_unknown = false;
@@ -82,8 +83,8 @@ switch ($gpu['vendor']) {
         $unknown_msg = "Default vendor set - Change vendor in GPUStat settings page and apply.";
 }
 
-
-$stats = "<div class='section'>_(GPU".$i.")_<br><span><i class='ups fa fa-line-chart'></i><span id='load'>Load: <span class='gpu-util{$i}'></span></span>" ;
+if ($gpus_selected > 1) $gpu_tag = $i ; else $gpu_tag = "" ;
+$stats = "<div class='section'>_(GPU".$gpu_tag.")_<br><span><i class='ups fa fa-line-chart'></i><span id='load'>Load: <span class='gpu-util{$i}'></span></span>" ;
 if ($gpu_nv || $gpu_amd) {
 if ($gpustat_cfg['DISPTEMP']) $stats .= "<span > Temperature: <span class='gpu-temp{$i}'></span></span>" ;
 }
