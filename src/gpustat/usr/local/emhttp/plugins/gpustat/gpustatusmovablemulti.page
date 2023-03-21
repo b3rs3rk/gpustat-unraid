@@ -67,44 +67,44 @@ $gpus_selected = count($multigpus) ;
 
 foreach ($multigpus as $id=>$gpu) {
     $gpu_nv = $gpu_intel = $gpu_amd = $gpu_unknown = false;
-switch ($gpu['vendor']) {
-    case "nvidia":
-        $gpu_nv = true;
-        break;
-    case "intel":
-        $gpu_intel = true;
-        break;
-    case "amd":
-        $gpu_amd = true;
-        break;
-    default:
-        // If vendor isn't set the config hasn't been saved, don't render the plugin
-        $gpu_unknown = true;
-        $unknown_msg = "Default vendor set - Change vendor in GPUStat settings page and apply.";
-}
+    switch ($gpu['vendor']) {
+        case "nvidia":
+            $gpu_nv = true;
+            break;
+        case "intel":
+            $gpu_intel = true;
+            break;
+        case "amd":
+            $gpu_amd = true;
+            break;
+        default:
+            // If vendor isn't set the config hasn't been saved, don't render the plugin
+            $gpu_unknown = true;
+            $unknown_msg = "No GPUs selected - Select GPU(s) in GPUStat settings page and apply.";
+    }
 
-if ($gpus_selected > 1) $gpu_tag = $i ; else $gpu_tag = "" ;
-$stats = "<div class='section'>_(GPU".$gpu_tag.")_<br><span><i class='ups fa fa-line-chart'></i><span id='load'>Load: <span class='gpu-util{$i}'></span></span>" ;
-if ($gpu_nv || $gpu_amd) {
-if ($gpustat_cfg['DISPTEMP']) $stats .= "<span > Temperature: <span class='gpu-temp{$i}'></span></span>" ;
-}
-if ($gpu_nv && $gpustat_cfg['DISPSESSIONS']) $stats .="<span> Processes: <span class='gpu-sessions{$i}'></span></span>";
-$stats .= "<br><br></div>" ;
-$layout = GPULayout($i, $gpu["vendor"],$gpustat_cfg) ;
-$mytiles[$pluginname.$k]['column'.$j] =
-<<<EOT
-<tbody id="tblGPUDash$i" title="_(GPU Stats GPU#$i)_">
-<tr><td><i class='icon-hardware f32'></i>
-$stats
-<a href="Dashboard/Settings/GPUStatSettings" title="_(Go to GPU Statistics settings)_"><i class="fa fa-fw fa-cog control"></i></a></td></tr>
-<tr class="header"><td><span class="w18">_(Vendor)_</span><span class="w44">_(Device)_</span></td></tr>
-$layout
-</tbody>
-EOT;
-$multigpus[$id]["panel"] = $i ;
-$i++ ; #GPU Number
-$j++ ; #Default Column
-if ($j >3) { $j=1 ; $k++ ;} #Plugin name in array. Only 3 Dashboards per name.
+    if ($gpus_selected > 1) $gpu_tag = $i ; else $gpu_tag = "" ;
+        $stats = "<div class='section'>_(GPU".$gpu_tag.")_<br><span><i class='ups fa fa-line-chart'></i><span id='load'>Load: <span class='gpu-util{$i}'></span></span>" ;
+        if ($gpu_nv || $gpu_amd) {
+        if ($gpustat_cfg['DISPTEMP']) $stats .= "<span > Temperature: <span class='gpu-temp{$i}'></span></span>" ;
+    }
+    if ($gpu_nv && $gpustat_cfg['DISPSESSIONS']) $stats .="<span> Processes: <span class='gpu-sessions{$i}'></span></span>";
+    $stats .= "<br><br></div>" ;
+    $layout = GPULayout($i, $gpu["vendor"],$gpustat_cfg) ;
+    $mytiles[$pluginname.$k]['column'.$j] =
+    <<<EOT
+    <tbody id="tblGPUDash$i" title="_(GPU Stats GPU#$i)_">
+    <tr><td><i class='icon-hardware f32'></i>
+    $stats
+    <a href="Dashboard/Settings/GPUStatSettings" title="_(Go to GPU Statistics settings)_"><i class="fa fa-fw fa-cog control"></i></a></td></tr>
+    <tr class="header"><td><span class="w18">_(Vendor)_</span><span class="w44">_(Device)_</span></td></tr>
+    $layout
+    </tbody>
+    EOT;
+    $multigpus[$id]["panel"] = $i ;
+    $i++ ; #GPU Number
+    $j++ ; #Default Column
+    if ($j >3) { $j=1 ; $k++ ;} #Plugin name in array. Only 3 Dashboards per name.
 }
 
 

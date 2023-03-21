@@ -56,15 +56,24 @@ Title="GPU Statistics"
 
       if ($multi_enable) {
         $json_array = array() ;
-        foreach ($val['MULTIGPU'] as $pciid) {
-          $gpupciid = "0000:".$pciid ;
-          $json_array[$pciid]['id'] = $gpus[$gpupciid]['id'] ;
-          $json_array[$pciid]['model'] = $gpus[$gpupciid]['model'] ;
-          $json_array[$pciid]['vendor'] = $gpus[$gpupciid]['vendor'] ;
-          $json_array[$pciid]['guid'] = $gpus[$gpupciid]['guid'] ;
+        if (isset($val['MULTIGPU'])) {
+          foreach ($val['MULTIGPU'] as $pciid) {
+            $gpupciid = "0000:".$pciid ;
+            $json_array[$pciid]['id'] = $gpus[$gpupciid]['id'] ;
+            $json_array[$pciid]['model'] = $gpus[$gpupciid]['model'] ;
+            $json_array[$pciid]['vendor'] = $gpus[$gpupciid]['vendor'] ;
+            $json_array[$pciid]['guid'] = $gpus[$gpupciid]['guid'] ;
+          }
+        } else {                
+          $json_array[$pciid]['id'] = "None";
+          $json_array[$pciid]['model'] = "None";
+          $json_array[$pciid]['vendor'] = "None";
+          $json_array[$pciid]['guid'] = "None";
         }
         $val["MULTIGPUJSON"] = urlencode(json_encode($json_array)) ;
-        if($val['MULTIGPU'] != "") $val['MULTIGPU'] = implode("," , $val['MULTIGPU']??[]) ;
+        if (isset($val['MULTIGPU'])) {      
+          if($val['MULTIGPU'] != "") $val['MULTIGPU'] = implode("," , $val['MULTIGPU']) ;
+        } else $val['MULTIGPU'] = "" ;
       }
       
       save_ini_file("gpustat.cfg", $val) ;
@@ -86,19 +95,19 @@ Title="GPU Statistics"
     $multi_enable=version_compare(parse_ini_file('/etc/unraid-version')['version'],'6.12.0-beta5', '>') ;
 
     if (count($_POST)) {
+      $cfg = NULL ;
       if ($_POST['#apply'] == "_(Apply)_") {
         array_map(function($k, $v) use (&$cfg) { if($k[0] != "#") $cfg[$k] = $v; }, array_keys($_POST), $_POST );
         save_cfg($cfg,$gpustat_data) ;
         $gpustat_cfg        = parse_plugin_cfg("gpustat", true);
+        unset($_POST) ;
       } 
     }
 
 ?>
 <script>
 $(function() {
-
-  $("#MULTIGPU").dropdownchecklist({ emptyText: 'None', width: 166, });
-
+  $('#MULTIGPU').dropdownchecklist({emptyText:"_(None)_", width:166});
 });
 </script>
 
@@ -132,18 +141,18 @@ Unit ID for Dashboard:
 
 <?php if ($multi_enable) : ?>
 Unit ID for Dashboard(Multiple):
-:  <select id="MULTIGPU" class="input.description" name="MULTIGPU[]" multiple="multiple" style="display">
+:  <select id="MULTIGPU" name="MULTIGPU[]" multiple="multiple" style="display:none">
    
-      <?php
-	 	
-	    if (isset($gpustat_data)) {
-        ksort($gpustat_data) ;
-        foreach ($gpustat_data AS $gpu) {
-         $gpudesc = sprintf('%s: %s - %s', $gpu['id'], $gpu['model'], $gpu['guid']);
-         $gpuid = $gpu['id'] ;
-         $checked = in_array($gpuid,explode(',',$gpustat_cfg['MULTIGPU'])) ? " selected" : "";
+ <?php	
+	  if (isset($gpustat_data)) {
+      ksort($gpustat_data) ;
+      foreach ($gpustat_data AS $gpu) {
+        $gpudesc = sprintf('%s: %s - %s', $gpu['id'], $gpu['model'], $gpu['guid']);
+        $gpuid = $gpu['id'] ;
+        $checked = in_array($gpuid,explode(',',$gpustat_cfg['MULTIGPU'])) ? " selected" : "";
       echo "<option value='$gpuid'$checked >$gpudesc</option>";
-}}
+      }
+  }
 ?>
 </select>
   <?php endif; ?>
