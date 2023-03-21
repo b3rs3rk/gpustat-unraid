@@ -127,7 +127,7 @@ $gpu_nv = $gpu_intel = $gpu_amd = $gpu_unknown = false;
     default:
         // If vendor isn't set the config hasn't been saved, don't render the plugin
         $gpu_unknown = true;
-        $unknown_msg = "Default vendor set - Change vendor in GPUStat settings page and apply.";
+        $unknown_msg = "No GPUs selected - Select GPU(s) in GPUStat settings page and apply.";
 }
 
     $page_render = '<tr class="updated"><td>' ;
@@ -135,7 +135,7 @@ $gpu_nv = $gpu_intel = $gpu_amd = $gpu_unknown = false;
 
     # No GPU Set 
 
-    if ($gpu_unknown)  $page_render .= "<tr><td><span>_(Default vendor set - Change vendor in GPUStat settings page and apply.)_</span></td>/tr>" ; 
+    if ($gpu_unknown)  $page_render .= "<tr><td><span>_(No GPUs selected - Select GPU(s) in GPUStat settings page and apply.)_</span></td>/tr>" ; 
 
     # Nvidia GPUs
 
