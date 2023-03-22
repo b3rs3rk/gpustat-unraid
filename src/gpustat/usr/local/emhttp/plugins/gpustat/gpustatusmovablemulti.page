@@ -53,6 +53,7 @@ Cond="version_compare(parse_ini_file('/etc/unraid-version')['version'],'6.12.0-b
 $pluginname = "gpustat"; // substitute this entry with the name of your plugin
 
 $gpustat_cfg = parse_plugin_cfg('gpustat', true);
+if (!isset($gpustat_cfg["MULTIGPUJSON"])) $gpustat_cfg["MULTIGPUJSON"] = "%7B%22%22%3A%7B%22id%22%3A%22None%22%2C%22model%22%3A%22None%22%2C%22vendor%22%3A%22None%22%2C%22guid%22%3A%22None%22%7D%7D" ;
 $multi = urldecode($gpustat_cfg["MULTIGPUJSON"]) ;
 $multigpus = json_decode($multi,true) ;
 $gpu_nv = $gpu_intel = $gpu_amd = $gpu_unknown = false;
