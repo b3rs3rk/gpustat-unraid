@@ -345,7 +345,7 @@ Graphics Translation Usage:
 
 <br><br><br>
 
-: <input id="btnApply" type="submit" name="#apply" value="Apply"><input type="button" value="Done" onClick="done()">
+: <input id="btnApply" type="submit" name="#apply" value="_(Apply)_"><input type="button" value="Done" onClick="done()">
 
 <br><br><br>
 Note: Where noted, not all metrics are provided by the vendor utilities and this plugin cannot magically make that work.
