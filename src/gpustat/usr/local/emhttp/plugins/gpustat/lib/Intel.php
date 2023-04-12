@@ -36,7 +36,7 @@ class Intel extends Main
 {
     const CMD_UTILITY = 'intel_gpu_top';
     const INVENTORY_UTILITY = 'lspci';
-    const INVENTORY_PARAM = " -Dmm | grep VGA";
+    const INVENTORY_PARAM = " -Dmm | grep -E 'Display|VGA";
     const INVENTORY_REGEX =
         '/VGA.+:\s+Intel\s+Corporation\s+(?P<model>.*)\s+(\[|Family|Integrated|Graphics|Controller|Series|\()/iU';
     const STATISTICS_PARAM = '-J -s 250 -d pci:slot="';
