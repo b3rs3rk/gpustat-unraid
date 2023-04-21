@@ -77,7 +77,7 @@ class Nvidia extends Main
             foreach ($commands as $command) {
                 if (strpos($process->process_name, $command) !== false) {
                     // For Handbrake/ffmpeg: arguments tell us which application called it
-                    if (in_array($command, ['ffmpeg', 'HandbrakeCLI', 'python3', 'python3.7'])) {
+                    if (in_array($command, ['ffmpeg', 'HandbrakeCLI', 'python3', 'python3.8'])) {
                         if (isset($process->pid)) {
                             $pid_info = $this->getFullCommand((int) $process->pid);
                             if (!empty($pid_info) && strlen($pid_info) > 0) {
