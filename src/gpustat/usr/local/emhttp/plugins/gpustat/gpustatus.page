@@ -32,7 +32,7 @@ Icon="gpustat.png"
 
     $apps = [
         'plex', 'jellyfin', 'handbrake', 'emby', 'tdarr', 'unmanic', 'dizquetv', 'ersatztv',
-        'fileflows', 'frigate', 'deepstack', 'nsfminer', 'shinobipro', 'foldinghome',
+        'fileflows', 'frigate', 'codeproject', 'deepstack', 'nsfminer', 'shinobipro', 'foldinghome',
     ];
 
     switch ($gpustat_cfg['VENDOR']) {
