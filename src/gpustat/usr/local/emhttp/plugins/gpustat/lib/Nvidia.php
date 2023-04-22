@@ -86,7 +86,7 @@ class Nvidia extends Main
                                     if (strpos($pid_info, '/ObjectDetectionYolo/detect_adapter.py') === false) {
                                         continue 2;
                                     }
-                                } elseif ($command === 'python3') {-
+                                } elseif ($command === 'python3') {
                                     // Deepstack doesn't have any signifier in the full command output
                                     if (strpos($pid_info, '/app/intelligencelayer/shared') === false) {
                                         continue 2;
