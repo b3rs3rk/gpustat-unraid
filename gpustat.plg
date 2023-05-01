@@ -2,7 +2,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "gpustat">
 <!ENTITY author    "b3rs3rk">
-<!ENTITY version   "2023.04.12a">
+<!ENTITY version   "2023.05.01">
 <!ENTITY launch    "Settings/GPUStatSettings">
 <!ENTITY gitURL    "https://raw.githubusercontent.com/SimonFair/&name;-unraid/master">
 <!ENTITY pluginURL "&gitURL;/&name;.plg">
@@ -48,6 +48,10 @@
 -->
 
 <CHANGES>
+###2023-05-01
+
+- Set default for refresh to 30 seconds for new installs.
+
 ###2023-04-12a
 
 - Fix for iGPUs call Display Controller.
