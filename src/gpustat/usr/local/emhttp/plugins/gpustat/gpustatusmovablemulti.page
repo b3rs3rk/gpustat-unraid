@@ -195,7 +195,7 @@ $gpu_nv = $gpu_intel = $gpu_amd = $gpu_unknown = false;
                 $page_render .= "<span class='w44 gpu-perfstate$count load'></span>" ;
             }
             if($gpustat_cfg['DISPTHROTTLE']) {
-                 $page_render .= "<span class='w44 gpu-throttled$count load'>&nbsp;<span class='gpu-thrtlrsn$count load'></span>" ;
+                 $page_render .= "<span class='w44 gpu-throttled$count load'>&nbsp;</span><span class='w44 gpu-thrtlrsn$count load'></span>" ;
             }
         $page_render .= "</td></tr>" ;
         }
