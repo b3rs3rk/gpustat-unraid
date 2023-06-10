@@ -2,9 +2,9 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "gpustat">
 <!ENTITY author    "b3rs3rk">
-<!ENTITY version   "2022.11.30a">
+<!ENTITY version   "2023.06.09">
 <!ENTITY launch    "Settings/GPUStatSettings">
-<!ENTITY gitURL    "https://raw.githubusercontent.com/b3rs3rk/&name;-unraid/master">
+<!ENTITY gitURL    "https://raw.githubusercontent.com/SimonFair/&name;-unraid/master">
 <!ENTITY pluginURL "&gitURL;/&name;.plg">
 <!ENTITY pkgURL    "&gitURL;/pkg">
 <!ENTITY plgPATH   "/boot/config/plugins/&name;">
@@ -48,6 +48,24 @@
 -->
 
 <CHANGES>
+###2023-06-09
+
+- Fix location retention issue when moving panels. Note this will reset locations and will need to be move to the required location.
+
+###2023-05-01
+
+- Set default for refresh to 30 seconds for new installs.
+
+###2023-04-12a
+
+- Fix for iGPUs call Display Controller.
+
+###2023-03-27
+- Fix apply for Multilanguage.
+
+###2023-03-21a
+- Fix GPU removal if none selected.
+- Fix Show only GPU if one panel selected rather than GPU1 as title
 
 ###2022-11-30
 - Fix case sensitivity in parent app detection preventing matches

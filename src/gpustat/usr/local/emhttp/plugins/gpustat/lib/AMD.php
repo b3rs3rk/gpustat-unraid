@@ -35,6 +35,7 @@ class AMD extends Main
     const CMD_UTILITY = 'radeontop';
     const INVENTORY_UTILITY = 'lspci';
     const INVENTORY_PARAM = '| grep VGA';
+    const INVENTORY_PARAMm = " -Dmm | grep VGA";
     const INVENTORY_REGEX =
         '/^(?P<busid>[0-9a-f]{2}).*\[AMD(\/ATI)?\]\s+(?P<model>.+)\s+(\[(?P<product>.+)\]|\()/imU';
 
@@ -88,13 +89,48 @@ class AMD extends Main
                 }
                 if (!empty($this->inventory)) {
                     foreach ($this->inventory AS $gpu) {
-                        $result[] = [
+                        $result[$gpu['busid']] = [
                             'id'    => "Bus ID " . $gpu['busid'],
                             'model' => (string) ($gpu['product'] ?? $gpu['model']),
                             'guid'  => $gpu['busid'],
                         ];
                     }
                 }
+            }
+        }
+
+        return $result;
+    }
+
+        /**
+     * Retrieves AMD inventory using lspci and returns an array
+     *
+     * @return array
+     */
+    public function getInventorym(): array
+    {
+        $result = [];
+
+        if ($this->cmdexists) {
+            $this->checkCommand(self::INVENTORY_UTILITY, false);
+            if ($this->cmdexists) {
+                $this->runCommand(self::INVENTORY_UTILITY, self::INVENTORY_PARAMm, false);
+                if (!empty($this->stdout) && strlen($this->stdout) > 0) {
+                    foreach(explode(PHP_EOL,$this->stdout) AS $vga) {
+                        preg_match_all('/"([^"]*)"|(\S+)/', $vga, $matches);
+                        $id = str_replace('"', '', $matches[0][0]) ;
+                        $vendor = str_replace('"', '',$matches[0][2]) ;
+                        $model = str_replace('"', '',$matches[0][3]) ;
+                        if ($vendor != "Advanced Micro Devices, Inc. [AMD/ATI]") continue ;
+                        $result[$id] = [
+                            'id' => substr($id,5) ,
+                            'model' => $model,
+                            'vendor' => 'amd',
+                            'guid' => substr($id,5,2)
+                        ];
+
+                     }
+                 }
             }
         }
 
@@ -115,6 +151,7 @@ class AMD extends Main
             } else {
                 $this->pageData['error'][] += Error::get(Error::VENDOR_DATA_NOT_RETURNED);
             }
+            return json_encode($this->pageData) ;
         }
     }
 
@@ -196,6 +233,8 @@ class AMD extends Main
             'colorblk'      => 'N/A',
         ];
 
+
+
         // radeontop data doesn't follow a standard object format -- need to parse CSV and then explode by spaces
         $data = explode(", ", substr($this->stdout, strpos($this->stdout, 'gpu')));
         $count = count($data);
@@ -229,6 +268,11 @@ class AMD extends Main
         }
         $this->pageData = array_merge($this->pageData, $this->getSensorData());
 
-        $this->echoJson();
+        $gpus = $this->getInventory() ;
+        if ($gpus) {
+            if (isset($gpus[$this->settings['GPUID']])) {
+                $this->pageData['name'] = $gpus[$this->settings['GPUID']]["model"] ;
+            }
+        }
     }
 }

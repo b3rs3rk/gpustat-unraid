@@ -51,15 +51,22 @@ if (isset($gpustat_inventory) && $gpustat_inventory) {
 
     switch ($gpustat_cfg['VENDOR']) {
         case 'amd':
-            (new AMD($gpustat_cfg))->getStatistics();
+            $data = (new AMD($gpustat_cfg))->getStatistics();
             break;
         case 'intel':
-            (new Intel($gpustat_cfg))->getStatistics();
+            $data = (new Intel($gpustat_cfg))->getStatistics();
             break;
         case 'nvidia':
-            (new Nvidia($gpustat_cfg))->getStatistics();
+            $data = (new Nvidia($gpustat_cfg))->getStatistics();
             break;
         default:
             print_r(Error::get(Error::CONFIG_SETTINGS_NOT_VALID));
     }
+    $json = $data ;
+    header('Content-Type: application/json');
+    header('Content-Length:' . ES . strlen($json));
+    echo $json;
+    file_put_contents("/tmp/gpujson2","Time = ".date(DATE_RFC2822)."\n") ;
+    file_put_contents("/tmp/gpujson2",$json."\n",FILE_APPEND) ;
+
 }

@@ -1,5 +1,6 @@
 Menu="Dashboard"
 Icon="gpustat.png"
+Cond="version_compare(parse_ini_file('/etc/unraid-version')['version'],'6.12.0-beta6', '<')"
 ---
 <?php
     /*
@@ -79,7 +80,7 @@ Icon="gpustat.png"
                 </div>
 <?php endif; ?>
                 <i class='fa fa-fw chevron mt0' id='dash_gpustat_toggle' onclick='toggleChevron("dash_gpustat_toggle",0)'></i>
-                <a href='/Settings/GPUStatSettings' id='dash_gpustat_settings' title='Go to GPU Statistics settings'><i class='fa fa-fw fa-cog chevron mt0'></i></a>
+                <a href='/Dashboard/Settings/GPUStatSettings' id='dash_gpustat_settings' title='Go to GPU Statistics settings'><i class='fa fa-fw fa-cog chevron mt0'></i></a>
                 <br><br>
             </td>
             <td></td>
