@@ -377,6 +377,10 @@ class Nvidia extends Main
                 if ($driver == "NVIDIA") {
                     $this->stdout = shell_exec(self::CMD_UTILITY . ES . sprintf(self::STATISTICS_PARAM, $this->settings['GPUID']));
                     #$this->stdout = shell_exec("cat /tmp/nvtxt");
+                    // Saved UUID is stale if the card in this PCI slot was swapped; fall back to the PCI bus ID
+                    if (stripos($this->stdout, '<gpu') === false) {
+                        $this->stdout = shell_exec(self::CMD_UTILITY . ES . sprintf(self::STATISTICS_PARAM, '0000:' . $this->settings['PCIID']));
+                    }
                 } else {
                     $this->stdout = $this->buildNouveauXML("0000:".$this->settings['PCIID']);
                 }
